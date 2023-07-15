@@ -1,0 +1,9 @@
+.idea
+.vscode
+__test_*
+.vscode
+.vim
+lamtest
+obj
+lib
+gmon.out

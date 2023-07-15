@@ -1,0 +1,9 @@
+.vscode
+*.o
+.idea
+
+lib
+*.tilestore
+*.hdx
+venv
+bin

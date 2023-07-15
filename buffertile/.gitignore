@@ -1,0 +1,10 @@
+.vscode
+*.o
+.idea
+
+lib
+bftest
+bftest_mp
+__test_*
+
+venv

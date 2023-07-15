@@ -1,0 +1,5 @@
+importlib-resources==5.4.0
+pkg-resources==0.0.0
+psycopg2==2.9.5
+tqdm==4.64.1
+zipp==3.6.0

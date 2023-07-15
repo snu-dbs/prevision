@@ -1,0 +1,4 @@
+DROP TABLE with_one;
+ALTER TABLE X RENAME TO :v1;
+DROP TABLE v;
+

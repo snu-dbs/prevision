@@ -1,0 +1,4 @@
+PGPORT=5433
+PGHOST=localhost
+PGDATABASE=pgtile
+PATH=/usr/lib/postgresql/12/bin:/home/pgtile/madlib/cmake-3.7.2/bin/:$PATH
