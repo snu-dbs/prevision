@@ -1,7 +1,5 @@
 # Data Loading and Evaluation
 
-sudo commands, so extend expireation time.
-
 Source codes or scripts that we used for evaluation are organized as follow.
 For detailed instructions, please refer to the below sections.
 
@@ -32,6 +30,8 @@ python3 -m venv venv
 source ./venv/bin/activate
 pip install -r requirements.txt
 ```
+
+We recommend to extend time-out limit for sudo because experiments will be running long time, and it may require a password for sudo repeatedly.
 
 ## Evaluation
 
