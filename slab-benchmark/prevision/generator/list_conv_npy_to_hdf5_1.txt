@@ -1,0 +1,14 @@
+./output/npy/10000000x100_dense.npy ./output/hdf5/regular/10000000x100_dense.hdf5 100
+./output/npy/10000000x10_dense.npy ./output/hdf5/regular/10000000x10_dense.hdf5 100
+./output/npy/10000000x1_dense.npy ./output/hdf5/regular/10000000x1_dense.hdf5 100
+./output/npy/20000000x100_dense.npy ./output/hdf5/regular/20000000x100_dense.hdf5 100
+./output/npy/20000000x10_dense.npy ./output/hdf5/regular/20000000x10_dense.hdf5 100
+./output/npy/20000000x1_dense.npy ./output/hdf5/regular/20000000x1_dense.hdf5 100
+./output/npy/40000000x100_dense.npy ./output/hdf5/regular/40000000x100_dense.hdf5 100
+./output/npy/40000000x10_dense.npy ./output/hdf5/regular/40000000x10_dense.hdf5 100
+./output/npy/40000000x1_dense.npy ./output/hdf5/regular/40000000x1_dense.hdf5 100
+./output/npy/80000000x100_dense.npy ./output/hdf5/regular/80000000x100_dense.hdf5 100
+./output/npy/80000000x10_dense.npy ./output/hdf5/regular/80000000x10_dense.hdf5 100
+./output/npy/80000000x1_dense.npy ./output/hdf5/regular/80000000x1_dense.hdf5 100
+./output/npy/100x1_dense.npy ./output/hdf5/regular/100x1_dense.hdf5 1
+./output/npy/10x100_dense.npy ./output/hdf5/regular/10x100_dense.hdf5 1

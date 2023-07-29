@@ -1,0 +1,9 @@
+{
+    "data_type": "matrix",
+    "value_type": "double",
+    "rows": 36692,
+    "cols": 1,
+    "nnz": 36692,
+    "format": "text",
+    "header": false
+}

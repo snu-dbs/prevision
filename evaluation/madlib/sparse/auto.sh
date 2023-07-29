@@ -1,10 +1,9 @@
-source ../env-12
-
 function lr() {
 	iter=$1
 	xname=$2
 	yname=$3
 	wname=$4
+	noi=$5
 	echo "LR"
 	
 	for j in $(seq 1 $iter); 
@@ -17,7 +16,7 @@ function lr() {
 		# algorithm
 		time psql -f lr_setup.sql -v v1=$xname -v v2=$yname -v v3=$wname
 		time psql -f lr1.sql -v v1=$xname -v v2=$yname -v v3=$wname
-		for i in $(seq 1 3); 
+		for i in $(seq 1 $noi); 
 		do 
 			time psql -f lr2.sql -v v1=$xname -v v2=$yname -v v3=$wname
 		done;
@@ -52,21 +51,19 @@ function pr() {
 	done;
 }
 
+lr 8 mat_400mx100_sparse_0_0125 mat_400mx1_sparse_0_0125 mat_100x1_sparse_0_0125 3
+lr 8 mat_400mx100_sparse_0_025 mat_400mx1_sparse_0_025 mat_100x1_sparse_0_025 3 
+lr 8 mat_400mx100_sparse_0_05 mat_400mx1_sparse_0_05 mat_100x1_sparse_0_05 3
+lr 8 mat_400mx100_sparse_0_1 mat_400mx1_sparse_0_1 mat_100x1_sparse_0_1 3
 
-iterarray=(1 2 3 4 8 16 32)
+pr 8 mat_enron mat_enron_v 36692 3
+pr 8 mat_epinions mat_epinions_v 75888 3
+pr 8 mat_livejournal mat_livejournal_v 4847571 3
+pr 8 mat_twitter mat_twitter_v 61578415 3
+
+iterarray=(1 2 4 8 16 32)
 for noi in ${iterarray[@]}
 do
 	echo $noi
-	# pr 2 mat_enron mat_enron_v 36692 $noi
-	# pr 2 mat_livejournal mat_livejournal_v 4847571 $noi
-	pr 2 mat_twitter mat_twitter_v 61578415 $noi
-	
+	pr 8 mat_twitter mat_twitter_v 61578415 $noi
 done
-exit;
-
-	# pr 1 mat_epinions mat_epinions_v 75888
-
-lr 1 mat_400mx100_sparse_0_1 mat_400mx1_sparse_0_1 mat_100x1_sparse_0_1
-lr 1 mat_400mx100_sparse_0_05 mat_400mx1_sparse_0_05 mat_100x1_sparse_0_05
-lr 1 mat_400mx100_sparse_0_0125 mat_400mx1_sparse_0_0125 mat_100x1_sparse_0_0125
-lr 1 mat_400mx100_sparse_0_025 mat_400mx1_sparse_0_025 mat_100x1_sparse_0_025

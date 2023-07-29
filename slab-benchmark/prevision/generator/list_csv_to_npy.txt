@@ -1,0 +1,14 @@
+./output/csv/10000000x100_dense.csv ./output/npy/10000000x100_dense.npy
+./output/csv/10000000x10_dense.csv ./output/npy/10000000x10_dense.npy
+./output/csv/10000000x1_dense.csv ./output/npy/10000000x1_dense.npy
+./output/csv/20000000x100_dense.csv ./output/npy/20000000x100_dense.npy
+./output/csv/20000000x10_dense.csv ./output/npy/20000000x10_dense.npy
+./output/csv/20000000x1_dense.csv ./output/npy/20000000x1_dense.npy
+./output/csv/40000000x100_dense.csv ./output/npy/40000000x100_dense.npy
+./output/csv/40000000x10_dense.csv ./output/npy/40000000x10_dense.npy
+./output/csv/40000000x1_dense.csv ./output/npy/40000000x1_dense.npy
+./output/csv/80000000x100_dense.csv ./output/npy/80000000x100_dense.npy
+./output/csv/80000000x10_dense.csv ./output/npy/80000000x10_dense.npy
+./output/csv/80000000x1_dense.csv ./output/npy/80000000x1_dense.npy
+./output/csv/100x1_dense.csv ./output/npy/100x1_dense.npy
+./output/csv/10x100_dense.csv ./output/npy/10x100_dense.npy

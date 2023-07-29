@@ -7,37 +7,50 @@ function exp() {
 	for i in $(seq 1 $iter)
 	do
 		echo "iter="$i
-		sudo docker start tilepack-scidb-exp
+		sudo docker start prevision-scidb-exp
 		sleep 16
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-		sudo docker exec -it tilepack-scidb-exp bash /home/scidb/alg-remote.sh $1 $2 $noi
-		sudo docker stop tilepack-scidb-exp
+		sudo docker exec -it prevision-scidb-exp bash /home/scidb/alg-remote.sh $1 $2 $noi
+		sudo docker stop prevision-scidb-exp
 	done
 }
 
+# Evaluation
 
-iterarray=(32)
-for noi in ${iterarray[@]}
+for i in $(seq 1 8)
 do
+    echo $i
+
+    # Dense 
+    exp lr 10M 3             # LR
+    exp nmf 10M 3            # NMF
+
+    exp lr 20M 3
+    exp nmf 20M 3
+
+    exp lr 40M 3            
+    exp nmf 40M 3           
+
+    exp lr 80M 3
+    exp nmf 80M 3
+
+    # Sparse
+    exp sparse_lr 0_0125 3    # LR
+    exp sparse_lr 0_025 3   
+    exp sparse_lr 0_05 3   
+    exp sparse_lr 0_1 3    
+
+    # PageRank
+    exp pagerank enron 3
+    exp pagerank epinions 3
+    exp pagerank livejournal 3
+    exp pagerank twitter 3
+
+    # iteration
+    iterarray=(1 2 4 8 16 32)
+    for noi in ${iterarray[@]}
+    do
         echo $noi
-	# exp nmf 10M $noi
-	#exp pagerank enron $noi
-	#exp pagerank epinions $noi
-	#exp pagerank livejournal $noi
-	exp pagerank twitter $noi
+        exp pagerank twitter $noi
+    done
 done
-exit;
-
-
-# exp sparse_lr 0_0125
-exp sparse_lr 0_025
-
-exit;
-exp lr 10M
-exp nmf 10M
-
-exp lr 20M
-exp nmf 20M
-
-# exp lr 40M
-# exp nmf 40M

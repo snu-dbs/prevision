@@ -1,0 +1,10 @@
+{
+    "data_type": "matrix",
+    "value_type": "double",
+    "rows": 61578415,
+    "cols": 1,
+    "nnz": 61578415,
+    "format": "text",
+    "header": false
+}
+

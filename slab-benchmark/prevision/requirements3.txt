@@ -1,0 +1,11 @@
+cloudpickle==2.2.1
+dask==2022.6.0
+fsspec==2023.6.0
+h5py==3.9.0
+locket==1.0.0
+numpy==1.24.4
+packaging==23.1
+partd==1.4.0
+PyYAML==6.0.1
+toolz==0.12.0
+tqdm==4.65.0

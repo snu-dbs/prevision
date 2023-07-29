@@ -18,7 +18,17 @@
 #include "tileio.h"
 #include "bf_malloc.h"
 
-extern int BFerrno;
+
+int BFerrno;
+
+uint64_t BF_curr_ts;
+uint8_t _bf_skiplist_level;
+
+BFmspace *_mspace_data;   
+BFmspace *_mspace_idata;  
+BFmspace *_mspace_key;
+BFmspace *_mspace_bf;
+BFshm_hdr *BFshm_hdr_ptr; 
 
 const char *tmparr_name_prefix = "__temparr_";
 

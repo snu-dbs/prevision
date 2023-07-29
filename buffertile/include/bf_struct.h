@@ -12,18 +12,18 @@
 /*
  * most recent BF error code
  */
-int BFerrno;
+extern int BFerrno;
 
-uint64_t BF_curr_ts;
-uint8_t _bf_skiplist_level;
+extern uint64_t BF_curr_ts;
+extern uint8_t _bf_skiplist_level;
 
 #define BF_TS_INF               (uint64_t) 0 - 1
 
 // memory space used for dlmalloc (mspace_malloc).
-BFmspace *_mspace_data;         // data for array data
-BFmspace *_mspace_idata;        // data for input data
-BFmspace *_mspace_key;
-BFmspace *_mspace_bf;
+extern BFmspace *_mspace_data;         // data for array data
+extern BFmspace *_mspace_idata;        // data for input data
+extern BFmspace *_mspace_key;
+extern BFmspace *_mspace_bf;
 
 // environmental variables
 extern size_t _bf_env_data_size;           // BF_DATA_SIZE
@@ -219,7 +219,7 @@ typedef struct BFshm_hdr
 
 } BFshm_hdr;
 
-BFshm_hdr *BFshm_hdr_ptr; // header
+extern BFshm_hdr *BFshm_hdr_ptr; // header
 // #define BF_HDR(VAR)     BFshm_hdr_ptr->(VAR)
 
 #endif

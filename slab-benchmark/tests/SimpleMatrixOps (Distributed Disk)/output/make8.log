@@ -1,0 +1,766 @@
+
+ make.py started: 2018-06-13 19:36:26 /home/ubuntu/SLAB/tests/SimpleMatrixOps (Distributed Disk)/src 
+
+
+name := "SystemMLMatrixOps"
+
+version := "0.1"
+
+scalaVersion := "2.10.4"
+
+libraryDependencies ++= Seq(
+    "org.apache.spark"     % "spark-sql_2.11"  % "2.1.1" % "provided"
+)
+
+assemblyMergeStrategy in assembly := {
+  case PathList("javax", "servlet", xs @ _*) => MergeStrategy.last
+  case PathList("javax", "activation", xs @ _*) => MergeStrategy.last
+  case PathList("org", "apache", xs @ _*) => MergeStrategy.last
+  case PathList("com", "google", xs @ _*) => MergeStrategy.last
+  case PathList("com", "esotericsoftware", xs @ _*) => MergeStrategy.last
+  case PathList("com", "codahale", xs @ _*) => MergeStrategy.last
+  case PathList("com", "yammer", xs @ _*) => MergeStrategy.last
+  case "about.html" => MergeStrategy.rename
+  case "META-INF/ECLIPSEF.RSA" => MergeStrategy.last
+  case "META-INF/mailcap" => MergeStrategy.last
+  case "META-INF/mimetypes.default" => MergeStrategy.last
+  case "plugin.properties" => MergeStrategy.last
+  case "log4j.properties" => MergeStrategy.last
+  case x =>
+    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    oldStrategy(x)
+}
+
+Running: sbt -Dsbt.log.noformat=true assembly 
+
+CPU count capped at: None
+Memory use capped at: -1e-09GB
+CPU Time capped at: -1 seconds
+name := "MLLibMatrixops"
+
+version := "0.1"
+
+scalaVersion := "2.10.4"
+
+libraryDependencies ++= Seq (
+    "org.apache.spark" %% "spark-core" % "2.2.0" % "provided",
+    "org.apache.spark" %% "spark-streaming" % "2.2.0" % "provided",
+    "org.apache.spark" %% "spark-mllib" % "2.2.0" % "provided",
+    "com.github.fommil.netlib" % "all" % "1.1.2"
+)
+
+assemblyMergeStrategy in assembly := {
+  case PathList("javax", "servlet", xs @ _*) => MergeStrategy.last
+  case PathList("javax", "activation", xs @ _*) => MergeStrategy.last
+  case PathList("org", "apache", xs @ _*) => MergeStrategy.last
+  case PathList("com", "google", xs @ _*) => MergeStrategy.last
+  case PathList("com", "esotericsoftware", xs @ _*) => MergeStrategy.last
+  case PathList("com", "codahale", xs @ _*) => MergeStrategy.last
+  case PathList("com", "yammer", xs @ _*) => MergeStrategy.last
+  case "about.html" => MergeStrategy.rename
+  case "META-INF/ECLIPSEF.RSA" => MergeStrategy.last
+  case "META-INF/mailcap" => MergeStrategy.last
+  case "META-INF/mimetypes.default" => MergeStrategy.last
+  case "plugin.properties" => MergeStrategy.last
+  case "log4j.properties" => MergeStrategy.last
+  case x =>
+    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    oldStrategy(x)
+}
+
+Running: sbt -Dsbt.log.noformat=true assembly 
+
+CPU count capped at: None
+Memory use capped at: -1e-09GB
+CPU Time capped at: -1 seconds
+# Copyright 2018 Anthony H Thomas and Arun Kumar
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import os
+import sys
+import shutil
+
+sys.path.append('../external/lib/python')
+import make_utils as utils
+import global_params as params
+import gen_data as data
+
+nodes = sys.argv[1]
+matsize = sys.argv[2].split(' ')
+systems = sys.argv[3].split(' ')
+ops = sys.argv[4].split(' ')
+
+all_files = os.listdir('../output/scale_mat_size')
+#for s in systems:
+#    for op in ops:
+#        relevant_files = filter(
+#            lambda x: (s in x) and (op in x) and (nodes in x), all_files)
+#        map(lambda x: os.unlink('../output/scale_mat_size/{}'.format(x)), 
+#            relevant_files)
+
+cmd_args = ('opType={opType} mattype={mattype}'
+            ' Mpath={Mpath} Npath={Npath}'
+            ' wPath={wPath} tableStub={tableStub}'
+            ' nodes={nodes} passPath=/scratch/pass.csv'
+            ' outdir=scale_mat_size savestub={savestub}')
+
+data.gen_data_disk('../temp/pass.csv', 2, 2, 2**12)
+# utils.hdfs_put('../temp/pass.csv')
+
+for op in ops:
+    for gb in matsize:
+        mattype_m = 'tall' if op != 'GMM' else 'wide'
+        mattype_n = 'tall'
+
+        Mpath_disk = '../external/disk_data/M{}_{}.csv'.format(gb,mattype_m)
+        wPath_disk = '../external/disk_data/w{}_{}.csv'.format(gb,mattype_m)
+        Npath_disk = '../external/disk_data/N{}_{}.csv'.format(gb,mattype_n)
+        if op == 'GMM':
+            NPath_disk = '../external/disk_data/M{}_tall.csv'.format(gb)
+
+        Mpath_hdfs = Mpath_disk.replace('../external/disk_data', '/scratch')
+        wPath_hdfs = wPath_disk.replace('../external/disk_data', '/scratch')
+        Npath_hdfs = Npath_disk.replace('../external/disk_data', '/scratch')
+
+        cmd_params_disk = {'mattype' : mattype_m,
+                   'Mpath'   : Mpath_disk,
+                   'wPath'   : wPath_disk,
+                   'Npath'   : Npath_disk,
+                   'nodes'   : nodes,
+                   'savestub': gb,
+                   'tableStub' : '{}_{}'.format(gb, mattype_m)}
+        cmd_params_hdfs = {'mattype' : mattype_m,
+                   'Mpath'   : Mpath_hdfs,
+                   'wPath'   : wPath_hdfs,
+                   'Npath'   : Npath_hdfs,
+                   'nodes'   : nodes,
+                   'savestub': gb,
+                   'tableStub' : '{}_{}'.format(gb, mattype_m)}
+
+        cmd_params_disk['opType'] = op
+        cmd_params_hdfs['opType'] = op
+        args_disk = cmd_args.format(**cmd_params_disk)
+        args_hdfs = cmd_args.format(**cmd_params_hdfs)
+
+        if 'SYSTEMML' in systems:
+          utils.run_spark(program = 'SystemMLMatrixOps',
+                          sbt_dir = './systemml',
+                          cmd_args = args_hdfs)
+        if 'MLLIB' in systems:
+          utils.run_spark(program = 'SparkMatrixOps',
+                          sbt_dir = './mllib',
+                          cmd_args = args_hdfs)
+        if 'MADLIB' in systems:
+          utils.run_python(program = 'madlib_matrix_ops.py',
+                           cmd_args = args_disk)
+        if 'R' in systems:
+          utils.run_pbdR(program = 'R_matrix_ops.R',
+                         cmd_args = args_disk)
+
+        if 'SCIDB' in systems:
+          utils.run_python(program = 'scidb_matrix_ops.py',
+                           cmd_args = args_disk)
+
+Running: python _msize_scaling_tests.py None "2 4 8 16" "SCIDB" "MVM"
+
+CPU count capped at: None
+Memory use capped at: -1e-09GB
+CPU Time capped at: -1 seconds
+# Copyright 2018 Anthony H Thomas and Arun Kumar
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+with open(__file__) as fh: print fh.read()
+import os
+import sys
+import time
+import json
+import scidbpy
+import subprocess
+
+import numpy as np
+import pandas as pd
+
+ROOT = os.getenv('BENCHMARK_PROJECT_ROOT')
+if (ROOT is None):
+    msg = 'Please set environment variable BENCHMARK_PROJECT_ROOT'
+    raise StandardError(msg)
+
+sys.path.append(os.path.join(ROOT,'lib','python'))
+from np_timing_utils import parse_cmd_args
+
+def do_matrix_op(kwargs):
+    op_type  = kwargs.get('opType')
+    mattype = kwargs.get('mattype')
+    tableStub = kwargs.get('tableStub')
+    savestub  = kwargs.get('savestub')
+    nodes  = kwargs.get('nodes')
+
+    nrow, ncol = get_dims('M{}'.format(tableStub))
+    path = '../output/scidb_{}_{}{}.txt'.format(mattype, op_type, nodes)
+
+    cxn = scidbpy.connect()
+    print cxn.iquery("list('instances')", fetch=True)
+    colnames = ['nodes','rows','time1','time2','time3','time4','time5']
+    run_times = pd.DataFrame(np.zeros((1,len(colnames))))
+    run_times.columns = colnames
+
+    M_name = 'M{}{}'.format(nrow, ncol)
+    if not M_name in dir(cxn.arrays):
+        alloc_matrix(nrow, ncol, M_name, cxn)
+    if op_type == 'GMM':
+        if not 'N{}{}'.format(ncol, nrow) in dir(cxn.arrays):
+            alloc_matrix(ncol, nrow, 'N{}{}'.format(ncol, nrow), cxn)
+        N_name = 'N{}{}'.format(ncol, nrow)
+        zv_name = 'ZEROS{}{}'.format(nrow, nrow)
+        zeros(nrow, nrow, zv_name, cxn)
+    if op_type == 'TSM':
+        zv_name = 'ZEROS{}{}'.format(ncol, ncol)
+        zeros(ncol, ncol, zv_name, cxn)
+    if op_type == 'ADD':
+        if not 'N{}{}'.format(nrow, ncol) in dir(cxn.arrays):
+            alloc_matrix(nrow, ncol, 'N{}{}'.format(nrow, ncol), cxn)
+        N_name = 'N{}{}'.format(nrow, ncol)
+    if op_type == 'MVM':
+        v_name = 'v{}'.format(ncol)
+        if not v_name in dir(cxn.arrays):
+            alloc_vector(ncol, v_name, cxn)
+        zv_name = 'ZEROS{}'.format(nrow)
+        zeros(nrow, 0, zv_name, cxn)
+
+    cxn.iquery("load_library('dense_linear_algebra')")
+    if op_type == 'TRANS':
+        call = 'consume(transpose({}))'.format(M_name)
+    elif op_type == 'NORM':
+        call = 'aggregate(apply({}, val2, pow(val,2.0)), sum(val2))'.format(
+            M_name)
+    elif op_type == 'GMM':
+        call = 'gemm({},{},{})'.format(M_name, N_name, zv_name)
+    elif op_type == 'MVM':
+        call = 'gemm({},{},{})'.format(M_name, v_name, zv_name)
+    elif op_type == 'TSM':
+        call = 'gemm({},{},{}, transa:true)'.format(M_name, M_name, zv_name)
+    elif op_type == 'ADD':
+        call = 'consume(apply(join({0},{1}), sum, {0}.val+{1}.val))'.format(
+            M_name, N_name)
+    else:
+        raise StandardError('Invalid operator type')
+    
+    main_axis = ncol if op_type == 'GMM' else nrow
+    run_times.ix[:,:2] = (nodes, main_axis)
+    run_times.ix[:,2:] = time_stmt(call, cxn)
+    write_header = False if (os.path.exists(path)) else True
+    run_times.to_csv(path, index=False, header=write_header, mode='a')
+
+def get_dims(name):
+    with open('../external/disk_data/{}.csv.mtd'.format(name), 'rb') as fh:
+        res = json.load(fh)
+    return (res['rows'], res['cols'])
+
+def zeros(rows, cols, name, cxn, chunksize=1000, overwrite=True):
+    if overwrite and (name in dir(cxn.arrays)):
+        cxn.iquery('remove({})'.format(name))
+    stmt = """
+        CREATE ARRAY {n}<val:double>[row=0:{r}:0:{cz};col=0:{c}:0:{cz}]
+    """.format(r=rows, n=name, c=cols, cz=chunksize)
+    cxn.iquery(stmt)
+
+def alloc_matrix(rows, cols, name, 
+        cxn, method='(RANDOM() % 100) / 10.0',
+        chunksize=1000):
+    stmt = """
+        store(build(<val:double>[row=0:{r}:0:{cz};col=0:{c}:0:{cz}], {m}), {n})
+    """.format(r=rows, c=cols, cz=chunksize, m=method, n=name)
+    print stmt
+    cxn.iquery(stmt)
+
+def alloc_vector(length, name, cxn, method='(RANDOM() % 100) / 10.0'):
+    stmt = """
+        store(build(<val:double>[row=0:{};col=0:0], {}), {})
+    """.format(length, method, name)
+    print stmt
+    cxn.iquery(stmt)
+
+def time_stmt(stmt, cxn, cleanup=None, n_reps=5):
+    times = []
+    cleanup = cleanup if cleanup is not None else []
+    for ix in range(n_reps):
+        if ix == 0:
+            print stmt
+        start = time.time()
+        cxn.iquery(stmt)
+        stop = time.time()
+        print 'Test {} => {}'.format(ix, stop-start)
+        if len(cleanup) > 0:
+            for obj in cleanup:
+                cxn.iquery('remove({})'.format(obj))
+        times.append(stop-start)
+    return times
+
+if __name__=='__main__':
+    argv = parse_cmd_args(sys.argv[1:])
+    do_matrix_op(argv)
+
+Running: python _scidb_matrix_ops.py opType=MVM mattype=tall Mpath=../external/disk_data/M2_tall.csv Npath=../external/disk_data/N2_tall.csv wPath=../external/disk_data/w2_tall.csv tableStub=2_tall nodes=None passPath=/scratch/pass.csv outdir=scale_mat_size savestub=2
+
+CPU count capped at: None
+Memory use capped at: -1e-09GB
+CPU Time capped at: -1 seconds
+# Copyright 2018 Anthony H Thomas and Arun Kumar
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+with open(__file__) as fh: print fh.read()
+import os
+import sys
+import time
+import json
+import scidbpy
+import subprocess
+
+import numpy as np
+import pandas as pd
+
+ROOT = os.getenv('BENCHMARK_PROJECT_ROOT')
+if (ROOT is None):
+    msg = 'Please set environment variable BENCHMARK_PROJECT_ROOT'
+    raise StandardError(msg)
+
+sys.path.append(os.path.join(ROOT,'lib','python'))
+from np_timing_utils import parse_cmd_args
+
+def do_matrix_op(kwargs):
+    op_type  = kwargs.get('opType')
+    mattype = kwargs.get('mattype')
+    tableStub = kwargs.get('tableStub')
+    savestub  = kwargs.get('savestub')
+    nodes  = kwargs.get('nodes')
+
+    nrow, ncol = get_dims('M{}'.format(tableStub))
+    path = '../output/scidb_{}_{}{}.txt'.format(mattype, op_type, nodes)
+
+    cxn = scidbpy.connect()
+    print cxn.iquery("list('instances')", fetch=True)
+    colnames = ['nodes','rows','time1','time2','time3','time4','time5']
+    run_times = pd.DataFrame(np.zeros((1,len(colnames))))
+    run_times.columns = colnames
+
+    M_name = 'M{}{}'.format(nrow, ncol)
+    if not M_name in dir(cxn.arrays):
+        alloc_matrix(nrow, ncol, M_name, cxn)
+    if op_type == 'GMM':
+        if not 'N{}{}'.format(ncol, nrow) in dir(cxn.arrays):
+            alloc_matrix(ncol, nrow, 'N{}{}'.format(ncol, nrow), cxn)
+        N_name = 'N{}{}'.format(ncol, nrow)
+        zv_name = 'ZEROS{}{}'.format(nrow, nrow)
+        zeros(nrow, nrow, zv_name, cxn)
+    if op_type == 'TSM':
+        zv_name = 'ZEROS{}{}'.format(ncol, ncol)
+        zeros(ncol, ncol, zv_name, cxn)
+    if op_type == 'ADD':
+        if not 'N{}{}'.format(nrow, ncol) in dir(cxn.arrays):
+            alloc_matrix(nrow, ncol, 'N{}{}'.format(nrow, ncol), cxn)
+        N_name = 'N{}{}'.format(nrow, ncol)
+    if op_type == 'MVM':
+        v_name = 'v{}'.format(ncol)
+        if not v_name in dir(cxn.arrays):
+            alloc_vector(ncol, v_name, cxn)
+        zv_name = 'ZEROS{}'.format(nrow)
+        zeros(nrow, 0, zv_name, cxn)
+
+    cxn.iquery("load_library('dense_linear_algebra')")
+    if op_type == 'TRANS':
+        call = 'consume(transpose({}))'.format(M_name)
+    elif op_type == 'NORM':
+        call = 'aggregate(apply({}, val2, pow(val,2.0)), sum(val2))'.format(
+            M_name)
+    elif op_type == 'GMM':
+        call = 'gemm({},{},{})'.format(M_name, N_name, zv_name)
+    elif op_type == 'MVM':
+        call = 'gemm({},{},{})'.format(M_name, v_name, zv_name)
+    elif op_type == 'TSM':
+        call = 'gemm({},{},{}, transa:true)'.format(M_name, M_name, zv_name)
+    elif op_type == 'ADD':
+        call = 'consume(apply(join({0},{1}), sum, {0}.val+{1}.val))'.format(
+            M_name, N_name)
+    else:
+        raise StandardError('Invalid operator type')
+    
+    main_axis = ncol if op_type == 'GMM' else nrow
+    run_times.ix[:,:2] = (nodes, main_axis)
+    run_times.ix[:,2:] = time_stmt(call, cxn)
+    write_header = False if (os.path.exists(path)) else True
+    run_times.to_csv(path, index=False, header=write_header, mode='a')
+
+def get_dims(name):
+    with open('../external/disk_data/{}.csv.mtd'.format(name), 'rb') as fh:
+        res = json.load(fh)
+    return (res['rows'], res['cols'])
+
+def zeros(rows, cols, name, cxn, chunksize=1000, overwrite=True):
+    if overwrite and (name in dir(cxn.arrays)):
+        cxn.iquery('remove({})'.format(name))
+    stmt = """
+        CREATE ARRAY {n}<val:double>[row=0:{r}:0:{cz};col=0:{c}:0:{cz}]
+    """.format(r=rows, n=name, c=cols, cz=chunksize)
+    cxn.iquery(stmt)
+
+def alloc_matrix(rows, cols, name, 
+        cxn, method='(RANDOM() % 100) / 10.0',
+        chunksize=1000):
+    stmt = """
+        store(build(<val:double>[row=0:{r}:0:{cz};col=0:{c}:0:{cz}], {m}), {n})
+    """.format(r=rows, c=cols, cz=chunksize, m=method, n=name)
+    print stmt
+    cxn.iquery(stmt)
+
+def alloc_vector(length, name, cxn, method='(RANDOM() % 100) / 10.0'):
+    stmt = """
+        store(build(<val:double>[row=0:{};col=0:0], {}), {})
+    """.format(length, method, name)
+    print stmt
+    cxn.iquery(stmt)
+
+def time_stmt(stmt, cxn, cleanup=None, n_reps=5):
+    times = []
+    cleanup = cleanup if cleanup is not None else []
+    for ix in range(n_reps):
+        if ix == 0:
+            print stmt
+        start = time.time()
+        cxn.iquery(stmt)
+        stop = time.time()
+        print 'Test {} => {}'.format(ix, stop-start)
+        if len(cleanup) > 0:
+            for obj in cleanup:
+                cxn.iquery('remove({})'.format(obj))
+        times.append(stop-start)
+    return times
+
+if __name__=='__main__':
+    argv = parse_cmd_args(sys.argv[1:])
+    do_matrix_op(argv)
+
+Running: python _scidb_matrix_ops.py opType=MVM mattype=tall Mpath=../external/disk_data/M4_tall.csv Npath=../external/disk_data/N4_tall.csv wPath=../external/disk_data/w4_tall.csv tableStub=4_tall nodes=None passPath=/scratch/pass.csv outdir=scale_mat_size savestub=4
+
+CPU count capped at: None
+Memory use capped at: -1e-09GB
+CPU Time capped at: -1 seconds
+# Copyright 2018 Anthony H Thomas and Arun Kumar
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+with open(__file__) as fh: print fh.read()
+import os
+import sys
+import time
+import json
+import scidbpy
+import subprocess
+
+import numpy as np
+import pandas as pd
+
+ROOT = os.getenv('BENCHMARK_PROJECT_ROOT')
+if (ROOT is None):
+    msg = 'Please set environment variable BENCHMARK_PROJECT_ROOT'
+    raise StandardError(msg)
+
+sys.path.append(os.path.join(ROOT,'lib','python'))
+from np_timing_utils import parse_cmd_args
+
+def do_matrix_op(kwargs):
+    op_type  = kwargs.get('opType')
+    mattype = kwargs.get('mattype')
+    tableStub = kwargs.get('tableStub')
+    savestub  = kwargs.get('savestub')
+    nodes  = kwargs.get('nodes')
+
+    nrow, ncol = get_dims('M{}'.format(tableStub))
+    path = '../output/scidb_{}_{}{}.txt'.format(mattype, op_type, nodes)
+
+    cxn = scidbpy.connect()
+    print cxn.iquery("list('instances')", fetch=True)
+    colnames = ['nodes','rows','time1','time2','time3','time4','time5']
+    run_times = pd.DataFrame(np.zeros((1,len(colnames))))
+    run_times.columns = colnames
+
+    M_name = 'M{}{}'.format(nrow, ncol)
+    if not M_name in dir(cxn.arrays):
+        alloc_matrix(nrow, ncol, M_name, cxn)
+    if op_type == 'GMM':
+        if not 'N{}{}'.format(ncol, nrow) in dir(cxn.arrays):
+            alloc_matrix(ncol, nrow, 'N{}{}'.format(ncol, nrow), cxn)
+        N_name = 'N{}{}'.format(ncol, nrow)
+        zv_name = 'ZEROS{}{}'.format(nrow, nrow)
+        zeros(nrow, nrow, zv_name, cxn)
+    if op_type == 'TSM':
+        zv_name = 'ZEROS{}{}'.format(ncol, ncol)
+        zeros(ncol, ncol, zv_name, cxn)
+    if op_type == 'ADD':
+        if not 'N{}{}'.format(nrow, ncol) in dir(cxn.arrays):
+            alloc_matrix(nrow, ncol, 'N{}{}'.format(nrow, ncol), cxn)
+        N_name = 'N{}{}'.format(nrow, ncol)
+    if op_type == 'MVM':
+        v_name = 'v{}'.format(ncol)
+        if not v_name in dir(cxn.arrays):
+            alloc_vector(ncol, v_name, cxn)
+        zv_name = 'ZEROS{}'.format(nrow)
+        zeros(nrow, 0, zv_name, cxn)
+
+    cxn.iquery("load_library('dense_linear_algebra')")
+    if op_type == 'TRANS':
+        call = 'consume(transpose({}))'.format(M_name)
+    elif op_type == 'NORM':
+        call = 'aggregate(apply({}, val2, pow(val,2.0)), sum(val2))'.format(
+            M_name)
+    elif op_type == 'GMM':
+        call = 'gemm({},{},{})'.format(M_name, N_name, zv_name)
+    elif op_type == 'MVM':
+        call = 'gemm({},{},{})'.format(M_name, v_name, zv_name)
+    elif op_type == 'TSM':
+        call = 'gemm({},{},{}, transa:true)'.format(M_name, M_name, zv_name)
+    elif op_type == 'ADD':
+        call = 'consume(apply(join({0},{1}), sum, {0}.val+{1}.val))'.format(
+            M_name, N_name)
+    else:
+        raise StandardError('Invalid operator type')
+    
+    main_axis = ncol if op_type == 'GMM' else nrow
+    run_times.ix[:,:2] = (nodes, main_axis)
+    run_times.ix[:,2:] = time_stmt(call, cxn)
+    write_header = False if (os.path.exists(path)) else True
+    run_times.to_csv(path, index=False, header=write_header, mode='a')
+
+def get_dims(name):
+    with open('../external/disk_data/{}.csv.mtd'.format(name), 'rb') as fh:
+        res = json.load(fh)
+    return (res['rows'], res['cols'])
+
+def zeros(rows, cols, name, cxn, chunksize=1000, overwrite=True):
+    if overwrite and (name in dir(cxn.arrays)):
+        cxn.iquery('remove({})'.format(name))
+    stmt = """
+        CREATE ARRAY {n}<val:double>[row=0:{r}:0:{cz};col=0:{c}:0:{cz}]
+    """.format(r=rows, n=name, c=cols, cz=chunksize)
+    cxn.iquery(stmt)
+
+def alloc_matrix(rows, cols, name, 
+        cxn, method='(RANDOM() % 100) / 10.0',
+        chunksize=1000):
+    stmt = """
+        store(build(<val:double>[row=0:{r}:0:{cz};col=0:{c}:0:{cz}], {m}), {n})
+    """.format(r=rows, c=cols, cz=chunksize, m=method, n=name)
+    print stmt
+    cxn.iquery(stmt)
+
+def alloc_vector(length, name, cxn, method='(RANDOM() % 100) / 10.0'):
+    stmt = """
+        store(build(<val:double>[row=0:{};col=0:0], {}), {})
+    """.format(length, method, name)
+    print stmt
+    cxn.iquery(stmt)
+
+def time_stmt(stmt, cxn, cleanup=None, n_reps=5):
+    times = []
+    cleanup = cleanup if cleanup is not None else []
+    for ix in range(n_reps):
+        if ix == 0:
+            print stmt
+        start = time.time()
+        cxn.iquery(stmt)
+        stop = time.time()
+        print 'Test {} => {}'.format(ix, stop-start)
+        if len(cleanup) > 0:
+            for obj in cleanup:
+                cxn.iquery('remove({})'.format(obj))
+        times.append(stop-start)
+    return times
+
+if __name__=='__main__':
+    argv = parse_cmd_args(sys.argv[1:])
+    do_matrix_op(argv)
+
+Running: python _scidb_matrix_ops.py opType=MVM mattype=tall Mpath=../external/disk_data/M8_tall.csv Npath=../external/disk_data/N8_tall.csv wPath=../external/disk_data/w8_tall.csv tableStub=8_tall nodes=None passPath=/scratch/pass.csv outdir=scale_mat_size savestub=8
+
+CPU count capped at: None
+Memory use capped at: -1e-09GB
+CPU Time capped at: -1 seconds
+# Copyright 2018 Anthony H Thomas and Arun Kumar
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+with open(__file__) as fh: print fh.read()
+import os
+import sys
+import time
+import json
+import scidbpy
+import subprocess
+
+import numpy as np
+import pandas as pd
+
+ROOT = os.getenv('BENCHMARK_PROJECT_ROOT')
+if (ROOT is None):
+    msg = 'Please set environment variable BENCHMARK_PROJECT_ROOT'
+    raise StandardError(msg)
+
+sys.path.append(os.path.join(ROOT,'lib','python'))
+from np_timing_utils import parse_cmd_args
+
+def do_matrix_op(kwargs):
+    op_type  = kwargs.get('opType')
+    mattype = kwargs.get('mattype')
+    tableStub = kwargs.get('tableStub')
+    savestub  = kwargs.get('savestub')
+    nodes  = kwargs.get('nodes')
+
+    nrow, ncol = get_dims('M{}'.format(tableStub))
+    path = '../output/scidb_{}_{}{}.txt'.format(mattype, op_type, nodes)
+
+    cxn = scidbpy.connect()
+    print cxn.iquery("list('instances')", fetch=True)
+    colnames = ['nodes','rows','time1','time2','time3','time4','time5']
+    run_times = pd.DataFrame(np.zeros((1,len(colnames))))
+    run_times.columns = colnames
+
+    M_name = 'M{}{}'.format(nrow, ncol)
+    if not M_name in dir(cxn.arrays):
+        alloc_matrix(nrow, ncol, M_name, cxn)
+    if op_type == 'GMM':
+        if not 'N{}{}'.format(ncol, nrow) in dir(cxn.arrays):
+            alloc_matrix(ncol, nrow, 'N{}{}'.format(ncol, nrow), cxn)
+        N_name = 'N{}{}'.format(ncol, nrow)
+        zv_name = 'ZEROS{}{}'.format(nrow, nrow)
+        zeros(nrow, nrow, zv_name, cxn)
+    if op_type == 'TSM':
+        zv_name = 'ZEROS{}{}'.format(ncol, ncol)
+        zeros(ncol, ncol, zv_name, cxn)
+    if op_type == 'ADD':
+        if not 'N{}{}'.format(nrow, ncol) in dir(cxn.arrays):
+            alloc_matrix(nrow, ncol, 'N{}{}'.format(nrow, ncol), cxn)
+        N_name = 'N{}{}'.format(nrow, ncol)
+    if op_type == 'MVM':
+        v_name = 'v{}'.format(ncol)
+        if not v_name in dir(cxn.arrays):
+            alloc_vector(ncol, v_name, cxn)
+        zv_name = 'ZEROS{}'.format(nrow)
+        zeros(nrow, 0, zv_name, cxn)
+
+    cxn.iquery("load_library('dense_linear_algebra')")
+    if op_type == 'TRANS':
+        call = 'consume(transpose({}))'.format(M_name)
+    elif op_type == 'NORM':
+        call = 'aggregate(apply({}, val2, pow(val,2.0)), sum(val2))'.format(
+            M_name)
+    elif op_type == 'GMM':
+        call = 'gemm({},{},{})'.format(M_name, N_name, zv_name)
+    elif op_type == 'MVM':
+        call = 'gemm({},{},{})'.format(M_name, v_name, zv_name)
+    elif op_type == 'TSM':
+        call = 'gemm({},{},{}, transa:true)'.format(M_name, M_name, zv_name)
+    elif op_type == 'ADD':
+        call = 'consume(apply(join({0},{1}), sum, {0}.val+{1}.val))'.format(
+            M_name, N_name)
+    else:
+        raise StandardError('Invalid operator type')
+    
+    main_axis = ncol if op_type == 'GMM' else nrow
+    run_times.ix[:,:2] = (nodes, main_axis)
+    run_times.ix[:,2:] = time_stmt(call, cxn)
+    write_header = False if (os.path.exists(path)) else True
+    run_times.to_csv(path, index=False, header=write_header, mode='a')
+
+def get_dims(name):
+    with open('../external/disk_data/{}.csv.mtd'.format(name), 'rb') as fh:
+        res = json.load(fh)
+    return (res['rows'], res['cols'])
+
+def zeros(rows, cols, name, cxn, chunksize=1000, overwrite=True):
+    if overwrite and (name in dir(cxn.arrays)):
+        cxn.iquery('remove({})'.format(name))
+    stmt = """
+        CREATE ARRAY {n}<val:double>[row=0:{r}:0:{cz};col=0:{c}:0:{cz}]
+    """.format(r=rows, n=name, c=cols, cz=chunksize)
+    cxn.iquery(stmt)
+
+def alloc_matrix(rows, cols, name, 
+        cxn, method='(RANDOM() % 100) / 10.0',
+        chunksize=1000):
+    stmt = """
+        store(build(<val:double>[row=0:{r}:0:{cz};col=0:{c}:0:{cz}], {m}), {n})
+    """.format(r=rows, c=cols, cz=chunksize, m=method, n=name)
+    print stmt
+    cxn.iquery(stmt)
+
+def alloc_vector(length, name, cxn, method='(RANDOM() % 100) / 10.0'):
+    stmt = """
+        store(build(<val:double>[row=0:{};col=0:0], {}), {})
+    """.format(length, method, name)
+    print stmt
+    cxn.iquery(stmt)
+
+def time_stmt(stmt, cxn, cleanup=None, n_reps=5):
+    times = []
+    cleanup = cleanup if cleanup is not None else []
+    for ix in range(n_reps):
+        if ix == 0:
+            print stmt
+        start = time.time()
+        cxn.iquery(stmt)
+        stop = time.time()
+        print 'Test {} => {}'.format(ix, stop-start)
+        if len(cleanup) > 0:
+            for obj in cleanup:
+                cxn.iquery('remove({})'.format(obj))
+        times.append(stop-start)
+    return times
+
+if __name__=='__main__':
+    argv = parse_cmd_args(sys.argv[1:])
+    do_matrix_op(argv)
+
+Running: python _scidb_matrix_ops.py opType=MVM mattype=tall Mpath=../external/disk_data/M16_tall.csv Npath=../external/disk_data/N16_tall.csv wPath=../external/disk_data/w16_tall.csv tableStub=16_tall nodes=None passPath=/scratch/pass.csv outdir=scale_mat_size savestub=16
+
+CPU count capped at: None
+Memory use capped at: -1e-09GB
+CPU Time capped at: -1 seconds
+
+ make.py ended: 2018-06-13 19:49:43

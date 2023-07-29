@@ -192,16 +192,16 @@ function pagerank() {
 	iquery -aq 'rename('$IN_X', X)'
 	iquery -aq 'rename('$IN_v', v)'
 
-	if [ $DATASET -eq 'enron' ]
+	if [ $DATASET == "enron" ]
 	then
 		time iquery -aq 'store(build(<value:double NOT NULL>[i=0:36691:0:3670; j=0:0:0:1], (double(1) - 0.85)/36692), with_one)'
-	elif [ $DATASET -eq 'epinions' ]
+	elif [ $DATASET == "epinions" ]
 	then
 		time iquery -aq 'store(build(<value:double NOT NULL>[i=0:75887:0:7589; j=0:0:0:1], (double(1) - 0.85)/75888), with_one)'
-	elif [ $DATASET -eq 'livejournal' ]
+	elif [ $DATASET == "livejournal" ]
 	then
 		time iquery -aq 'store(build(<value:double NOT NULL>[i=0:4847570:0:484758; j=0:0:0:1], (double(1) - 0.85)/4847571), with_one)'
-	elif [ $DATASET -eq 'twitter' ]
+	elif [ $DATASET == "twitter" ]
 	then
 		time iquery -aq 'store(build(<value:double NOT NULL>[i=0:61578414:0:6157842; j=0:0:0:1], (double(1) - 0.85)/61578415), with_one)'
 	fi

@@ -1,0 +1,2 @@
+nodes,rows,cols,time1,time2,time3,time4,time5
+4,20.469,20.459,18.353,15.625,21.834

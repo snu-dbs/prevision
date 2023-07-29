@@ -1,0 +1,10 @@
+./output/npy/80000000x100_dense.npy ./output/hdf5/small/200/80000000x100_dense.hdf5 200
+./output/npy/80000000x10_dense.npy ./output/hdf5/small/200/80000000x10_dense.hdf5 200
+./output/npy/80000000x100_dense.npy ./output/hdf5/small/400/80000000x100_dense.hdf5 400
+./output/npy/80000000x10_dense.npy ./output/hdf5/small/400/80000000x10_dense.hdf5 400
+./output/npy/80000000x100_dense.npy ./output/hdf5/small/800/80000000x100_dense.hdf5 800
+./output/npy/80000000x10_dense.npy ./output/hdf5/small/800/80000000x10_dense.hdf5 800
+./output/npy/80000000x100_dense.npy ./output/hdf5/small/1600/80000000x100_dense.hdf5 1600
+./output/npy/80000000x10_dense.npy ./output/hdf5/small/1600/80000000x10_dense.hdf5 1600
+./output/npy/80000000x100_dense.npy ./output/hdf5/small/3200/80000000x100_dense.hdf5 3200
+./output/npy/80000000x10_dense.npy ./output/hdf5/small/3200/80000000x10_dense.hdf5 3200

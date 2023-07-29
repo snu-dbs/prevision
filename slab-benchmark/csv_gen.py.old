@@ -1,0 +1,13 @@
+import sys
+import tqdm
+import random
+
+size = int(sys.argv[1])
+out_mat_path = f'data/{size}x{size}_random_int.csv'
+nrow, ncol = size, size
+
+with open(out_mat_path, 'w') as f:
+    for i in tqdm.tqdm(range(nrow), total=nrow):
+        for j in range(ncol):
+            val = int((random.random() * 1024) % 1024)
+            f.write(f'{i},{j},{val}\n')

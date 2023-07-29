@@ -24,7 +24,7 @@ object SystemDSMLAlgorithms extends App {
 
     // set systemds configuration file path and print statistics
     val sysds = sys.env("SYSTEMDS_ROOT")
-    ml.setConfig(s"${sysds}/conf/SystemDS-config-defaults.xml")
+    ml.setConfig(s"${sysds}/conf/SystemDS-config.xml")
     ml.setStatistics(true)
 
     val argMap = Map[String,String](

@@ -73,12 +73,12 @@ void csv_to_sparse_rowmajor(
         __i = 0;
         while (!feof(csv)) {
             assert((f_offset = ftell(csv)) >= 0);
-            double val = 1;
+            double val;
             int32_t col, row;
-            assert(fscanf(csv, "%d\t%d\n", &row, &col) == 2);
+            assert(fscanf(csv, "%d,%d,%lf\n", &row, &col, &val) == 3);
 
-            uint64_t urow = (uint64_t) row - 1;
-            uint64_t ucol = (uint64_t) col - 1;
+            uint64_t urow = (uint64_t) row;
+            uint64_t ucol = (uint64_t) col;
 
             // break if outside of the fiber
             int in_tile_row = urow >= (curr_tile_i * tilesize[0]) && 
@@ -111,12 +111,12 @@ void csv_to_sparse_rowmajor(
         __i = 0;
         assert(fseek(csv, f_lastoffset, SEEK_SET) == 0);
         while (!feof(csv)) {
-            double val = 1;
+            double val;
             int32_t col, row;
-            assert(fscanf(csv, "%d\t%d\n", &row, &col) == 2);
+            assert(fscanf(csv, "%d,%d,%lf\n", &row, &col, &val) == 3);
 
-            uint64_t urow = (uint64_t) row - 1;
-            uint64_t ucol = (uint64_t) col - 1;
+            uint64_t urow = (uint64_t) row;
+            uint64_t ucol = (uint64_t) col;
 
             // break if outside of the fiber
             int in_tile_row = urow >= (curr_tile_i * tilesize[0]) && 

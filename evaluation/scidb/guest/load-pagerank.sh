@@ -1,6 +1,5 @@
 # /bin/bash
-
-DIR=/nas/pgtile/pagerank/
+DIR=/prevision/output/csv/
 
 import() {
 	dataset=$1
@@ -21,3 +20,6 @@ import() {
 }
 
 import enron 36692 3670
+import epinions 75888 7589
+import livejournal 4847571 484758
+import twitter 61578415 6157842
