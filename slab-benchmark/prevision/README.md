@@ -98,7 +98,7 @@ deactivate
 
 The followings are the issues we have run into and the solution we used. 
 
-- `pg_ctl` command not found: It might be raised because you don't have a development environment for PostgreSQL. You need to install `libpg-dev` on your computer.
+- `pg_ctl command not found`: It might be raised because you don't have a development environment for PostgreSQL. You need to install `libpg-dev` on your computer.
 - `#include <Python.h>: No such file or directory`: It might be raised because you don't have a development environment for Python. You need to install `python3-dev` and `python2-dev` on your computer.
 
 #### Generation
