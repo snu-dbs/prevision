@@ -14,12 +14,13 @@ The project structure is as follows.
 
 ```
 .
-├── README.md                   # This file
+├── README.md                   # This File
+├── plot                        # Scripts for Plotting
 ├── buffertile                  # PreVision Buffer Manager
 ├── lam_executor                # PreVision Executor
 ├── linear_algebra_module       # PreVision Linear Algebra Operators
 ├── evaluation                  # Evaluation Scripts
-├── makeall.sh                  # Build PreVision. see `./evaluation/prevision/exec_eval`.
+├── makeall.sh                  # Build PreVision. See `./evaluation/prevision/exec_eval`.
 ├── slab-benchmark              # Data Generator
 ├── tilechunk                   # PreVision Buffer Wrapper
 └── tilestore                   # PreVision I/O Manager
