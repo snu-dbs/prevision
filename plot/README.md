@@ -1,4 +1,4 @@
-This README.md describes what script is used for a plot in the paper, especially about evaluation results.
+This README.md describes what script is used for an experiment plot in the paper.
 Note that all numbers used for plotting are hard-coded in the scripts.
 
 - Figure 8: `barchart_overall.ipynb`. You may need to make a little modification to produce exactly the same layout.
