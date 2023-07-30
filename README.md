@@ -37,6 +37,7 @@ We recommend using Ubuntu as the operating system.
 We have tested on Ubuntu 18.04 and 20.04.
 
 Since some systems throw an out-of-memory error when preparing datasets, we recommend using a machine with a large memory size.
+Also, since the size of datasets that will be generated for the evaluation is quite huge, please make sure that you have at least 3 terabytes of free disk space.
 
 Before getting started, you need to install comparison systems.
 This is required since every later step depends on the systems.
