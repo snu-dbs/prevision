@@ -1,8 +1,8 @@
 # Data Generator for PreVision
 
-Before get started, we are willing to say that thanks to reproduce this work!
+Before getting started, we are willing to say thanks to reproduce this work!
 Since the paper involves seven systems with huge volumes of datasets, you might need at least several terabytes of free disk space and are required to have several hours to generate datasets.
-We tried to use a service providing transferring data anonymously for your convinence, but we could not find any services satisfying that.
+We tried to use a service providing transferring data anonymously for your convenience, but we could not find any services satisfying that.
 Instead, we eagerly wrote up this documentation for you to generate datasets as easiest as possible.
 
 This documentation describes how to generate matrices used in the paper.
@@ -10,10 +10,10 @@ Before running the below, please make sure that the following prerequisites are 
 
 ## Prerequisites
 
-Since some systems throw an out-of-memory error when trying to generate datasets, we recommend to use a machine with large memory size.
+Since some systems throw an out-of-memory error when trying to generate datasets, we recommend using a machine with a large memory size.
 
-Please make sure that the below softwares are installed.
-We are recommend to use tested versions to avoid issues.
+Please make sure that the below are installed.
+We recommend using tested versions to avoid issues.
 
 - Docker: version 24.0.2 tested
 - Python 2: 2.7.17 and 2.7.18 tested
@@ -29,9 +29,9 @@ We are recommend to use tested versions to avoid issues.
 
 ## Directory Structure
 
-The directory structure of the data generaotr looks like follow. 
-We are currently on the `prevision` directory.
-We will run commands in here.
+The directory structure of the data generator looks like follow. 
+We are currently in the `prevision` directory.
+We will run commands here.
 
 ```
 slab-benchmark
@@ -43,13 +43,13 @@ slab-benchmark
 ├── gen_data.py -> ./lib/python/gen_data.py
 ├── lib
 ├── prevision               # PreVision Data Generator
-│   ├── README.md           # README
-│   ├── generator           # Generation Scripts
-│   ├── mtd                 # Some metadata
-│   ├── output              # Data Output Directory
-│   ├── requirements2.txt
-│   ├── requirements3.txt
-│   └── tmp                 # Tmp Directory for Some Systems
+│   ├── README.md           # README
+│   ├── generator           # Generation Scripts
+│   ├── mtd                 # Some metadata
+│   ├── output              # Data Output Directory
+│   ├── requirements2.txt
+│   ├── requirements3.txt
+│   └── tmp                 # Tmp Directory for Some Systems
 ├── requirements.txt
 ├── sql_cxn.py -> ./lib/python/sql_cxn.py
 └── tests
@@ -70,16 +70,16 @@ sudo bash auto.sh
 
 To reproduce the paper, we need to create dense tall-skinny matrices, sparse tall-skinny matrices, and square matrices for PageRank.
 This generator relies on [SLAB benchmark](https://adalabucsd.github.io/slab.html) for generating tall-skinny matrices.
-This repository is based on the benchmark and we already made some modification, so you don't need to download it again.
+This repository is based on the benchmark and we already made some modifications, so you don't need to download it again.
 
-First, we are going to generate CSV files using SLAB benchmark.
-Using the generated CSV files and PageRank CSV files that downloaded from the Internet (we will describe it), we will convert those to each format of the comparsion systems.
+First, we are going to generate CSV files using the SLAB benchmark.
+Using the generated CSV files and PageRank CSV files that were downloaded from the Internet (we will describe PageRank stuff soon), we will convert those to each format of the comparison systems.
 
 ### Generating CSV Files for Tall-Skinny Matrices
 
 #### Preparation
 
-Since SLAB uses Python 2, create virtualenv environment using Python 2 and install requirements as follows.
+Since SLAB uses Python 2, create a virtualenv environment using Python 2 and install requirements as follows.
 
 ```bash
 virtualenv -p $(which python2) venv2
@@ -88,8 +88,8 @@ pip install -r requirements2.txt
 deactivate
 ```
 
-Some parts of our generator uses Python 3. 
-Therefore, please create venv for Python 3 and install requirements as follows.
+Some parts of our generator use Python 3. 
+Therefore, please create venv for Python 3 and install the requirements as follows.
 
 ```bash
 python3 -m venv venv3
@@ -98,17 +98,17 @@ pip install -r requirements3.txt
 deactivate
 ```
 
-The followings are the issues we have ran into and its solution we used. 
+The followings are the issues we have run into and the solution we used. 
 
-- `pg_ctl`: It might be raised becuase you don't have dev environment for PostgreSQL. You need to install `libpg-dev` on your computer.
-- `#include <Python.h>`: It might be raised becuase you don't have dev environment for python. You need to install `python3-dev` and `python2-dev` on your computer.
+- `pg_ctl` command not found: It might be raised because you don't have a development environment for PostgreSQL. You need to install `libpg-dev` on your computer.
+- `#include <Python.h>`: It might be raised because you don't have a development environment for Python. You need to install `python3-dev` and `python2-dev` on your computer.
 
 #### Generation
 
-We need to use PostgreSQL because SLAB benchmark generates CSV files using PostgreSQL.
+We need to use PostgreSQL because the SLAB benchmark generates CSV files using PostgreSQL.
 Using the PostgreSQL that we already configured could ruin your environment (e.g., MADlib), so we are going to do it using Docker.
-Using the following commands, please pull a postgres image and create a postgres container.
-If you are already use 15432 port, use another one and modify `/slab_benchmark/lib/python/gen_data.py` to use your port number.
+Using the following commands, please pull a Postgres image and create a Postgres container.
+If you are already using the 15432 port, use another one and modify `/slab_benchmark/lib/python/gen_data.py` to use your port number.
 
 ```bash
 sudo docker pull postgres
@@ -117,7 +117,7 @@ sudo docker run -p15432:5432 --name some-postgres -e POSTGRES_PASSWORD=mysecretp
 
 Now, you can generate matrices with the following command.
 The output matrices will be generated in the `./output/csv/` directory.
-Please note that you have enough disk space at lease 800GB.
+Please note that you have enough disk space at least 800GB.
 This will take several hours to complete.
 
 ```bash
@@ -127,7 +127,7 @@ sudo bash ./generator/auto_gen_csv.sh
 sudo bash ./generator/auto_gen_csv_parallel.sh
 ```
 
-After generating CSV files, please make sure that you have appropriate permission to all generated CSV files.
+After generating CSV files, please make sure that you have the appropriate permission for all generated CSV files.
 The following command will ensure the file owner and permission.
 Please check if the environmental variable `USER` is set appropriately. 
 
@@ -150,7 +150,7 @@ bash ./generator/auto_lower_density_parallel.sh
 
 ### Generating CSV Files for PageRank Matrices
 
-The paper uses four graph datasets for PageRank experiments, namely enron, epinions, livejournal, and twitter.
+The paper uses four graph datasets for PageRank experiments, namely Enron, Epinions, LiveJournal, and Twitter.
 First of all, please downloads all files to the `./output/raw/` directory.
 The links and filenames of each dataset are as follows:
 - [Enron](https://snap.stanford.edu/data/email-Enron.html): `email-Enron.txt`
@@ -183,7 +183,7 @@ bash ./generator/auto_conv_csv_to_npy_parallel.sh
 #### Converting CSV to Dask HDF5 format
 
 Dask only supports dense computation, so we only need to convert dense matrices.
-Dask is the second-best performer in the dense NMF with 80M matrix, so we create matrices with finer tile sizes as well.
+Dask is the second-best performer in the dense NMF with the 80M matrix, so we create matrices with finer tile sizes as well.
 The following command will make HDF files from npy files for dense experiments.
 The matrices will be generated in the `./output/hdf5/` directory.
 
@@ -203,16 +203,16 @@ The MTD files for PageRank should be supplied, so please copy these files using 
 cp ./mtd/* ./output/csv/
 ```
 
-For sparse matrices in CSV format, the row and column index starts from 0.
+For sparse matrices in CSV format, the row index and the column index start from 0.
 However, SystemDS requires (i, j, v) text format in which the index starts from 1.
 So, we need to convert CSV files to IJV format when dealing with sparse matrices.
 The following command automatically generates binary files for both dense and sparse experiments.
 
-Before running the command, please make sure that you can call `systemds` command in anywhere (i.e., the command path should be included in `PATH`).
+Before running the command, please make sure that you can call the `systemds` command in anywhere (i.e., the command path should be included in `PATH`).
 Please also make sure that the environmental variable `SYSTEMDS_ROOT` is set appropriately.
 
-Your can control the memory size that used during the conversion.
-In line 86 of `$SYSTEMDS_ROOT/bin/systemds` (version 3.1.0), you can find `SYSTEMDS_STANDALONE_OPTS` parameter.
+You can control the memory size that is used during the conversion.
+In line 86 of `$SYSTEMDS_ROOT/bin/systemds` (version 3.1.0), you can find the `SYSTEMDS_STANDALONE_OPTS` parameter.
 You can increase the maximum Java heap memory size by changing `-Xmx4g`.
 
 ```bash
@@ -222,8 +222,8 @@ bash ./generator/auto_conv_csv_to_bin.sh
 #### Converting for SciDB
 
 SciDB can load CSV files in the COO format.
-However, the dense matrices that SLAB generated is not in the COO format, so we need to convert it to the COO format.
-The following command automatically convert it and save the results in `./output/scidb/`.
+However, the dense matrices that SLAB generated are not in the COO format, so we need to convert them to the COO format.
+The following command automatically converts it and saves the results in `./output/scidb/`.
 
 ```bash
 bash ./generator/auto_conv_densecsv_to_coocsv.sh
@@ -231,10 +231,10 @@ bash ./generator/auto_conv_densecsv_to_coocsv.sh
 
 #### Converting for MLlib
 
-Conversion for MLlib relies on `spark-shell`, thus please make sure that you can call the command from anywhere (i.e., the command path is included to `PATH`).
+Conversion for MLlib relies on `spark-shell`, thus please make sure that you can call the command from anywhere (i.e., the command path is included in `PATH`).
 
-You can configure memory size and the number of executors using `./generator/auto_conv_csv_to_sf.sh` file.
-The `MEM_CONF` specifies the memory size, and the `MASTER` speficies the master URL of Spark.
+You can configure memory size and the number of executors using the `./generator/auto_conv_csv_to_sf.sh` file.
+The `MEM_CONF` specifies the memory size, and the `MASTER` specifies the master URL of Spark.
 Since Spark could use more memory than what we specified, please configure the memory parameter carefully.
 We suspect that if we use more threads, it uses more memory.
 

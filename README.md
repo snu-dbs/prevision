@@ -2,15 +2,15 @@
 
 This README describes how to reproduce the paper named "PreVision: An Out-of-Core Matrix Computation System with Optimal Buffer Replacement".
 If you have any questions about it, please contact us (maybe through chairs).
-We will happy to hear that and respond to you joyfully.
+We will be happy to hear that and respond to you joyfully.
 
-Please note that this repository is using a lot of dependencies that may contains explicit author names or institutions.
+Please note that this repository is using a lot of dependencies that may contain explicit author names or institutions.
 However, our names are not included in any of those.
 
-This project contains three major parts: PreVision source codes, evalution scripts for all systems, and a data generator.
+This project contains three major parts: PreVision source codes, evaluation scripts for all systems, and a data generator.
 The source codes and scripts are tuned for the current directory structure.
 Thus, please do not change the directory structure.
-The proejct structure is as follow.
+The project structure is as follows.
 
 ```
 .
@@ -28,25 +28,24 @@ The proejct structure is as follow.
 Now we are going to go through the below steps.
 1. Install prerequisites 
 2. Data generation
-3. Data loading for some systems
-4. Evaluation
+3. Data loading for some systems and evaluation
 
 ## Install Prerequisites
 
-We are recommend to use Ubuntu for the operating system.
+We recommend using Ubuntu as the operating system.
 We have tested on Ubuntu 18.04 and 20.04.
 
-Since some systems throw an out-of-memory error when preparing datasets, we recommend to use a machine with large memory size.
+Since some systems throw an out-of-memory error when preparing datasets, we recommend using a machine with a large memory size.
 
-Before getting started, you need to install comparsion systems.
-This is quired since every later steps depend on the systems.
+Before getting started, you need to install comparison systems.
+This is quired since every later step depend on the systems.
 
 ### SystemDS
 
 Please install Java 11 before installing SystemDS because the system requires it.
 
 Download [SystemDS 3.1.0](https://www.apache.org/dyn/closer.lua/systemds/3.1.0/systemds-3.1.0-bin.tgz) and un-compress it to the current directory (the location having the above directory structure).
-Please make sure the followings.
+Please make sure the following.
 
 - Add the absolute path of `./systemds-3.1.0-bin/bin/` to the `PATH` environmental variable.
 - Add the absolute path of `./systemds-3.1.0-bin/` to the `SYSTEMDS_ROOT` environmental variable.
@@ -54,11 +53,11 @@ Please make sure the followings.
 ### MLlib (Spark)
 
 Download [Spark 3.3.2](https://www.apache.org/dyn/closer.lua/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz) and un-compress it to the current directory.
-Please make sure that adding the absolute path of `./spark-3.3.2-bin-hadoop3/bin/` to the `PATH` environmental variable.
+Please make sure that add the absolute path of `./spark-3.3.2-bin-hadoop3/bin/` to the `PATH` environmental variable.
 
 ### MADlib
 
-MADlib is an machine learning extension of PostgreSQL.
+MADlib is a machine learning extension of PostgreSQL.
 Thus, you need to install PostgreSQL first, and then install MADlib.
 
 Install PostgreSQL 12.14 on your computer.
@@ -73,10 +72,10 @@ Fortunately, a well-structured docker image for SciDB 19.11 is published on the 
 You can find the docker image at [here](https://hub.docker.com/r/rvernica/scidb/tags).
 
 Please note that if you run SciDB using docker without setting a volume, every imported data will be stored in the docker directory (e.g., `/var/lib/docker/`).
-If you have not enough disk space for that directory, consider using a volume to store SciDB data outside the docker directory. 
+If you do not have enough disk space for that directory, consider using a volume to store SciDB data outside the docker directory. 
 
 Please also note that if you use docker, make sure that the shared memory threshold is enough.
-If a container has limited shared memory size, SciDB may raise a memory error.
+If a container has a limited shared memory size, SciDB may raise a memory error.
 You can use the `--shm-size` option for the `docker run` command (e.g., `--shm-size=30gb`).
 
 Here is an **example** of running a SciDB container.
@@ -86,6 +85,5 @@ sudo docker run --name prevision-scidb-exp -it --shm-size=30gb -v /prevision/sla
 
 ## Data Generation
 
-Now, we are going to generate matrices for experiemtns.
+Now, we are going to generate matrices for experiments.
 Please move your directory to `./slab-benchmark/prevision/` and open `README.md` there.
-
