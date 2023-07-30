@@ -32,7 +32,7 @@ OUT_LIBS 	= -lm -lrt -lpthread # -lprofiler
 #############################################################################
 # This macro definition can be overwritten by command-line definitions.
 CC	= gcc
-CFLAGS	= -std=gnu11 -pedantic -fPIC -Wno-unused-result -g3 -O0
+CFLAGS	= -std=gnu11 -pedantic -fPIC -Wno-unused-result -g3 -O2
 #############################################################################
 
 all: lib${LIB}.a ${LIB}test ${LIB}_tool
