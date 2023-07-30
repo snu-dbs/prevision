@@ -88,3 +88,8 @@ sudo docker run --name prevision-scidb-exp -it --shm-size=30gb -v /prevision/sla
 
 Now, we are going to generate matrices for experiments.
 Please move your directory to `./slab-benchmark/prevision/` and open `README.md` there.
+
+## Plotting
+
+Scripts for plotting are stored in the `plot` directory.
+Please refer to the `./plot/README.md`.
