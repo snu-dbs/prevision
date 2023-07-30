@@ -38,13 +38,13 @@ We have tested on Ubuntu 18.04 and 20.04.
 Since some systems throw an out-of-memory error when preparing datasets, we recommend using a machine with a large memory size.
 
 Before getting started, you need to install comparison systems.
-This is quired since every later step depend on the systems.
+This is required since every later step depends on the systems.
 
 ### SystemDS
 
 Please install Java 11 before installing SystemDS because the system requires it.
 
-Download [SystemDS 3.1.0](https://www.apache.org/dyn/closer.lua/systemds/3.1.0/systemds-3.1.0-bin.tgz) and un-compress it to the current directory (the location having the above directory structure).
+Download [SystemDS 3.1.0](https://www.apache.org/dyn/closer.lua/systemds/3.1.0/systemds-3.1.0-bin.tgz) and un-compress it to the current directory (the root directory of the above directory structure).
 Please make sure the following.
 
 - Add the absolute path of `./systemds-3.1.0-bin/bin/` to the `PATH` environmental variable.

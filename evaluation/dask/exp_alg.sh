@@ -1,11 +1,13 @@
 num_of_iter=8
 
+DATADIR="../../slab-benchmark/prevision/output/hdf5/"
+
 run_nmf() {
 	dataset=$1
 	noi=$2
-	npy_tall="./hdf5/""$dataset""x100_dense.hdf5"
-	npy_nmf_w="./hdf5/""$dataset""x10_dense.hdf5"
-	npy_nmf_h="./hdf5/10x100_dense.hdf5"
+	npy_tall="$DATADIR""$dataset""x100_dense.hdf5"
+	npy_nmf_w="$DATADIR""$dataset""x10_dense.hdf5"
+	npy_nmf_h="$DATADIR""10x100_dense.hdf5"
 
 	echo "dataset=""$dataset"
 	echo 'NMF'
@@ -20,9 +22,9 @@ run_nmf() {
 run_lr() {
 	dataset=$1
 	noi=$2
-	npy_tall="./hdf5/""$dataset""x100_dense.hdf5"
-	npy_lr_y="./hdf5/""$dataset""x1_dense.hdf5"
-	npy_lr_w="./hdf5/100x1_dense.hdf5"
+	npy_tall="$DATADIR""$dataset""x100_dense.hdf5"
+	npy_lr_y="$DATADIR""$dataset""x1_dense.hdf5"
+	npy_lr_w="$DATADIR""100x1_dense.hdf5"
 
 	echo "dataset=""$dataset"
 	echo 'LR'
@@ -34,30 +36,26 @@ run_lr() {
 
 }
 
-num_of_iter=2
+run_lr "regular/80000000"
+run_lr "regular/40000000"
+run_lr "regular/20000000"
+run_lr "regular/10000000"
 
-iterlist=(1 2 3 4 8 16 32)
+run_nmf "regular/80000000"
+run_nmf "regular/40000000"
+run_nmf "regular/20000000"
+run_nmf "regular/10000000"
+
+iterlist=(1 2 4 8 16 32)
 for noi in ${iterlist[@]}; do
-        echo "num_of_iter=$noi";
-        echo "LR"
-	run_lr 10000000 $noi
-	run_lr 80000000 $noi
-
-        echo "NMF"
+	echo "num_of_iter=$noi";
+	echo "NMF"
 	run_nmf 10000000 $noi
-	run_nmf 80000000 $noi
 done;
 
-exit;
-
-run_lr 80000000
-run_lr 40000000
-run_lr 20000000
-run_lr 10000000
-
-run_nmf 10000000
-run_nmf 20000000
-run_nmf 40000000
-run_nmf 80000000
-
+run_nmf "small/200/80000000"
+run_nmf "small/400/80000000"
+run_nmf "small/800/80000000"
+run_nmf "small/1600/80000000"
+run_nmf "small/3200/80000000"
 

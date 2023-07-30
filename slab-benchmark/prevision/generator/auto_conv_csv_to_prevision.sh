@@ -24,7 +24,7 @@ cd $TMP
 set_env
 
 # Build converter for PreVision
-gcc -std=c11 -pedantic -g -O0 -g3 -o generator/conv_csv_to_prevision generator/conv_csv_to_prevision.c ../../tilestore/lib/libtilestore.a -lm -I../../tilestore/include
+gcc -std=c11 -pedantic -g -O2 -g3 -o ./generator/conv_csv_to_prevision ./generator/conv_csv_to_prevision.c ../../tilestore/lib/libtilestore.a -lm -I../../tilestore/include
 
 function conv_dense() {
     name=$1

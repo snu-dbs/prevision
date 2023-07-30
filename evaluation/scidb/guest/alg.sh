@@ -1,9 +1,10 @@
 #!/bin/bash
 TIMEFORMAT='%3R'
 
-iter=3
 function lr() {
 	DATASET=$1
+	iter=$2
+
 	IN_X='mat_'$DATASET'x100_dense'
 	IN_y='mat_'$DATASET'x1_dense'
 	IN_w='mat_100x1_dense'
@@ -60,6 +61,8 @@ function lr() {
 
 function nmf() {
 	DATASET=$1
+	iter=$2
+
 	IN_X='mat_'$DATASET'x100_dense'
 	IN_W='mat_'$DATASET'x10_dense'
 	IN_H='mat_10x100_dense'
@@ -127,6 +130,8 @@ function nmf() {
 
 function sparse_lr() {
 	DATASET=$1
+	iter=$2
+
 	IN_X='mat_400Mx100_sparse_'$DATASET
 	IN_y='mat_400Mx1_sparse_'$DATASET
 	IN_w='mat_100x1_sparse_'$DATASET
@@ -177,6 +182,8 @@ function sparse_lr() {
 
 function pagerank() {
 	DATASET=$1
+	iter=$2
+	
 	IN_X='mat_'$DATASET
 	IN_v='mat_'$DATASET'_v'
 

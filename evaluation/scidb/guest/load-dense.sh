@@ -1,5 +1,5 @@
 # /bin/bash
-DIR=/prevision/output/scidb/
+DIR=../../../slab-benchmark/prevision/output/scidb/
 
 # 80000000x100_dense 
 iquery -aq "CREATE ARRAY mat_80Mx100_dense_coo <i:int64,j:int64,value:double>[idx=0:*];"

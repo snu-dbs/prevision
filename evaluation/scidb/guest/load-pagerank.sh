@@ -1,5 +1,5 @@
 # /bin/bash
-DIR=/prevision/output/csv/
+DIR=../../../slab-benchmark/prevision/output/scidb/
 
 import() {
 	dataset=$1

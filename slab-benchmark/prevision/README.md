@@ -1,7 +1,7 @@
 # Data Generator for PreVision
 
 Before getting started, we are willing to say thanks to reproduce this work!
-Since the paper involves seven systems with huge volumes of datasets, you might need at least several terabytes of free disk space and are required to have several hours to generate datasets.
+Since the paper involves seven systems with huge volumes of datasets, you might need at least several terabytes of free disk space and are required to have several dozen hours to generate datasets.
 We tried to use a service providing transferring data anonymously for your convenience, but we could not find any services satisfying that.
 Instead, we eagerly wrote up this documentation for you to generate datasets as easiest as possible.
 
@@ -15,7 +15,7 @@ Since some systems throw an out-of-memory error when trying to generate datasets
 Please make sure that the below are installed.
 We recommend using tested versions to avoid issues.
 
-- Docker: version 24.0.2 tested
+- Docker: 24.0.2 tested
 - Python 2: 2.7.17 and 2.7.18 tested
 - Virtualenv: 16.7.7 and 20.0.17 tested
 - Python 3: 3.8.2 and 3.8.17 tested
@@ -35,8 +35,6 @@ We will run commands here.
 
 ```
 slab-benchmark
-├── LICENSE
-├── README.md
 ├── analysis
 ├── config
 ├── data
@@ -69,7 +67,7 @@ sudo bash auto.sh
 ## Matrix Generation
 
 To reproduce the paper, we need to create dense tall-skinny matrices, sparse tall-skinny matrices, and square matrices for PageRank.
-This generator relies on [SLAB benchmark](https://adalabucsd.github.io/slab.html) for generating tall-skinny matrices.
+This generator relies on the [SLAB benchmark](https://adalabucsd.github.io/slab.html) for generating tall-skinny matrices.
 This repository is based on the benchmark and we already made some modifications, so you don't need to download it again.
 
 First, we are going to generate CSV files using the SLAB benchmark.
@@ -101,14 +99,14 @@ deactivate
 The followings are the issues we have run into and the solution we used. 
 
 - `pg_ctl` command not found: It might be raised because you don't have a development environment for PostgreSQL. You need to install `libpg-dev` on your computer.
-- `#include <Python.h>`: It might be raised because you don't have a development environment for Python. You need to install `python3-dev` and `python2-dev` on your computer.
+- `#include <Python.h>: No such file or directory`: It might be raised because you don't have a development environment for Python. You need to install `python3-dev` and `python2-dev` on your computer.
 
 #### Generation
 
 We need to use PostgreSQL because the SLAB benchmark generates CSV files using PostgreSQL.
-Using the PostgreSQL that we already configured could ruin your environment (e.g., MADlib), so we are going to do it using Docker.
+Using the PostgreSQL that we already configured could ruin your environment (i.e., MADlib), so we are going to do it using Docker.
 Using the following commands, please pull a Postgres image and create a Postgres container.
-If you are already using the 15432 port, use another one and modify `/slab_benchmark/lib/python/gen_data.py` to use your port number.
+If you are already using the 15432 port, use another one and modify `/slab-benchmark/lib/python/gen_data.py` to use your port number.
 
 ```bash
 sudo docker pull postgres
@@ -117,13 +115,11 @@ sudo docker run -p15432:5432 --name some-postgres -e POSTGRES_PASSWORD=mysecretp
 
 Now, you can generate matrices with the following command.
 The output matrices will be generated in the `./output/csv/` directory.
-Please note that you have enough disk space at least 800GB.
-This will take several hours to complete.
 
 ```bash
 sudo bash ./generator/auto_gen_csv.sh
 
-# OR, you can use the parallel version of the script
+# a parallel version; if an error occurs, please use the above
 sudo bash ./generator/auto_gen_csv_parallel.sh
 ```
 
@@ -144,14 +140,14 @@ The following command performs that.
 ```bash
 bash ./generator/auto_lower_density.sh
 
-# OR, you can use the parallel version of the script
+# a parallel version; if an error occurs, please use the above
 bash ./generator/auto_lower_density_parallel.sh
 ```
 
 ### Generating CSV Files for PageRank Matrices
 
 The paper uses four graph datasets for PageRank experiments, namely Enron, Epinions, LiveJournal, and Twitter.
-First of all, please downloads all files to the `./output/raw/` directory.
+First of all, please download all files to the `./output/raw/` directory.
 The links and filenames of each dataset are as follows:
 - [Enron](https://snap.stanford.edu/data/email-Enron.html): `email-Enron.txt`
 - [Epinions](https://snap.stanford.edu/data/soc-Epinions1.html): `soc-Epinions1.txt`
@@ -203,21 +199,19 @@ The MTD files for PageRank should be supplied, so please copy these files using 
 cp ./mtd/* ./output/csv/
 ```
 
-For sparse matrices in CSV format, the row index and the column index start from 0.
-However, SystemDS requires (i, j, v) text format in which the index starts from 1.
-So, we need to convert CSV files to IJV format when dealing with sparse matrices.
-The following command automatically generates binary files for both dense and sparse experiments.
-
-Before running the command, please make sure that you can call the `systemds` command in anywhere (i.e., the command path should be included in `PATH`).
+Before converting, please make sure that you can call the `systemds` command anywhere (i.e., the command path should be included in `PATH`).
 Please also make sure that the environmental variable `SYSTEMDS_ROOT` is set appropriately.
 
-You can control the memory size that is used during the conversion.
-In line 86 of `$SYSTEMDS_ROOT/bin/systemds` (version 3.1.0), you can find the `SYSTEMDS_STANDALONE_OPTS` parameter.
-You can increase the maximum Java heap memory size by changing `-Xmx4g`.
+The following command automatically generates binary files for both dense and sparse experiments.
+The results will be saved in `./output/sysds/`.
 
 ```bash
 bash ./generator/auto_conv_csv_to_bin.sh
 ```
+
+You can control the memory size that is used during the conversion.
+In line 86 of `$SYSTEMDS_ROOT/bin/systemds` (version 3.1.0), you can find the `SYSTEMDS_STANDALONE_OPTS` parameter.
+You can increase the maximum Java heap memory size by changing `-Xmx4g`.
 
 #### Converting for SciDB
 
@@ -231,12 +225,13 @@ bash ./generator/auto_conv_densecsv_to_coocsv.sh
 
 #### Converting for MLlib
 
-Conversion for MLlib relies on `spark-shell`, thus please make sure that you can call the command from anywhere (i.e., the command path is included in `PATH`).
+Conversion for MLlib relies on `spark-shell`, thus please make sure that you can call the command anywhere (i.e., the command path is included in `PATH`).
 
 You can configure memory size and the number of executors using the `./generator/auto_conv_csv_to_sf.sh` file.
 The `MEM_CONF` specifies the memory size, and the `MASTER` specifies the master URL of Spark.
 Since Spark could use more memory than what we specified, please configure the memory parameter carefully.
-We suspect that if we use more threads, it uses more memory.
+
+The following command will produce matrices for MLlib to `./output/sequencefile/`.
 
 ```bash
 bash ./generator/auto_conv_csv_to_sf.sh
@@ -245,16 +240,20 @@ bash ./generator/auto_conv_csv_to_sf.sh
 #### Converting CSV to PreVision data format
 
 The following command will produce `.tilestore` data files that PreVision uses as its matrix format. 
+Please run the following command.
 The result files will be placed on `./output/prevision/`.
 
 ```bash
 bash ./generator/auto_conv_csv_to_prevision.sh
 ```
 
-If you run into the shared-memory error, please resize your `/dev/shm` and retry it.
+PreVision is used to be used as a part of another system and these systems use the shared-memory for sharing buffers.
+Thus, if you don't have enough shared memory space, you can run into a shared-memory error.
+If so, please resize your `/dev/shm` and retry it.
 To see how to increase the shared memory size, refer to [here](https://stackoverflow.com/a/58804023).
 
 If you see `[BufferTile] shm_open failed. You can ignore this if you intend it.` error, please remove `/dev/shm/buffertile_*` files and retry it.
+
 
 Congratulations! 
 You're done!

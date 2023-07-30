@@ -153,6 +153,8 @@ for noi in ${iterlist[@]}; do
         echo "num_of_iter=$noi";
         echo "NMF"
         dense_nmf 80000000 $noi
+        echo "PageRank"
+        pagerank twitter $noi
 done;
 
 # small tile

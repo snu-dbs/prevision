@@ -1,5 +1,5 @@
 # /bin/bash
-DIR=/prevision/output/csv/
+DIR=../../../slab-benchmark/prevision/output/scidb/
 
 # Import 
 density=0.0125

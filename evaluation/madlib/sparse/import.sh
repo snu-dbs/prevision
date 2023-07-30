@@ -1,4 +1,4 @@
-DATADIR="../slab-benchmark/prevision/output/ivj"
+DATADIR="../../slab-benchmark/prevision/output/ivj"
 
 function import_pagerank() {
 	dataset=$1

@@ -2,4 +2,4 @@
 TIMEFORMAT='%3R'
 
 source /home/scidb/alg.sh
-$1 $2
+$1 $2 $3
