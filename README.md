@@ -1,5 +1,3 @@
-You can download a zipped repository at [this link](https://drive.google.com/file/d/1MQEiUxIQlCxkr2HsvjyF3WbuaVaGulf9/view?usp=sharing).
-
 # PreVision: An Out-of-Core Matrix Computation System with Optimal Buffer Replacement
 
 This README describes how to reproduce the paper named "PreVision: An Out-of-Core Matrix Computation System with Optimal Buffer Replacement".
