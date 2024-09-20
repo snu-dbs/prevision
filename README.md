@@ -21,7 +21,7 @@ The project structure is as follows.
 ├── linear_algebra_module       # PreVision Linear Algebra Operators
 ├── evaluation                  # Evaluation Scripts
 ├── makeall.sh                  # Build PreVision. See `./evaluation/prevision/exec_eval`.
-├── slab-benchmark              # Data Generator
+├── slab-benchmark              # Data Generator (from the SLAB Benchmark: https://adalabucsd.github.io/slab.html)
 ├── tilechunk                   # PreVision Buffer Wrapper
 └── tilestore                   # PreVision I/O Manager
 ```
