@@ -77,9 +77,6 @@ systemds -f ./generator/conv_csv_to_bin.dml -nvargs X=./output/ijv/400000000x100
 systemds -f ./generator/conv_csv_to_bin.dml -nvargs X=./output/ijv/400000000x1_sparse_0.1.ijv O=./output/sysds/400000000x1_sparse_0.1 row=400000
 systemds -f ./generator/conv_csv_to_bin.dml -nvargs X=./output/ijv/100x1_sparse_0.1.ijv O=./output/sysds/100x1_sparse_0.1 row=100
 
-exit;
-
-
 # Generate sparse matrices for PageRank
 awk -F ',' '{print $1+1 " " $2+1 " " $3 }' ./output/csv/enron.csv > ./output/ijv/enron.ijv
 awk -F ',' '{print $1+1 " " $2+1 " " $3 }' ./output/csv/enron_v.csv > ./output/ijv/enron_v.ijv
