@@ -1,9 +1,10 @@
+**For reviewers, we opened an FTP server to provide access to the entire dataset used by the repository. Please [email us](mailto:koo@dbs.snu.ac.kr).**
+
 # Data Generator for PreVision
 
 Before getting started, we would like to say thanks for reproducing this work!
 Since the paper involves seven systems with huge volumes of datasets, you might need at least several terabytes of free disk space and are required to have several dozen hours to generate datasets.
-We tried to use a service that provides data transfer for your convenience, but we could not find services satisfying that.
-Instead, we eagerly wrote this documentation for you to generate datasets as easily as possible.
+If you want to generate data by yourself, please read this documentation.
 
 This documentation describes how to generate matrices used in the paper.
 Before running the below, please make sure that the following prerequisites are already prepared.
@@ -98,7 +99,7 @@ deactivate
 
 The followings are the issues we have run into and the solution we used. 
 
-- `RuntimeError: failed to query python2.7 with code 1 err: ... SyntaxError: invalid syntax\` when virtualenv: virtualenv has dropped supports for Python 2.x so you need to install older version (e.g., 20.0.17)
+- `RuntimeError: failed to query python2.7 with code 1 err: ... SyntaxError: invalid syntax\` when virtualenv: virtualenv has dropped supports for Python 2.x so you need to install an older version (e.g., 20.0.17)
 - `pg_ctl command not found`: It might be raised because you don't have a development environment for PostgreSQL. You need to install `libpq-dev` on your computer.
 - `#include <Python.h>: No such file or directory`: It might be raised because you don't have a development environment for Python. You need to install `python3-dev` and `python2-dev` on your computer.
 
@@ -134,7 +135,7 @@ sudo chmod -R 755 ./output/*
 ```
 
 Finally, we need to put the finishing touches on the sparse matrices.
-Since the density of a SLAB-generated matrix is not accurate, we generated matrices with higher densities.
+Since the density of an SLAB-generated matrix is not accurate, we generated matrices with higher densities.
 Thus, the density of matrices should be lowered.
 The following command performs that.
 
@@ -155,7 +156,7 @@ The links and filenames of each dataset are as follows:
 - [LiveJournal](https://snap.stanford.edu/data/soc-LiveJournal1.html): `soc-LiveJournal1.txt`
 - [Twitter](https://github.com/ANLAB-KAIST/traces/releases/tag/twitter_rv.net): `twitter_rv.net`
 
-After downloading, please run the following command to generate CSV files for PageRank experiments.
+After downloading, please remove the comments at the top of each file and run the following command to generate CSV files for PageRank experiments.
 This command will produce the CSV files in the `./output/csv/` directory.
 
 ```bash
