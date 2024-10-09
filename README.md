@@ -43,7 +43,7 @@ This is required since every later step depends on the systems.
 
 Please install Java 11 before installing SystemDS because the system requires it.
 
-Download [SystemDS 3.1.0](https://www.apache.org/dyn/closer.lua/systemds/3.1.0/systemds-3.1.0-bin.tgz) and un-compress it to the current directory (the root directory of the above directory structure).
+Download [SystemDS 3.1.0](https://archive.apache.org/dist/systemds/3.1.0/systemds-3.1.0-bin.tgz) and un-compress it to the current directory (the root directory of the above directory structure).
 Please make sure the following.
 
 - Add the absolute path of `./systemds-3.1.0-bin/bin/` to the `PATH` environmental variable.
@@ -51,7 +51,7 @@ Please make sure the following.
 
 ### MLlib (Spark)
 
-Download [Spark 3.3.2](https://www.apache.org/dyn/closer.lua/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz) and un-compress it to the current directory.
+Download [Spark 3.3.2](https://archive.apache.org/dist/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz) and un-compress it to the current directory.
 Please make sure that add the absolute path of `./spark-3.3.2-bin-hadoop3/bin/` to the `PATH` environmental variable.
 
 ### MADlib
