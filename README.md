@@ -1,11 +1,8 @@
 # PreVision: An Out-of-Core Matrix Computation System with Optimal Buffer Replacement
 
 This README describes how to reproduce the paper named "PreVision: An Out-of-Core Matrix Computation System with Optimal Buffer Replacement".
-If you have any questions about it, please contact us (maybe through chairs).
+If you have any questions about it, please [contact us](mailto:koo@dbs.snu.ac.kr).
 We will be happy to hear that and respond to you joyfully.
-
-Please note that this repository is using a lot of dependencies that may contain explicit author names or institutions.
-However, our names are not included in any of those.
 
 This project contains three major parts: PreVision source codes, evaluation scripts for all systems, and a data generator.
 The source codes and scripts are tuned for the current directory structure.
