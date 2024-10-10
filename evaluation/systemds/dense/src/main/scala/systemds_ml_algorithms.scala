@@ -37,9 +37,12 @@ object SystemDSMLAlgorithms extends App {
     val nrow = argMap("nrow")
     val iter = argMap("iter").toInt
 
-    val inputX = argMap("inputX")
+    val inputX_LR = argMap("inputX_LR")
     val inputY = argMap("inputY")
-    val inputW = argMap("inputW")
+    val inputW_LR = argMap("inputW_LR")
+
+    val inputX_NMF = argMap("inputX_NMF")
+    val inputW_NMF = argMap("inputW_NMF")
     val inputH = argMap("inputH")
 
     val outputB = argMap("outputB") // output of LR
@@ -61,9 +64,9 @@ object SystemDSMLAlgorithms extends App {
         |
         | lr = function(Integer nrow) return (integer res) {
         |
-        |   X = read("$inputX")
+        |   X = read("$inputX_LR")
         |   y = read("$inputY")
-        |   w = read("$inputW")
+        |   w = read("$inputW_LR")
         |
         |   iteration = 0
         |   stepSize = 0.0000001
@@ -84,8 +87,8 @@ object SystemDSMLAlgorithms extends App {
         |
         | nmf = function(Integer nrow) return (integer res) {
         |
-        |   X = read ("$inputX")
-        |   W = read ("$inputW")
+        |   X = read ("$inputX_NMF")
+        |   W = read ("$inputW_NMF")
         |   H = read ("$inputH")
         |
         |   iteration = 0

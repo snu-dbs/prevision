@@ -24,7 +24,7 @@ spark-submit --master local \
 	--conf spark.driver.maxResultSize=0 \
 	--class SystemDSMLAlgorithms target/scala-2.12/SystemDSAlgs-assembly-0.1.jar \
 	opType=nmf nrow=$nrow iter=$iter \
-	inputX=$inputX inputW=$inputW inputH=$inputH outputW=$outputW outputH=$outputH \
-	inputY=dump outputB=dump
+	inputX_NMF=$inputX inputW_NMF=$inputW inputH=$inputH outputW=$outputW outputH=$outputH \
+	inputX_LR=dump inputY=dump inputW_LR=dump outputB=dump
 
 rm dump
