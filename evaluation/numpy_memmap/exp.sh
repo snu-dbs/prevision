@@ -43,15 +43,15 @@ run_nmf() {
 
 }
 
-run_nmf 10000000
-run_nmf 20000000
-run_nmf 40000000
-run_nmf 80000000
+run_nmf 10000000 3
+run_nmf 20000000 3
+run_nmf 40000000 3
+run_nmf 80000000 3
 
-run_lr 10000000
-run_lr 20000000
-run_lr 40000000
-run_lr 80000000
+run_lr 10000000 3
+run_lr 20000000 3
+run_lr 40000000 3
+run_lr 80000000 3
 
 iterlist=(1 2 4 8 16 32)
 for noi in ${iterlist[@]}; do
