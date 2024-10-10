@@ -43,20 +43,30 @@ run_nmf() {
 
 }
 
-run_nmf 10000000 3
-run_nmf 20000000 3
-run_nmf 40000000 3
-run_nmf 80000000 3
+export PARALLELISM=1
 
 run_lr 10000000 3
 run_lr 20000000 3
 run_lr 40000000 3
 run_lr 80000000 3
 
+run_nmf 10000000 3
+run_nmf 20000000 3
+run_nmf 40000000 3
+run_nmf 80000000 3
+
 iterlist=(1 2 4 8 16 32)
 for noi in ${iterlist[@]}; do
-	echo "num_of_iter=$noi";
-	echo "NMF"
-	run_nmf 10000000 $noi
+        echo "num_of_iter=$noi";
+        echo "NMF"
+        run_nmf 10000000 $noi
+done;
+
+plist=(2 4 8)
+for p in ${plist[@]}; do
+        echo "parallelism=$p";
+        echo "NMF"
+        export PARALLELISM=$p
+        run_nmf 10000000 3
 done;
 
