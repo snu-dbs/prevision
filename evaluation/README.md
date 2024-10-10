@@ -22,20 +22,22 @@ evaluation
 
 ## Prerequisites
 
-Please make sure you can call `spark-submit` anywhere.
-Also, sbt 1.8.2 should be installed on your computer.
+Please make sure the following is installed:
+- `spark-submit`. you can call it from anywhere
+- sbt 1.8.2
+- The GNU time command. If not, you can install with `sudo apt install time`.
 
-Note that the storage device containing the current directory could affect the performance.
-
-We recommend extending the time-out limit for sudo because experiments will be running for a long time, and it may require a password for sudo repeatedly.
-
-To install the prerequisites that are needed for this experiment, run the following commands in the current directory (i.e., `/evaluation/`).
+To install the prerequisite python packages needed for this experiment, run the following commands in the current directory (i.e., `/evaluation/`).
 
 ```bash
 python3 -m venv venv
 source ./venv/bin/activate
 pip install -r requirements.txt
 ```
+
+Note that the storage device containing the current directory could affect the performance.
+
+We recommend extending the time-out limit for sudo because experiments will run for a long time, and it may require a password for sudo repeatedly.
 
 ## Evaluation
 
