@@ -48,10 +48,14 @@ object SystemDSMLAlgorithms extends App {
     val outputB = argMap("outputB") // output of LR
     val outputW = argMap("outputW") // output of NMF
     val outputH = argMap("outputH") // output of NMF
-    
+
     val call = opType match {
-        case "lr" => s"lr(${nrow})"
-        case "nmf" => s"nmf(${nrow})"
+        case "lr" =>
+            ml.setConfigProperty("sysds.native.blas", "openblas")
+            s"lr(${nrow})"
+        case "nmf" => 
+            ml.setConfigProperty("sysds.native.blas", "none")
+            s"nmf(${nrow})"
         case _        => ""
     }
 

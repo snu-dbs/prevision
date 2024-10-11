@@ -127,6 +127,8 @@ Please make sure that the config file name described in the line is the same as 
 If it is not the same, please update it.
 After that, go back to the `dense` or `sparse` directory depending on the experiment.
 
+Please note that the LR task uses OpenBLAS, whereas the NMF task does not. You can find the `ml.setConfigProperty()` statements in lines 54 and 57 in the `./src/main/scala/systemds_ml_algorithms.scala` file. This configuration is necessary because SystemDS produces incorrect results during the NMF task when multiplying a matrix by its transpose (specifically, computing $HH^T$).
+
 Using the following command, build queries for SystemDS.
 
 ```bash
