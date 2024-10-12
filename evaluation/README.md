@@ -1,7 +1,6 @@
 # Data Loading and Evaluation
 
-We are going to run an evaluation on each system.
-It can involve loading generated datasets because some systems require it.
+This README describes how to load generated datasets and run experiments on each system.
 
 The directory structure is as follows.
 Each subdirectory of this directory is responsible for each comparison system.
@@ -40,6 +39,9 @@ Note that the storage device containing the current directory could affect the p
 We recommend extending the time-out limit for sudo because experiments will run for a long time, and it may require a password for sudo repeatedly.
 
 ## Evaluation
+
+We ask reviewers to record the elapsed times of experiments. 
+The recorded elapsed times will be used to compare with the results.
 
 ### NumPy
 
