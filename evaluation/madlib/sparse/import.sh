@@ -1,8 +1,8 @@
-DATADIR="../../slab-benchmark/prevision/output/ivj"
+DATAPATH="../../slab-benchmark/prevision/output/ivj"
 
 function import_pagerank() {
 	dataset=$1
-	csvpath=$DATADIR"/"$dataset".ijv"
+	csvpath=$DATAPATH"/"$dataset".ijv"
 
 	psql -c "CREATE TABLE mat_$dataset (row_id INTEGER, col_id INTEGER, val DOUBLE PRECISION DEFAULT 1 NOT NULL);"
 	psql -c "COPY mat_$dataset (row_id, col_id, val) FROM '"$csvpath"' DELIMITER E'\t' CSV;"
@@ -21,7 +21,7 @@ function import() {
 	density2=$4
 	rowsize2=$5
 
-	csvpath=$DATADIR"/"$rowsize"x"$colsize"_sparse_"$density1".ijv"
+	csvpath=$DATAPATH"/"$rowsize"x"$colsize"_sparse_"$density1".ijv"
 
 	psql -c "CREATE TABLE mat_"$rowsize2"x"$colsize"_sparse_"$density2" (row_id INTEGER, col_id INTEGER, val DOUBLE PRECISION);"
 	psql -c "COPY mat_"$rowsize2"x"$colsize"_sparse_"$density2" (row_id, col_id, val) FROM '"$csvpath"' DELIMITER ' ' CSV;"

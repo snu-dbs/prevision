@@ -6,7 +6,7 @@ import psycopg2
 conn = psycopg2.connect("dbname=pgtile user=pgtile")
 cur = conn.cursor()
 arrname = sys.argv[2] 
-is_vec = sys.argv[3] == 1
+is_vec = int(sys.argv[3]) == 1
 
 if is_vec:
 	# cur.execute("DROP TABLE {arrname} ;".format(arrname=arrname))

@@ -51,15 +51,15 @@ function lr() {
 
 # NMF & LR
 
-nmf 8 mat_80mx100_dense mat_80mx10_dense mat_10x100_dense 3
-nmf 8 mat_40mx100_dense mat_40mx10_dense mat_10x100_dense 3
-nmf 8 mat_20mx100_dense mat_20mx10_dense mat_10x100_dense 3
 nmf 8 mat_10mx100_dense mat_10mx10_dense mat_10x100_dense 3
+nmf 8 mat_20mx100_dense mat_20mx10_dense mat_10x100_dense 3
+nmf 8 mat_40mx100_dense mat_40mx10_dense mat_10x100_dense 3
+nmf 8 mat_80mx100_dense mat_80mx10_dense mat_10x100_dense 3
 
-lr 8 mat_80mx100_dense mat_80mx1_dense vec_100x1_dense 3
-lr 8 mat_40mx100_dense mat_40mx1_dense vec_100x1_dense 3
-lr 8 mat_20mx100_dense mat_20mx1_dense vec_100x1_dense 3
 lr 8 mat_10mx100_dense mat_10mx1_dense vec_100x1_dense 3
+lr 8 mat_20mx100_dense mat_20mx1_dense vec_100x1_dense 3
+lr 8 mat_40mx100_dense mat_40mx1_dense vec_100x1_dense 3
+lr 8 mat_80mx100_dense mat_80mx1_dense vec_100x1_dense 3
 
 # Iteration 
 iterarray=(1 2 4 8 16 32)
@@ -68,3 +68,5 @@ do
     echo $noi
 	nmf 8 mat_10mx100_dense mat_10mx10_dense mat_10x100_dense $noi
 done
+
+#NOTE: Please do parallelism experiments manually
