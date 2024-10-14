@@ -132,33 +132,15 @@ Please note that the LR task uses OpenBLAS, whereas the NMF task does not. You c
 Using the following command, build queries for SystemDS.
 
 ```bash
-# current directory: /evaluation/systemds/dense/ or /evaluation/systemds/sparse/
+# current directory: /evaluation/systemds/dense or /evaluation/systemds/sparse
 bash build.sh
 ```
 
-Once the build is successfully finished, run a query like the following commands.
+Once the build is successfully finished, run the following command on `dense` or `sparse` directory.
 
 ```bash
-# Dense (in /evaluation/systemds/dense/)
-bash lr.sh [rows] [iteration] [input X] [input Y] [input W] [output]
-bash nmf.sh [rows] [iteration] [input X] [input W] [input H] [output W] [output H]
-
-# Sparse (in /evaluation/systemds/sparse/)
-bash lr.sh [rows] [iteration] [input X] [input Y] [input W] [output]
-
-# PageRank (in /evaluation/systemds/sparse/)
-bash pagerank.sh [rows] [iteration] [input] [output]
-```
-
-The following snippet is an example of running SystemDS experiments.
-
-```bash
-# current directory: /evaluation/systemds/sparse/
-# PageRank, Enron, iteration=3
-bash pagerank.sh 36692 3 ../../../slab-benchmark/prevision/output/sysds/enron output
-
-# PageRank, Twitter, iteration=32
-bash pagerank.sh 61578415 32 ../../../slab-benchmark/prevision/output/sysds/twitter output
+# current directory: /evaluation/systemds/dense or /evaluation/systemds/sparse
+bash auto.sh
 ```
 
 ### MLlib
@@ -188,23 +170,23 @@ pip install -r requirements.txt
 ```
 
 We need to import data to PostgreSQL first.
-Before importing, please open `./import-script/auto.sh` and `./sparse/import.sh` and modify `DATAPATH` and `DATADIR` values, respectively.
-After editing, run the following commands to import data to PostgreSQL.
+Before importing, please open `./import-script/auto.sh` and `./sparse/import.sh` and check `DATAPATH` if it directs the right path.
+After that, run the following commands to import data to PostgreSQL.
 
 ```bash
-# Current directory: madlib
+# Current directory: /evaluation/madlib
 bash ./import-script/auto.sh
 psql -f ./import-script/index.sql
 bash ./sparse/import.sh
 ```
 
-To run dense experiments, run the following script.
+To run dense experiments, move to the `exp-scripts` directory and run the following script.
 Note that the script restarts the PostgreSQL service for each experiment.
-The service name could be different from our environment, thus please update the service name if you need.
+The command to restart could be different from our environment, thus please update the command if you need.
 
 ```bash
-# Current directory: madlib
-bash ./exp-scripts/auto.sh
+# Current directory: /evaluation/madlib/exp-scripts
+bash auto.sh
 ```
 
 To run sparse experiments, run the following script.
