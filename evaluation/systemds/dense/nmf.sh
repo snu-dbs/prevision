@@ -7,9 +7,10 @@ inputW=$4
 inputH=$5
 outputW=$6
 outputH=$7
+num_thread=$8
 
-if [ $# -ne 7 ]; then
-	echo "Usage: $0 [rows] [iteration] [input X] [input W] [input H] [output W] [output H]"
+if [ $# -ne 8 ]; then
+	echo "Usage: $0 [rows] [iteration] [input X] [input W] [input H] [output W] [output H] [parallelism]"
 	exit
 fi
 
@@ -20,7 +21,8 @@ sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
 touch dump
 
 spark-submit --master local \
-	--conf spark.driver.memory=30g --conf spark.executor.memory=30g \
+	--conf spark.driver.memory=27g --conf spark.executor.memory=27g \
+	--conf spark.executor.cores=$num_thread \
 	--conf spark.driver.maxResultSize=0 \
 	--class SystemDSMLAlgorithms target/scala-2.12/SystemDSAlgs-assembly-0.1.jar \
 	opType=nmf nrow=$nrow iter=$iter \
