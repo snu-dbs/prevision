@@ -193,7 +193,8 @@ def eval_LR(X_path, y_path, w_path, _iter=3, alpha=0.0001):
 
 
 def initialize_client():
-    client = Client(processes=False, n_workers=1, threads_per_worker=1)
+    num_thread = int(os.environ.get("_PREVISION_DASK_THREAD", 1))
+    client = Client(processes=False, n_workers=1, threads_per_worker=num_thread)
 
 
 def test():
