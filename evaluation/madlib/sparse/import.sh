@@ -5,7 +5,7 @@ function import_pagerank() {
 	csvpath=$DATAPATH"/"$dataset".ijv"
 
 	psql -c "CREATE TABLE mat_$dataset (row_id INTEGER, col_id INTEGER, val DOUBLE PRECISION DEFAULT 1 NOT NULL);"
-	psql -c "COPY mat_$dataset (row_id, col_id, val) FROM '"$csvpath"' DELIMITER E'\t' CSV;"
+	psql -c "\COPY mat_$dataset (row_id, col_id, val) FROM '"$csvpath"' DELIMITER E'\t' CSV;"
 
 	# psql -c "CREATE INDEX ON mat_$dataset USING HASH (row_id);"
 	psql -c "CREATE INDEX ON mat_$dataset (row_id);"
@@ -24,7 +24,7 @@ function import() {
 	csvpath=$DATAPATH"/"$rowsize"x"$colsize"_sparse_"$density1".ijv"
 
 	psql -c "CREATE TABLE mat_"$rowsize2"x"$colsize"_sparse_"$density2" (row_id INTEGER, col_id INTEGER, val DOUBLE PRECISION);"
-	psql -c "COPY mat_"$rowsize2"x"$colsize"_sparse_"$density2" (row_id, col_id, val) FROM '"$csvpath"' DELIMITER ' ' CSV;"
+	psql -c "\COPY mat_"$rowsize2"x"$colsize"_sparse_"$density2" (row_id, col_id, val) FROM '"$csvpath"' DELIMITER ' ' CSV;"
 
 	psql -c "CREATE INDEX ON mat_"$rowsize2"x"$colsize"_sparse_"$density2" USING HASH (row_id);"
 	psql -c "CREATE INDEX ON mat_"$rowsize2"x"$colsize"_sparse_"$density2" (row_id);"
