@@ -145,6 +145,47 @@ Once the build is successfully finished, run the following command on `dense` or
 bash auto.sh
 ```
 
+
+Since SystemDS relies on Spark for out-of-core computation, its performance is highly dependent on the configuration of Spark.
+Below is an excerpt from our paper regarding the configuration used:
+
+> For SystemDS and MLlib, Spark was configured to run with a driver process and a single executor process.
+> We did not isolate JVM processes to a specific core in order to prevent performance degradation caused by garbage collection or just-in-time compilation.
+> We tested a few memory configurations to discover a specific memory budget for each driver and executor that delivers the best performance.
+
+Below is the specific memory allocation with a total budget of 27GB (only successful experiments are presented):
+
+#### Dense LR
+| Number of Rows | 10M  | 20M  | 40M  | 80M  |
+|----------------|------|------|------|------|
+| **Driver Memory**   | 26GB | 26GB | 7GB  | 14GB |
+| **Executor Memory** | 1GB  | 1GB  | 20GB | 13GB |
+
+---
+
+#### Dense NMF
+| Number of Rows | 10M  | 20M  | 40M  | 80M  |
+|----------------|------|------|------|------|
+| **Driver Memory**   | 26GB | 26GB | 20GB | 20GB |
+| **Executor Memory** | 1GB  | 1GB  | 7GB  | 7GB  |
+
+---
+
+#### Sparse LR
+| Density        | 0.0125 | 0.025 | 0.05  | 0.1   |
+|----------------|--------|-------|-------|-------|
+| **Driver Memory**   | 1GB    | 7GB   | 1GB   | 1GB   |
+| **Executor Memory** | 26GB   | 20GB  | 26GB  | 26GB  |
+
+---
+
+#### PageRank
+| Dataset Label  | Enron  | Epinions | Livejournal |
+|----------------|--------|----------|-------------|
+| **Driver Memory**   | 7GB    | 20GB     | 14GB        |
+| **Executor Memory** | 20GB   | 7GB      | 13GB        |
+
+
 ### MLlib
 
 Please make sure that you can run `spark-submit` anywhere (i.e., add the spark `bin` directory to your `PATH` environmental variable).
