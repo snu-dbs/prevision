@@ -5,6 +5,8 @@ run_sparse_lr() {
         dataset=$1
         noi=$2
         p=$3
+        dmem=$4
+        emem=$5
         nrows=400000000
 
         bin_tall="$DATADIR""/400000000x100_sparse_""$dataset"
@@ -15,7 +17,7 @@ run_sparse_lr() {
         echo 'Sparse LR ' $noi
         for i in $(seq 1 $num_of_iter); do
                 echo 'started'
-                bash lr.sh $nrows $noi $bin_tall $bin_lr_y $bin_lr_w output/res $p
+                bash lr.sh $nrows $noi $bin_tall $bin_lr_y $bin_lr_w output/res $p $dmem $emem
                 rm -rf output/*
         done;
 }
@@ -25,34 +27,36 @@ run_pagerank() {
         dataset=$1
         nrows=$2
         noi=$3
+        dmem=$4
+        emem=$5
 
         echo "dataset=""$dataset"
         echo 'PageRank ' $noi
         for i in $(seq 1 $num_of_iter); do
                 echo 'started'
-                bash pagerank.sh $nrows $noi $DATADIR/$dataset output/res_pr 1
+                bash pagerank.sh $nrows $noi $DATADIR/$dataset output/res_pr 1 $dmem $emem
                 rm -rf output/*
         done;
 }
 
-run_sparse_lr 0.0125 3 1
-run_sparse_lr 0.025 3 1
-run_sparse_lr 0.05 3 1
-run_sparse_lr 0.1 3 1
+run_sparse_lr 0.0125 3 1 1 26
+run_sparse_lr 0.025 3 1 7 20
+run_sparse_lr 0.05 3 1 1 26
+run_sparse_lr 0.1 3 1 1 26
 
-run_pagerank "enron" 36692 3
-run_pagerank "epinions" 75888 3
-run_pagerank "livejournal" 4847571 3
-run_pagerank "twitter" 61578415 3
+run_pagerank "enron" 36692 3 7 20
+run_pagerank "epinions" 75888 3 20 7
+run_pagerank "livejournal" 4847571 3 14 13
+run_pagerank "twitter" 61578415 3 14 13
 
 iterlist=(1 2 4 8 16 32)
 for noi in ${iterlist[@]}; do
         echo "num_of_iter=$noi";
-        run_pagerank "twitter" 1 $noi
+        run_pagerank "twitter" 1 $noi 14 13
 done;
 
 plist=(2 4 8)
 for p in ${plist[@]}; do
         echo "parallelism=$p";
-        run_sparse_lr 0.0125 3 $p
+        run_sparse_lr 0.0125 3 $p 1 26
 done;
