@@ -1,4 +1,4 @@
-DATAPATH="../../slab-benchmark/prevision/output/ivj"
+DATAPATH="../../slab-benchmark/prevision/output/ijv"
 
 function import_pagerank() {
 	dataset=$1
