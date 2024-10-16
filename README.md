@@ -59,10 +59,9 @@ Please make sure that add the absolute path of `./spark-3.3.2-bin-hadoop3/bin/` 
 MADlib is a machine learning extension of PostgreSQL.
 Thus, you need to install PostgreSQL first, and then install MADlib.
 
-Install PostgreSQL 12.14 on your computer.
-After that, install MADlib 1.21.0 which we used for the paper.
-The installation process could be quite tricky.
-[This documentation](https://cwiki.apache.org/confluence/display/MADLIB/Installation+Guide) would be helpful.
+Install PostgreSQL 12.14 with plpython support ([`--with-python`](https://www.postgresql.org/docs/current/install-make.html#CONFIGURE-OPTION-WITH-PYTHON)) on your computer.
+After that, following [the MADlib installation guide](https://cwiki.apache.org/confluence/display/MADLIB/Installation+Guide), install MADlib 1.21.0 with schema `madlib`.
+If you install MADlib from source code, please make sure the Postgres installation is detected during initializing a cmake build.
 
 ### SciDB
 

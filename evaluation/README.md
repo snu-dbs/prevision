@@ -239,8 +239,8 @@ This is because MADlib infers matrix sizes using inserted cell values.
 To solve this issue, just insert an upper-left cell with zero value (i.e., `row_id=1, col_id=1, value=0`) and a lower-right cell with zero value.
 
 ```bash
-# Current directory: madlib
-bash ./sparse/auto.sh
+# Current directory: /evaluation/madlib/sparse
+bash auto.sh
 ```
 
 ### PreVision
