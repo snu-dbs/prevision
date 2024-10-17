@@ -17,21 +17,20 @@ function exp() {
 
 # Evaluation
 
-# Dense 
-exp lr 10M 3             # LR
-exp nmf 10M 3            # NMF
-
+# Dense LR
+exp lr 10M 3             
 exp lr 20M 3
-exp nmf 20M 3
-
 exp lr 40M 3            
-exp nmf 40M 3           
-
 exp lr 80M 3
+
+# Dense NMF
+exp nmf 10M 3            
+exp nmf 20M 3
+exp nmf 40M 3           
 exp nmf 80M 3
 
 # Sparse
-exp sparse_lr 0_0125 3    # LR
+exp sparse_lr 0_0125 3    
 exp sparse_lr 0_025 3   
 exp sparse_lr 0_05 3   
 exp sparse_lr 0_1 3    

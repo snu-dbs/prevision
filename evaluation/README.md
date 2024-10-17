@@ -41,14 +41,16 @@ We recommend extending the time-out limit for sudo because experiments will run 
 ## Evaluation
 
 We ask reviewers to record the elapsed times of experiments. 
-The recorded elapsed times will be used to compare with the results.
+Each script prints elapsed times and those should be recorded manually to compare with the results.
 
 ### NumPy
 
 The script for NumPy is located at `./numpy_memmap/exp.sh`.
 The `exp.sh` will run all experiments presented in the paper.
 Note that the script will copy some npy files to the current directory and run with these data.
-The usage is as follows.
+
+The usage of the script is as follows.
+If your directory structure is different from what we presented, please modify the `DATADIR` variable of the `exp.sh` script to correctly direct the dataset path.
 
 ```bash
 # current directory: /evaluation/numpy_memmap/
@@ -56,13 +58,13 @@ The usage is as follows.
 bash exp.sh
 ```
 
-If your directory structure is different from what we presented, please modify the `DATADIR` variable of the `exp.sh` script to correctly direct the dataset path.
-
 ### Dask
 
 The Dask evaluation script is located at `./dask/exp_alg.sh`.
 The `exp_alg.sh` will run all experiments presented in the paper.
+
 The usage is as follows.
+If your directory structure is different from what we presented, please modify the `DATADIR` variable of the `exp_alg.sh` script to correctly direct the dataset path.
 
 ```bash
 # current directory: /evaluation/dask/
@@ -70,48 +72,75 @@ The usage is as follows.
 bash exp_alg.sh
 ```
 
-If your directory structure is different from what we presented, please modify the `DATADIR` variable of the `exp_alg.sh` script to correctly direct the dataset path.
-
 ### SciDB
 
-Before explaining SciDB stuff, it is worth mentioning that SciDB could not run when it has only one instance. 
-Because of this reason, you may need to configure SciDB to use two instances.
-It is also worth saying that sometimes it might cause an out-of-memory error because SciDB overuses memory capacity.
-In such a case, lowering memory numbers might make the workload run without an OOM error.
-Lastly, if you run SciDB using the root account, SciDB would make an MPI error. 
-You can use a normal user to solve the issue.
-
+#### Files
 The `./scidb/guest/` contains SciDB queries, data loaders, and configuration files that we used.
 The `load-dense.sh`, `load-sparse.sh`, and `load-pagerank.sh` are data-loading scripts.
 You may need to modify the `DIR` variable of each script to adjust the dataset directory.
 The `alg.sh` script defines the matrix computation queries.
-The `config.ini` file is a configuration we used for experiments.
 The `setup.sh` and `clean.sh` are scripts that needed to be executed before and after experiments, respectively.
 
-Before running experiments, please run the data loading scripts.
+#### Configuration
 
-If you run SciDB without docker, you can start the evaluation with the following command.
-Please note that you may need to drop the OS page cache after every experiment.
+The `config.ini` file is a configuration we used for non-parallelism experiments.
+Please adjust the number of instances (the last value of `server-0`) when parallelism experiments are required.
+For example, if parallelism is four, the `server-0` should be `127.0.0.1,4` (one coordinator and four executors).
+After modified, you should load data again.
+
+For the buffer size, the equal-sized values for each instances are set to the `smgr-cache-size` and `mem-array-threshold`.
+For instance, set `3000` to each of them if parallelism is four; the total # of instances is 5 so (`smgr-cache-size` + `mem-array-threadhold`) * 5 should be 30GB.
+Sometimes it might cause an out-of-memory error because SciDB overuses memory capacity. 
+In such a case, lowering memory numbers might make the workload run without an OOM error.
+
+The other configurations should not be modified.
+For more information, please refer to [the SciDB configuration documentation](https://paradigm4.atlassian.net/wiki/spaces/scidb/pages/3395882557/Configuring+SciDB).
+
+
+#### Evaluation
+
+##### For Docker user
+
+Please transfer the script files in the `guest` directory to the docker container.
+The commands in the `exp.sh` will be sent to the docker container and execute queries remotely.
+Your docker configuration may be different from ours, so please modify the `exp.sh` and `alg-remote.sh` for your environment to use these.
+
+Before running experiments, please run the data loading scripts. 
+Please review the `DIR` path in the script files.
+
+```bash
+# Current directory: /evaluation/scidb/guest/
+bash load-dense.sh
+bash load-sparse.sh
+bash load-pagerank.sh
+```
+
+After that, you can start an evaluation with the following command on the host side.
+
+```bash
+# Current directory: /evaluation/scidb/
+# Please configure exp.sh and alg-remote.sh and put guest scripts in appropriate directories.
+bash exp.sh
+```
+
+##### For non-docker user
+
+Before running experiments, please run the data loading scripts. 
+
+```bash
+# Current directory: /evaluation/scidb/guest/
+bash load-dense.sh
+bash load-sparse.sh
+bash load-pagerank.sh
+```
+
+You can start the evaluation with the following command.
 
 ```bash
 # Current directory: /evaluation/scidb/guest/
 # Note that alg-local.sh and alg.sh should be placed in the same directory.
 # Note also that the setup.sh and clean.sh will be executed in the alg-local.sh script.
 bash alg-local.sh
-```
-
-In case using docker, transfer the files in the `guest` directory to the docker container and use `./scidb/exp.sh` on the host.
-The commands in the `exp.sh` will be sent to the docker container and execute queries remotely.
-Your docker configuration may be different from ours, so please modify the `exp.sh` and `alg-remote.sh` for your environment to use these.
-
-You are also required to call the `setup.sh` and `clean.sh` scripts inside the docker container.
-
-You can start an evaluation with the following command.
-
-```bash
-# Current directory: /evaluation/scidb/
-# Please configure exp.sh and alg-remote.sh and put guest scripts in appropriate directories.
-bash exp.sh
 ```
 
 ### SystemDS

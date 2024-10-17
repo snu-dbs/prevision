@@ -69,17 +69,24 @@ Since SciDB changed to closed-source software, the latest version we can use is 
 Fortunately, a well-structured docker image for SciDB 19.11 is published on the Internet, so we can use it.
 You can find the docker image at [here](https://hub.docker.com/r/rvernica/scidb/tags).
 
-Please note that if you run SciDB using docker without setting a volume, every imported data will be stored in the docker directory (e.g., `/var/lib/docker/`).
+Please refer to the below to set up SciDB:
+
+- If you run SciDB using docker without setting a volume, every imported data will be stored in the docker directory (e.g., `/var/lib/docker/`).
 If you do not have enough disk space for that directory, consider using a volume to store SciDB data outside the docker directory. 
 
-Please also note that if you use docker, make sure that the shared memory threshold is enough.
+- If you use docker, make sure that the shared memory threshold is enough.
 If a container has a limited shared memory size, SciDB may raise a memory error.
 You can use the `--shm-size` option for the `docker run` command (e.g., `--shm-size=30gb`).
+- You must use a normal user (not a root user) to run SciDB. If you run SciDB using the root account, SciDB would make an MPI error. 
 
 Here is an **example** of running a SciDB container.
 ```bash
 sudo docker run --name prevision-scidb-exp -it --shm-size=30gb -v /prevision/slab-benchmark/prevision:/prevision -v /prevision/evaluation/scidb/dbpath:/dbpath rvernica/scidb:19.11
 ```
+
+SciDB requires at least two instances that one for a coordinator and the other for executors.
+So please use additional one instance for all SciDB experiments.
+
 
 ## Data Generation
 
