@@ -16,7 +16,6 @@ import org.apache.spark.mllib.linalg.distributed._
 
 object SystemDSMLAlgorithms extends App {
     val conf = new SparkConf()
-                .setMaster("local")
                 .setAppName("MLLibMatrixOps")
     val sc = new SparkContext(conf)
     val ml = new MLContext(sc)

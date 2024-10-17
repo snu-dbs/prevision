@@ -1,0 +1,116 @@
+[0m[[0m[0mdebug[0m] [0m[0mSeparate classpath projects and all dependencies start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mSeparate classpath projects and all dependencies end. Took 1 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect only external dependencies start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect only external dependencies end. Took 1 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect excluded jar names start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect excluded jar names end. Took 0 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mFilter jars start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mFilter jars end. Took 1 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect and shade project classes start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect and shade project classes end. Took 1 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect and shade dependency entries start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect and shade dependency entries end. Took 12 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect renames start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect renames end. Took 66 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mProcess renames start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mProcess renames end. Took 17 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect all merge strategies for cache check start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mCollect all merge strategies for cache check end. Took 45 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mBuilding assembly jar due to missing output...[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge all conflicting jar entries (including those renamed) start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge all conflicting jar entries (including those renamed) end. Took 465 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mReport merge results start:[0m
+[0m[[0m[0minfo[0m] [0m[0m7 file(s) merged using strategy 'Rename' (Run the task at debug level to see the details)[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Rename[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar entry = LICENSE_scala-library-2.12.17[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = scala-library-2.12.17.jar, jar org = org.scala-lang, entry target = LICENSE[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Rename[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar entry = META-INF/LICENSE_SystemDS[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = SystemDS.jar, entry target = META-INF/LICENSE[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Rename[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar entry = scripts/nn/README_SystemDS.md[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = SystemDS.jar, entry target = scripts/nn/README.md[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Rename[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar entry = scripts/nn/examples/README_SystemDS.md[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = SystemDS.jar, entry target = scripts/nn/examples/README.md[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Rename[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar entry = scripts/aws/README_SystemDS.md[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = SystemDS.jar, entry target = scripts/aws/README.md[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Rename[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar entry = META-INF/NOTICE_SystemDS[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = SystemDS.jar, entry target = META-INF/NOTICE[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Rename[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar entry = NOTICE_scala-library-2.12.17[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = scala-library-2.12.17.jar, jar org = org.scala-lang, entry target = NOTICE[0m
+[0m[[0m[0minfo[0m] [0m[0m7 file(s) merged using strategy 'Discard' (Run the task at debug level to see the details)[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Discard[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  None[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = SystemDS.jar, entry target = META-INF/maven/org.apache.systemds/systemds/pom.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Discard[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  None[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = SystemDS.jar, entry target = META-INF/maven/org.apache.systemds/systemds/pom.properties[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Discard[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  None[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = SystemDS.jar, entry target = META-INF/maven/org.antlr/antlr4-runtime/pom.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Discard[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  None[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = SystemDS.jar, entry target = META-INF/DEPENDENCIES[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Discard[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  None[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = SystemDS.jar, entry target = META-INF/MANIFEST.MF[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = scala-library-2.12.17.jar, jar org = org.scala-lang, entry target = META-INF/MANIFEST.MF[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge Strategy Used: Discard[0m
+[0m[[0m[0mdebug[0m] [0m[0mResulting entries:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  None[0m
+[0m[[0m[0mdebug[0m] [0m[0mMerge origins:[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Jar name = SystemDS.jar, entry target = META-INF/maven/org.antlr/antlr4-runtime/pom.properties[0m
+[0m[[0m[0mdebug[0m] [0m[0mReport merge results end. Took 4 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mFinding remaining conflicts that were not merged start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mFinding remaining conflicts that were not merged end. Took 37 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mSort/Parallelize merged entries start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mSort/Parallelize merged entries end. Took 8 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mCreate jar start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mCreate jar end. Took 788 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mHash newly-built Jar start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mHash newly-built Jar end. Took 37 ms[0m
+[0m[[0m[0minfo[0m] [0m[0mBuilt: /data/ssd/prevision_v2/evaluation/systemds/sparse/target/scala-2.12/SystemDSAlgs-assembly-0.1.jar[0m
+[0m[[0m[0minfo[0m] [0m[0mJar hash: a4c44ec0f0e0974b18d1ed3298aca2b578e068ad[0m
+[0m[[0m[0mdebug[0m] [0m[0mClose library jar references start:[0m
+[0m[[0m[0mdebug[0m] [0m[0mClose library jar references end. Took 2 ms[0m
