@@ -234,9 +234,6 @@ bash auto.sh
 
 To run sparse experiments, run the following script.
 Note that the script also contains restarting the PostgreSQL service.
-Please also note that MADlib could raise a dimension mismatch error when running sparse experiments.
-This is because MADlib infers matrix sizes using inserted cell values.
-To solve this issue, just insert an upper-left cell with zero value (i.e., `row_id=1, col_id=1, value=0`) and a lower-right cell with zero value.
 
 ```bash
 # Current directory: /evaluation/madlib/sparse
