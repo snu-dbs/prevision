@@ -42,15 +42,15 @@ run_pagerank() {
         done;
 }
 
-#run_sparse_lr 0.0125 3 1 1 26
-#run_sparse_lr 0.025 3 1 7 20
-#run_sparse_lr 0.05 3 1 1 26
-#run_sparse_lr 0.1 3 1 1 26
+run_sparse_lr 0.0125 3 1 1 26
+run_sparse_lr 0.025 3 1 7 20
+run_sparse_lr 0.05 3 1 1 26
+run_sparse_lr 0.1 3 1 1 26
 
-#run_pagerank "enron" 36692 3
-#run_pagerank "epinions" 75888 3
-#run_pagerank "livejournal" 4847571 3
-#run_pagerank "twitter" 61578415 3
+run_pagerank "enron" 36692 3
+run_pagerank "epinions" 75888 3
+run_pagerank "livejournal" 4847571 3
+run_pagerank "twitter" 61578415 3
 
 iterlist=(1 2 4 8 16 32)
 for noi in ${iterlist[@]}; do
