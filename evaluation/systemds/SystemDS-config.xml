@@ -1,0 +1,10 @@
+<root>
+    <sysds.localtmpdir>/mnt/ssd/systemds/tmp</sysds.localtmpdir>
+    <sysds.scratch>/mnt/ssd/systemds/tmp/scratch_space</sysds.scratch>
+    <sysds.defaultblocksize>100</sysds.defaultblocksize>
+    <sysds.cp.parallel.ops>false</sysds.cp.parallel.ops>
+    <sysds.cp.parallel.io>false</sysds.cp.parallel.io>
+    <sysds.parallel.encode>false</sysds.parallel.encode>
+    <sysds.parallel.tokenize>false</sysds.parallel.tokenize>    
+    <sysds.native.blas.directory>/home/pgtile/OpenBLAS</sysds.native.blas.directory>
+</root>

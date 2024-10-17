@@ -148,8 +148,7 @@ bash alg-local.sh
 Please make sure the following.
 - You can run `spark-submit` anywhere (i.e., add the spark `bin` directory to your `PATH` environmental variable). It is required to use SystemDS in out-of-core situations.
 - You have set the `SYSTEMDS_ROOT` and `SPARK_ROOT` environmental variables.
-- You have made SystemDS configuration on `$SYSTEMDS_ROOT/conf/`.
-
+- You have made SystemDS configuration on `$SYSTEMDS_ROOT/conf/`. We uploaded the configuration we used to `./systemds/SystemDS-config.xml`.
 
 Before running an experiment, please move to `./systemds/dense` or `./systemds/sparse` directory depending on the experiment.
 Then, open the `./src/main/scala/systemds_ml_algorithms.scala` file.
