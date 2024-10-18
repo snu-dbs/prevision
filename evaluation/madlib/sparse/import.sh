@@ -2,6 +2,8 @@ DATAPATH="../../slab-benchmark/prevision/output/ijv"
 
 function import_pagerank() {
 	dataset=$1
+	nrow=$2
+
 	csvpath=$DATAPATH"/"$dataset"_pagerank.ijv"
 
 	psql -c "CREATE TABLE mat_$dataset (row_id INTEGER, col_id INTEGER, val DOUBLE PRECISION DEFAULT 1 NOT NULL);"
@@ -12,6 +14,14 @@ function import_pagerank() {
 	psql -c "CREATE INDEX ON mat_$dataset (col_id);"
 	psql -c "CREATE INDEX ON mat_$dataset (row_id, col_id);"
 	psql -c "CREATE INDEX ON mat_$dataset (col_id, row_id);"
+
+	psql -c "CREATE TABLE mat_"$dataset"_v (row_id INTEGER, col_id INTEGER, val DOUBLE PRECISION DEFAULT 1 NOT NULL);"
+	psql -c "INSERT INTO mat_"$dataset"_v (row_id, col_id, val) SELECT generate_series(1, $nrow) AS row_id, 1 AS col_id, (1::DOUBLE PRECISION / $nrow) AS val;"
+	psql -c "CREATE INDEX ON mat_"$dataset"_v (row_id);"
+	psql -c "CREATE INDEX ON mat_"$dataset"_v (col_id);"
+	psql -c "CREATE INDEX ON mat_"$dataset"_v (row_id, col_id);"
+	psql -c "CREATE INDEX ON mat_"$dataset"_v (col_id, row_id);"
+	psql -c "CREATE INDEX ON mat_"$dataset"_v USING HASH (col_id, row_id);"
 }
 
 function import() {
@@ -115,7 +125,18 @@ ensure_size mat_400mx100_sparse_0_0125 400000000 100
 # PageRank
 ####################
 
-import_pagerank enron;
-import_pagerank epinions;
-import_pagerank livejournal;
-import_pagerank twitter;
+import_pagerank enron 36692
+ensure_size mat_enron 1 1
+ensure_size mat_enron 36692 36692
+
+import_pagerank epinions 75888
+ensure_size mat_epinions 1 1
+ensure_size mat_epinions 75888 75888
+
+import_pagerank livejournal 4847571
+ensure_size mat_livejournal 1 1
+ensure_size mat_livejournal 4847571 4847571
+
+import_pagerank twitter 61578415
+ensure_size mat_twitter 1 1
+ensure_size mat_twitter 61578415 61578415
