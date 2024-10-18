@@ -2,7 +2,7 @@ DATAPATH="../../slab-benchmark/prevision/output/ijv"
 
 function import_pagerank() {
 	dataset=$1
-	csvpath=$DATAPATH"/"$dataset".ijv"
+	csvpath=$DATAPATH"/"$dataset"_pagerank.ijv"
 
 	psql -c "CREATE TABLE mat_$dataset (row_id INTEGER, col_id INTEGER, val DOUBLE PRECISION DEFAULT 1 NOT NULL);"
 	psql -c "\COPY mat_$dataset (row_id, col_id, val) FROM '"$csvpath"' DELIMITER E'\t' CSV;"
