@@ -24,6 +24,7 @@ function run() {
                 --conf spark.executor.cores=${nthread} \
                 --conf spark.driver.maxResultSize=0 \
                 --class SparkMLAlgorithms \
+                --master spark://127.0.0.1:7077 \
                 ./target/scala-2.12/MLLibAlgs-assembly-0.1.jar \
                 opType=$alg \
                 mattype=tall \
