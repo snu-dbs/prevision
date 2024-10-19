@@ -43,6 +43,9 @@ We recommend extending the time-out limit for sudo because experiments will run 
 We ask reviewers to record the elapsed times of experiments. 
 Each script prints elapsed times and those should be recorded manually to compare with the results.
 
+The scripts in this directory are configured to run on a machine with 32GB memory (settings presented in the paper).
+So please update memory configurations for systems if you want different memory setting.
+
 ### NumPy
 
 The script for NumPy is located at `./numpy_memmap/exp.sh`.
@@ -148,7 +151,7 @@ bash alg-local.sh
 Please make sure the following.
 - You can run `spark-submit` anywhere (i.e., add the spark `bin` directory to your `PATH` environmental variable). It is required to use SystemDS in out-of-core situations.
 - You have set the `SYSTEMDS_ROOT` and `SPARK_ROOT` environmental variables.
-- You have made SystemDS configuration on `$SYSTEMDS_ROOT/conf/`. We uploaded the configuration we used to `./systemds/SystemDS-config.xml`.
+- You have made SystemDS configuration on `$SYSTEMDS_ROOT/conf/`. We uploaded the configuration we used to `./systemds/SystemDS-config.xml`. Please modify values of `sysds.localtmpdir`, `systemds.scratch`, and `sysds.native.blas.directory` to your environment's one.
 
 Before running an experiment, please move to `./systemds/dense` or `./systemds/sparse` directory depending on the experiment.
 Then, open the `./src/main/scala/systemds_ml_algorithms.scala` file.
@@ -157,12 +160,9 @@ Please make sure that the config file name described in the line is the same as 
 If it is not the same, please update it.
 After that, go back to the `dense` or `sparse` directory depending on the experiment.
 
-
 Please note that the LR task uses OpenBLAS, whereas the NMF task does not. You can find the `ml.setConfigProperty()` statements in lines 53 and 56 in the `./src/main/scala/systemds_ml_algorithms.scala` file. This configuration is necessary because SystemDS produces incorrect results during the NMF task when multiplying a matrix by its transpose (specifically, computing $HH^T$).
 
-
 Since SystemDS relies on Spark for out-of-core computation, its performance is highly dependent on the configuration of Spark. The best-performed memory configurations from our experiments are set as the default. But, you can manually set both the driver and executor memory by passing them as arguments to `lr.sh`, `nmf.sh`, or `pagerank.sh`.
-
 
 Using the following command, build queries for SystemDS.
 
@@ -176,6 +176,26 @@ Once the build is successfully finished, run the following command on `dense` or
 ```bash
 # current directory: /evaluation/systemds/dense or /evaluation/systemds/sparse
 bash auto.sh
+```
+
+The experiment result will be shown at the end of each execution, looked similar to the following. 
+Please record the value for the "Total elapsed time:" as its performance.
+
+```
+SystemDS Statistics:
+Total elapsed time:             29.032 sec.     <=== HERE!!
+Total compilation time:         0.355 sec.
+Total execution time:           28.677 sec.
+Number of compiled Spark inst:  3.
+Number of executed Spark inst:  0.
+Native openblas calls (dense mult/conv/bwdF/bwdD):      0/0/0/0.
+Native openblas calls (sparse conv/bwdF/bwdD):  0/0/0.
+Native openblas times (dense mult/conv/bwdF/bwdD):      0.000/0.000/0.000/0.000.
+Cache hits (Mem/Li/WB/FS/HDFS): 33/0/0/0/3.
+Cache writes (Li/WB/FS/HDFS):   2/12/0/1.
+Cache times (ACQr/m, RLS, EXP): 23.319/0.000/0.002/0.036 sec.
+HOP DAGs recompiled (PRED, SB): 0/0.
+HOP DAGs recompile time:        0.000 sec.
 ```
 
 
@@ -197,11 +217,27 @@ Be aware that the temp directory (`spark.local.dir`) is set to the same storage 
 
 ### MADlib
 
+#### Memory Setting
+
+Please update configurations in `postgres.conf` file as follow to align with our evlaution:
+```
+shared_buffers = 12400MB
+max_worker_processes = 1
+max_parallel_workers_per_gather = 1
+max_parallel_workers = 1
+```
+
+We ask reviewers to update `max_worker_processes`, `max_parallel_workers_per_gather`, and `max_parallel_workers` to 
+the number of threads manually when parallelism experiments are required.
+
+
+#### Data Loading
+
 First, please move to the `madlib` directory.
 Then, run the following commands to prepare for importing data to PostgreSQL.
 
 ```bash
-# Current directory: madlib
+# Current directory: /evaluation/madlib
 python3 -m venv venv
 source ./venv/bin/activate
 pip install -r requirements.txt
@@ -209,6 +245,7 @@ pip install -r requirements.txt
 
 We need to import data to PostgreSQL first.
 Before importing, please open `./import-script/auto.sh` and `./sparse/import.sh` and check `DATAPATH` if it directs the right path.
+Second, open `main.py` and update connection information (at line 6) to your environment.
 After that, run the following commands to import data to PostgreSQL.
 
 ```bash
@@ -218,16 +255,18 @@ psql -f ./import-script/index.sql
 bash ./sparse/import.sh
 ```
 
+#### Experiment
+
 To run dense experiments, move to the `exp-scripts` directory and run the following script.
 Note that the script restarts the PostgreSQL service for each experiment.
-The command to restart could be different from our environment, thus please update the command if you need.
+The command could be different from our environment, thus please update the command if you need.
 
 ```bash
 # Current directory: /evaluation/madlib/exp-scripts
 bash auto.sh
 ```
 
-To run sparse experiments, run the following script.
+To run sparse experiments, move to the `sparse` directory and run the following script.
 Note that the script also contains restarting the PostgreSQL service.
 
 ```bash
@@ -237,14 +276,17 @@ bash auto.sh
 
 ### PreVision
 
+If you have not built PreVision yet, please move to the root directory of this repository and run `makeall.sh`.
+Make sure OpenBLAS, LAPACK, and LAPACKe are installed.
+If you are using Ubuntu, you can install those by `sudo apt install liblapack-dev liblapacke-dev libopenblas-dev`.
+
 To run PreVision, go to the `prevision` directory.
-If you have generated matrices for PreVision, the `exec_eval` executable file would exist.
-If not, build the executable file by running the `make` command.
+If the `exec_eval` executable file not exist, build the executable file by running the `make` command.
 
 To run dense and sparse experiments, run the following script.
 
 ```bash
-# Current directory: prevision
+# Current directory: /evaluation/prevision
 bash ./exp.sh
 ```
 
