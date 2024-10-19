@@ -30,5 +30,5 @@ CREATE INDEX ON mat_10Mx100_dense USING HASH (row_id);
 CREATE INDEX ON mat_10Mx10_dense USING HASH (row_id);
 CREATE INDEX ON mat_10Mx1_dense USING HASH (row_id);
 
-CREATE INDEX ON mat_100x10_dense(row_id);
-CREATE INDEX ON mat_100x10_dense USING HASH (row_id);
+CREATE INDEX ON mat_10x100_dense(row_id);
+CREATE INDEX ON mat_10x100_dense USING HASH (row_id);
