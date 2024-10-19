@@ -54,17 +54,17 @@ function pr() {
 ####################
 # NMF & LR
 ####################
-lr 8 mat_400mx100_sparse_0_0125 mat_400mx1_sparse_0_0125 mat_100x1_sparse_0_0125 3
+lr 1 mat_400mx100_sparse_0_0125 mat_400mx1_sparse_0_0125 mat_100x1_sparse_0_0125 3
 
 # remove comments and run if you want to test timeout
-# lr 8 mat_400mx100_sparse_0_025 mat_400mx1_sparse_0_025 mat_100x1_sparse_0_025 3 
-# lr 8 mat_400mx100_sparse_0_05 mat_400mx1_sparse_0_05 mat_100x1_sparse_0_05 3
-# lr 8 mat_400mx100_sparse_0_1 mat_400mx1_sparse_0_1 mat_100x1_sparse_0_1 3
+# lr 1 mat_400mx100_sparse_0_025 mat_400mx1_sparse_0_025 mat_100x1_sparse_0_025 3 
+# lr 1 mat_400mx100_sparse_0_05 mat_400mx1_sparse_0_05 mat_100x1_sparse_0_05 3
+# lr 1 mat_400mx100_sparse_0_1 mat_400mx1_sparse_0_1 mat_100x1_sparse_0_1 3
 
-pr 8 mat_enron mat_enron_v 36692 3
-pr 8 mat_epinions mat_epinions_v 75888 3
-pr 8 mat_livejournal mat_livejournal_v 4847571 3
-pr 8 mat_twitter mat_twitter_v 61578415 3
+pr 1 mat_enron mat_enron_v 36692 3
+pr 1 mat_epinions mat_epinions_v 75888 3
+pr 1 mat_livejournal mat_livejournal_v 4847571 3
+pr 1 mat_twitter mat_twitter_v 61578415 3
 
 ####################
 # Iteration 
@@ -73,7 +73,7 @@ iterarray=(1 2 4 8 16 32)
 for noi in ${iterarray[@]}
 do
 	echo $noi
-	pr 8 mat_twitter mat_twitter_v 61578415 $noi
+	pr 1 mat_twitter mat_twitter_v 61578415 $noi
 done
 
 

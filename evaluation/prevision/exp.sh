@@ -1,5 +1,5 @@
 # /bin/bash
-iter=8
+iter=1
 
 DATADIR=../../slab-benchmark/prevision/output/prevision
 

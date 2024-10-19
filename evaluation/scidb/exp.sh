@@ -1,5 +1,5 @@
 function exp() {
-	iter=8
+	iter=1
 	noi=$3
 
 	echo $1 $2 $3

@@ -1,4 +1,4 @@
-num_of_iter=8
+num_of_iter=1
 
 DATADIR="../../slab-benchmark/prevision/output/npy/"
 
