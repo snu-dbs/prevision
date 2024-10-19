@@ -39,6 +39,11 @@ Also, since the size of datasets that will be generated for the evaluation is qu
 Before getting started, you need to install comparison systems.
 This is required since every later step depends on the systems.
 
+### MLlib (Spark)
+
+Download [Spark 3.3.2](https://archive.apache.org/dist/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz) and un-compress it to the current directory.
+Please make sure that add the absolute path of `./spark-3.3.2-bin-hadoop3/bin/` to the `PATH` environmental variable.
+
 ### SystemDS
 
 Please install Java 11 before installing SystemDS because the system requires it.
@@ -49,10 +54,6 @@ Please make sure the following.
 - Add the absolute path of `./systemds-3.1.0-bin/bin/` to the `PATH` environmental variable.
 - Add the absolute path of `./systemds-3.1.0-bin/` to the `SYSTEMDS_ROOT` environmental variable.
 
-### MLlib (Spark)
-
-Download [Spark 3.3.2](https://archive.apache.org/dist/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz) and un-compress it to the current directory.
-Please make sure that add the absolute path of `./spark-3.3.2-bin-hadoop3/bin/` to the `PATH` environmental variable.
 
 ### MADlib
 

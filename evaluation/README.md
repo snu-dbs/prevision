@@ -181,17 +181,19 @@ bash auto.sh
 
 ### MLlib
 
-Please make sure that you can run `spark-submit` anywhere (i.e., add the spark `bin` directory to your `PATH` environmental variable).
+Please make sure that you can run `spark-submit` anywhere and an environmental variable `SPARK_ROOT` is set appropriatly.
 
-Before running, you may need to modify the paths of MLlib data files in the MLlib source code.
+Before running, you may need to modify data paths in the source code.
 Please move to the `mllib` directory.
 Then, open `./src/main/scala/spark_ml_algs.scala` and modify paths for your environment.
 Then, run the experiment script as follow.
 
 ```bash
-# current directory: /evaluation/systemds/mllib/
+# current directory: /evaluation/mllib/
 bash ./auto.sh
 ```
+
+Be aware that the temp directory (`spark.local.dir`) is set to the same storage as the data files for precise results.
 
 ### MADlib
 

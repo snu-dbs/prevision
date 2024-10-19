@@ -32,7 +32,6 @@ object SparkMLAlgorithms {
     def main(args: Array[String]): Unit= {
         val conf = new SparkConf()
         .setAppName("MLLibMatrixOps")
-        .setMaster("local[1]")
        
         val sc = new SparkContext(conf)
 
@@ -71,7 +70,7 @@ object SparkMLAlgorithms {
 
     def logit(nrow: Int, max_iter: Int = 3, sc: SparkContext) = {
         // input X
-        val xraw = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/${nrow}x100_dense")
+        val xraw = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/${nrow}x100_dense.sf")
         val blocksX = xraw.map{ x =>
             val items = x._1.split(",").map(_.toInt)
             ((items(0), items(1)), Matrices.dense(nrow/100, 100, bytearrayToDoublearray(x._2)))
@@ -84,7 +83,7 @@ object SparkMLAlgorithms {
         val N = X.numRows.toInt
         val K = X.numCols.toInt
 
-        val yraw = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/${N}x1_dense")
+        val yraw = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/${N}x1_dense.sf")
         val blocksY = yraw.map{ x =>
             val items = x._1.split(",").map(_.toInt)
             ((items(0), items(1)), Matrices.dense(N/100, 1, bytearrayToDoublearray(x._2)))
@@ -92,7 +91,7 @@ object SparkMLAlgorithms {
         val y = new BlockMatrix(blocksY, N/100, 1)
         y.persist(MEMORY_AND_DISK_SER)
 
-        val wraw = sc.sequenceFile[String, Array[Byte]]("../../slab-benchmark/prevision/output/sequencefile/100x1_dense")
+        val wraw = sc.sequenceFile[String, Array[Byte]]("../../slab-benchmark/prevision/output/sequencefile/100x1_dense.sf")
         var w = wraw.map( x => Vectors.dense(bytearrayToDoublearray(x._2))).first().asInstanceOf[DenseVector]
 
         val XT = X.transpose
@@ -143,7 +142,7 @@ object SparkMLAlgorithms {
             iteration += 1
         }
 
-        sc.parallelize(Seq(("0,0", doublearrayToBytearray(w.values)))).saveAsSequenceFile("__mllib_logit")
+        sc.parallelize(Seq(("0,0", doublearrayToBytearray(w.values)))).saveAsSequenceFile("__mllib_logit.sf")
     }
 
     def read_blockmatrix_sparse(path: String, numRow: Int, numCol: Int, numBlockRow: Int, numBlockCol: Int, sc: SparkContext) : BlockMatrix = {
@@ -173,7 +172,7 @@ object SparkMLAlgorithms {
     def logit_sparse(density: String, max_iter: Int = 3, sc: SparkContext) = {
         // input X
         var X = read_blockmatrix_sparse(
-          s"../../slab-benchmark/prevision/output/sequencefile/400000000x100_sparse_${density}",
+          s"../../slab-benchmark/prevision/output/sequencefile/400000000x100_sparse_${density}.sf",
           400000000, 100, 4000000, 100, sc)
         X.blocks.persist(MEMORY_AND_DISK_SER)
 
@@ -184,12 +183,12 @@ object SparkMLAlgorithms {
 
         // FIXME:
         var y = read_blockmatrix_sparse(
-          s"../../slab-benchmark/prevision/output/sequencefile/400000000x1_sparse_${density}",
+          s"../../slab-benchmark/prevision/output/sequencefile/400000000x1_sparse_${density}.sf",
           400000000, 1, 4000000, 1, sc)
         y.persist(MEMORY_AND_DISK_SER)
 
         // w is sparse when loaded, but it will become densevector as computed.
-        val wraw = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/100x1_sparse_${density}")
+        val wraw = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/100x1_sparse_${density}.sf")
         var w = wraw.map { x => 
           var base = 4 * 3    // sizeof(int) * 3 
           val metabytes = x._2.slice(0, base)      
@@ -256,7 +255,7 @@ object SparkMLAlgorithms {
             iteration += 1
         }
 
-        sc.parallelize(Seq(("0,0", doublearrayToBytearray(w.asInstanceOf[DenseVector].values)))).saveAsSequenceFile("__mllib_logit")
+        sc.parallelize(Seq(("0,0", doublearrayToBytearray(w.asInstanceOf[DenseVector].values)))).saveAsSequenceFile("__mllib_logit.sf")
     }
 
     def pagerank(dataset: String, arrside: Int, tileside: Int, max_iter: Int = 3, sc: SparkContext) = {
@@ -264,18 +263,18 @@ object SparkMLAlgorithms {
 
         // input X
         var X = read_blockmatrix_sparse(
-          s"../../slab-benchmark/prevision/output/sequencefile/${dataset}",
+          s"../../slab-benchmark/prevision/output/sequencefile/${dataset}.sf",
           arrside, arrside, tileside, tileside, sc)
         X.blocks.persist(MEMORY_AND_DISK_SER)
 
         /*
         var v = read_blockmatrix_sparse(
-          s"../../slab-benchmark/prevision/output/sequencefile/${dataset}_v",
+          s"../../slab-benchmark/prevision/output/sequencefile/${dataset}_v.sf",
           arrside, 1, tileside, 1, sc)
         v.persist(MEMORY_AND_DISK_SER)
         */
 
-        val vraw = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/${dataset}_v")
+        val vraw = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/${dataset}_v.sf")
         val blocksV = vraw.map{ x =>
             val items = x._1.split(",").map(_.toInt)
             ((items(0), items(1)), Matrices.dense(tileside, 1, bytearrayToDoublearray(x._2)))
@@ -306,12 +305,12 @@ object SparkMLAlgorithms {
         }
 
         v.blocks.map(x => ((x._1._1.toString + "," + x._1._2.toString),
-	    doublearrayToBytearray(x._2.asInstanceOf[DenseMatrix].values))).saveAsSequenceFile("__pagerank_res")
+	    doublearrayToBytearray(x._2.asInstanceOf[DenseMatrix].values))).saveAsSequenceFile("__pagerank_res.sf")
     }
 
     def gnmf(nrow: Int, r: Int, max_iter: Int, sc: SparkContext) = {
         // input X
-        val xraw = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/${nrow}x100_dense")
+        val xraw = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/${nrow}x100_dense.sf")
         val blocksX = xraw.map{ x =>
             val items = x._1.split(",").map(_.toInt)
             ((items(0), items(1)), Matrices.dense(nrow/100, 100, bytearrayToDoublearray(x._2)))
@@ -324,7 +323,7 @@ object SparkMLAlgorithms {
         // row x rank
         // rank x column
        
-        val w = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/${N}x10_dense")
+        val w = sc.sequenceFile[String, Array[Byte]](s"../../slab-benchmark/prevision/output/sequencefile/${N}x10_dense.sf")
         val blocksW = w.map{ x =>
             val items = x._1.split(",").map(_.toInt)
             ((items(0), items(1)), Matrices.dense(N/100, 10, bytearrayToDoublearray(x._2)))
@@ -332,7 +331,7 @@ object SparkMLAlgorithms {
         var W = new BlockMatrix(blocksW, N/100, 10)
         W.blocks.persist(MEMORY_AND_DISK_SER)
 
-        val h = sc.sequenceFile[String, Array[Byte]]("../../slab-benchmark/prevision/output/sequencefile/10x100_dense")
+        val h = sc.sequenceFile[String, Array[Byte]]("../../slab-benchmark/prevision/output/sequencefile/10x100_dense.sf")
         val blocksH = h.map{ x =>
             val items = x._1.split(",").map(_.toInt)
             ((items(0), items(1)), Matrices.dense(10, 100, bytearrayToDoublearray(x._2)))
@@ -350,9 +349,9 @@ object SparkMLAlgorithms {
         }
 
         W.blocks.map(x => ((x._1._1.toString + "," + x._1._2.toString),
-	    doublearrayToBytearray(x._2.asInstanceOf[DenseMatrix].values))).saveAsSequenceFile("__mllib_gnmf_W")
+	    doublearrayToBytearray(x._2.asInstanceOf[DenseMatrix].values))).saveAsSequenceFile("__mllib_gnmf_W.sf")
         H.blocks.map(x => ((x._1._1.toString + "," + x._1._2.toString),
-	    doublearrayToBytearray(x._2.asInstanceOf[DenseMatrix].values))).saveAsSequenceFile("__mllib_gnmf_H")
+	    doublearrayToBytearray(x._2.asInstanceOf[DenseMatrix].values))).saveAsSequenceFile("__mllib_gnmf_H.sf")
     }
 
     def bytearrayToDoublearray(bytearray: Array[Byte]) : Array[Double] = {
