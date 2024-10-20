@@ -67,7 +67,7 @@ function pagerank() {
         DATASET=$1
         noi=$2
         MAT=$DATADIR"/regular/"$DATASET
-        VEC=$DATADIR"./regular/"$DATASET"_v"
+        VEC=$DATADIR"/regular/"$DATASET"_v"
 
         echo "pagerank: ./exec_eval PAGERANK $MAT $VEC $noi"
         for i in $(seq 1 $iter);

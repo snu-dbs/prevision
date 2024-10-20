@@ -317,27 +317,11 @@ void eval_NMF(
         Array *H_RHS = elemwise_op(WtX, WtWH, OP_DIV);      // 10 x 100
         H = elemwise_op(H, H_RHS, OP_PRODUCT);              // 10 x 100
         // H = execute(H);
-
-	    continue;   
-
-        Array *RMSE_diff = elemwise_op(matmul(W, H), X, OP_SUB);
-        Array *RMSE_hat = aggr(elemwise_op(RMSE_diff, RMSE_diff, OP_PRODUCT), 1, NULL, 0);
-        RMSE_hat = execute(RMSE_hat);
-        double rmse = sqrt(RMSE_hat->scalar_val_double / (10000000 * 100));
-        fprintf(stderr, "iter=%d, rmse=%lf\n", i, rmse);
     }
 
-    // W->persist = H->persist = true;
-    // H = execute(H);
-
+    W->persist = H->persist = true;
+    H = execute(H);
     
-    Array *RMSE_diff = elemwise_op(matmul(W, H), X, OP_SUB);
-    Array *RMSE_hat = aggr(elemwise_op(RMSE_diff, RMSE_diff, OP_PRODUCT), 1, NULL, 0);
-    RMSE_hat = execute(RMSE_hat);
-    double rmse = sqrt(RMSE_hat->scalar_val_double / (10000000 * 100));
-    fprintf(stderr, "final rmse=%lf\n", rmse);
-    
-
     eval_printstats();          // this is called here since a query flushes all buffers at the end
     BF_Detach(); BF_Free();
 }
@@ -410,30 +394,13 @@ void eval_LR(
         w = elemwise_op(w, rhs, OP_SUB);
     }
 
-    // w->persist = true;
-    // w = execute(w);
-
-    Array *RMSE_diff = elemwise_op(map(matmul(X, w), sigmoid, sigmoid_sparse, TILESTORE_FLOAT64), y, OP_SUB);
-    Array *RMSE_hat = aggr(elemwise_op(RMSE_diff, RMSE_diff, OP_PRODUCT), 1, NULL, 0);
-    RMSE_hat = execute(RMSE_hat);
-    double rmse = sqrt(RMSE_hat->scalar_val_double / (10000000 * 1));
-    fprintf(stderr, "iter=%d, rmse=%lf\n", -1, rmse);
-
-    // fprintf(stderr, "Done!\n");
+    w->persist = true;
+    w = execute(w);
 
     eval_printstats();          // this is called here since a query flushes all buffers at the end
 
     BF_Detach();
     BF_Free();
-
-    // free_node(w);
-    // free_node(X); free_node(y);
-    // free_node(Xw);
-    // free_node(sigmoid_temp1);
-    // free_node(Xt);
-    // free_node(aXt);
-    // free_node(temp2);
-    // free_node(temp3);
 }
 
 void eval_PageRank(
