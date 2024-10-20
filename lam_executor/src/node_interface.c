@@ -238,7 +238,7 @@ Array* retile(Array *A, uint64_t *tilesize) {
 }
 
 Array* elemwise_op(Array* A, Array* B, int op_type){
-    assert(A->desc.array_type == B->desc.array_type);
+    // assert(A->desc.array_type == B->desc.array_type);
     assert(A->desc.dim_len == B->desc.dim_len);
     for (int d = 0; d < A->desc.dim_len; d++)
     {
@@ -261,7 +261,11 @@ Array* elemwise_op(Array* A, Array* B, int op_type){
     Descriptor desc;
     char *name = genArrayName(128);
     desc.object_name = name;
-    desc.array_type = A->desc.array_type;
+    // TODO: should consider product operation later
+    if (A->desc.array_type != B->desc.array_type) 
+        desc.array_type = TILESTORE_DENSE;
+    else
+        desc.array_type = A->desc.array_type;
     desc.dim_len = A->desc.dim_len;
 
     desc.tile_extents = malloc(sizeof(uint64_t) * desc.dim_len);
@@ -654,7 +658,7 @@ Array *window(Array *A, int64_t *window_size, int window_func)
 Array *map(
     Array *A, 
     void (*fp_d)(void *, void *, uint64_t),
-    void (*fp_s)(uint64_t *, uint64_t *, void *, uint64_t *, uint64_t *, void *, uint64_t, uint64_t *),
+    void (*fp_s)(uint64_t *, uint64_t *, void *, uint64_t, void *, uint64_t),
     int return_type)
 {
     A->num_children++;
@@ -674,7 +678,8 @@ Array *map(
     Descriptor desc;
     char *name = genArrayName(128);
     desc.object_name = name;
-    desc.array_type = A->desc.array_type;
+    // desc.array_type = A->desc.array_type;
+    desc.array_type = TILESTORE_DENSE;
     desc.dim_len = A->desc.dim_len;
 
     desc.tile_extents = malloc(sizeof(uint64_t) * desc.dim_len);

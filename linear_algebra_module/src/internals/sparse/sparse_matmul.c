@@ -13,10 +13,96 @@
 #include "array_struct.h"
 
 
+typedef struct ChunkSparseMMOpFloat64Float64Args {
+    uint64_t *A_indptr;
+    uint64_t *A_indices;
+    double *A_buf;
+
+    uint64_t *B_indptr;
+    uint64_t *B_indices;
+    double *B_buf;
+
+    uint64_t *RES_indptr;
+    uint64_t *RES_indices;
+    double *RES_buf;
+
+    uint64_t nstart;
+    uint64_t nend;
+    uint64_t nrows;
+    uint64_t ncols;
+} ChunkSparseMMOpFloat64Float64Args;
+
+void* chunk_sparse_mm_op_float64_float64(void *raw) {
+    ChunkSparseMMOpFloat64Float64Args *args = (ChunkSparseMMOpFloat64Float64Args*) raw;
+    uint64_t *A_indptr = args->A_indptr;
+    uint64_t *A_indices = args->A_indices;
+    double *A_buf = args->A_buf;
+
+    uint64_t *B_indptr = args->B_indptr;
+    uint64_t *B_indices = args->B_indices;
+    double *B_buf = args->B_buf;
+
+    uint64_t *RES_indptr = args->RES_indptr;
+    uint64_t *RES_indices = args->RES_indices;
+    double *RES_buf = args->RES_buf;
+
+    uint64_t nstart = args->nstart;
+    uint64_t nend = args->nend;
+    uint64_t nrows = args->nrows;
+    uint64_t ncols = args->ncols;
+
+    double *values = calloc(ncols, sizeof(double));
+    int64_t *mask = malloc(sizeof(int64_t) * ncols);
+
+    uint64_t nnz = RES_indptr[nstart];
+
+    // Calculate matmul result
+    for (size_t i = 0; i < ncols; i++)
+    {
+        mask[i] = (int64_t)-1;
+    }
+
+    for (size_t i = nstart; i < nend; i++)
+    {
+        for (size_t jj = A_indptr[i]; jj < A_indptr[i + 1]; jj++)
+        {
+            size_t j = A_indices[jj];
+            double v = A_buf[jj];
+
+            for (size_t kk = B_indptr[j]; kk < B_indptr[j + 1]; kk++)
+            {
+                size_t k = B_indices[kk];
+
+                values[k] += v * B_buf[kk];
+
+                if (mask[k] != (int64_t)i)
+                {
+                    mask[k] = i;
+                }
+            }
+        }
+        for (size_t jj = 0; jj < ncols; jj++)
+        {
+            if (mask[jj] == (int64_t)i)
+            {
+                RES_indices[nnz] = jj;
+                RES_buf[nnz] = values[jj];
+                nnz++;
+            }
+            values[jj] = 0;
+        }
+    }
+
+    free(mask);
+    free(values);
+}
+
 /* Private functions for sparse matmul */
 void _sparse_matmul_csr_csr(PFpage *A_page, PFpage *B_page, CSR_MATRIX *res,
                                   int type1, int type2)
 {
+    int num_threads = (getenv("__PREVISION_NUM_THREADS") == NULL) ? 1 : atoi(getenv("__PREVISION_NUM_THREADS"));
+
     uint64_t *A_indptr = bf_util_pagebuf_get_coords(A_page, 0);
     uint64_t *A_indices = bf_util_pagebuf_get_coords(A_page, 1);
     uint64_t *B_indptr = bf_util_pagebuf_get_coords(B_page, 0);
@@ -370,34 +456,68 @@ void _sparse_matmul_csr_csr(PFpage *A_page, PFpage *B_page, CSR_MATRIX *res,
             double *B_buf = (double *)bf_util_get_pagebuf(B_page);
             res->data_type = TILESTORE_FLOAT64;
 
-            for (size_t i = 0; i < res->n_row; i++)
-            {
-                for (size_t jj = A_indptr[i]; jj < A_indptr[i + 1]; jj++)
+            if (num_threads > 1) {
+                pthread_t *threads = malloc(sizeof(pthread_t) * num_threads);
+                ChunkSparseMMOpFloat64Float64Args *args = malloc(sizeof(ChunkSparseMMOpFloat64Float64Args) * num_threads);
+                uint64_t row_per_thread = res->n_row / num_threads;
+                for (int i = 0; i < num_threads; i++) {
+                    args[i].A_indptr = A_indptr;
+                    args[i].A_indices = A_indices;
+                    args[i].A_buf = A_buf;
+
+                    args[i].B_indptr = B_indptr;
+                    args[i].B_indices = B_indices;
+                    args[i].B_buf = B_buf;
+
+                    args[i].RES_indptr = res->indptr;
+                    args[i].RES_indices = res->indices;
+                    args[i].RES_buf = res->data;
+
+                    args[i].nstart = row_per_thread * i;
+                    args[i].nend = (i + 1 == num_threads) ? 
+                        res->n_row : (row_per_thread * i) + row_per_thread;
+                    args[i].nrows = res->n_row;
+                    args[i].ncols = res->n_col;
+                    
+                    pthread_create(&threads[i], NULL, chunk_sparse_mm_op_float64_float64, (void *) &args[i]);
+                }
+
+                for (int i = 0; i < num_threads; i++) {
+                    pthread_join(threads[i], NULL);
+                }
+
+                free(args);
+                free(threads);
+            } else {
+                for (size_t i = 0; i < res->n_row; i++)
                 {
-                    size_t j = A_indices[jj];
-                    double v = A_buf[jj];
-
-                    for (size_t kk = B_indptr[j]; kk < B_indptr[j + 1]; kk++)
+                    for (size_t jj = A_indptr[i]; jj < A_indptr[i + 1]; jj++)
                     {
-                        size_t k = B_indices[kk];
+                        size_t j = A_indices[jj];
+                        double v = A_buf[jj];
 
-                        values[k] += v * B_buf[kk];
-
-                        if (mask[k] != (int64_t)i)
+                        for (size_t kk = B_indptr[j]; kk < B_indptr[j + 1]; kk++)
                         {
-                            mask[k] = i;
+                            size_t k = B_indices[kk];
+
+                            values[k] += v * B_buf[kk];
+
+                            if (mask[k] != (int64_t)i)
+                            {
+                                mask[k] = i;
+                            }
                         }
                     }
-                }
-                for (size_t jj = 0; jj < res->n_col; jj++)
-                {
-                    if (mask[jj] == (int64_t)i)
+                    for (size_t jj = 0; jj < res->n_col; jj++)
                     {
-                        res->indices[nnz] = jj;
-                        res->data[nnz] = values[jj];
-                        nnz++;
+                        if (mask[jj] == (int64_t)i)
+                        {
+                            res->indices[nnz] = jj;
+                            res->data[nnz] = values[jj];
+                            nnz++;
+                        }
+                        values[jj] = 0;
                     }
-                    values[jj] = 0;
                 }
             }
         }

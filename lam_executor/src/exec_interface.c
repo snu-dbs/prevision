@@ -19,31 +19,42 @@
 
 
 unsigned long long ex_min_fl_creation_time;
+unsigned long long ex_hint_bf_time;
+unsigned long long ex_planning_time;
 
 Array *execute(Array *root)
 {
-    ex_min_fl_creation_time = 0;        // stats
+    // stats
+    ex_min_fl_creation_time = 0;
+    ex_hint_bf_time = 0;        
+    ex_planning_time = 0;        
+    struct timeval _start, _end;
+
     BF_QueryStart();
 
     // planning
+    gettimeofday(&_start, NULL);
     uint8_t order = gen_plan(root);
+    gettimeofday(&_end, NULL);
+
+    unsigned long long planning_diff = ((_end.tv_sec - _start.tv_sec) * 1000000) + (_end.tv_usec - _start.tv_usec); 
+    ex_planning_time += planning_diff;
 
     // for write prevention
     bool write_prevention_on = true;
     if (write_prevention_on) {
+        gettimeofday(&_start, NULL);
         hint_to_bf(root, ++order);      // all array's visited_for_consumer_cnt become false.
+        gettimeofday(&_end, NULL);
         
-        // stats
-        struct timeval fl_start;
-        gettimeofday(&fl_start, NULL);
+        unsigned long long hint_bf_diff = ((_end.tv_sec - _start.tv_sec) * 1000000) + (_end.tv_usec - _start.tv_usec); 
+        ex_hint_bf_time += hint_bf_diff;
 
+        gettimeofday(&_start, NULL);
         fill_future(root);
-        
-        // stats
-        struct timeval fl_end;
-        gettimeofday(&fl_end, NULL);
+        gettimeofday(&_end, NULL);
 
-        unsigned long long fl_diff = ((fl_end.tv_sec - fl_start.tv_sec) * 1000000) + (fl_end.tv_usec - fl_start.tv_usec); 
+        unsigned long long fl_diff = ((_end.tv_sec - _start.tv_sec) * 1000000) + (_end.tv_usec - _start.tv_usec); 
         ex_min_fl_creation_time += fl_diff;
     } else {
         fprintf(stderr, "[EXECUTOR] write prevention off\n");

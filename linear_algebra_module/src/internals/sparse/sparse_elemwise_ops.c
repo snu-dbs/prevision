@@ -2763,58 +2763,36 @@ void _lam_sparse_map(
         Array *output_array) {
 
     int result_attr_type = output_array->op_param.lambda.return_type;
-    void (*lambda_csr)(
-        uint64_t *, uint64_t *, void *,
-         uint64_t *, uint64_t *, void *,
-          uint64_t, uint64_t *) = output_array->op_param.lambda.lambda_func_sparse;
+    void (*lambda_csr)(uint64_t *, uint64_t *, void *, uint64_t nrows, void *, uint64_t) = output_array->op_param.lambda.lambda_func_sparse;
 
     uint64_t *A_coord_sizes = bf_util_pagebuf_get_coords_lens(A);
     uint64_t *A_indptr = bf_util_pagebuf_get_coords(A, 0);
     uint64_t *A_indices = bf_util_pagebuf_get_coords(A, 1);
 
-    uint64_t numcells = A_coord_sizes[1] / sizeof(uint64_t);
+    // uint64_t numcells = A_coord_sizes[1] / sizeof(uint64_t);
 
-    BF_ResizeBuf(B, numcells);
-    uint64_t *B_indptr = bf_util_pagebuf_get_coords(B, 0);
-    uint64_t *B_indices = bf_util_pagebuf_get_coords(B, 1);
-
-    B_indptr[0] = 0;
     uint64_t nnz = 0;
     uint64_t nrows = A_coord_sizes[0] / sizeof(uint64_t) - 1;
 
     if (result_attr_type == TILESTORE_FLOAT64)
     {
         double *Bbuf = (double *)bf_util_get_pagebuf(B);
+        uint64_t numcells = B->pagebuf_len / sizeof(double);
 
         if (opnd_attr_type == TILESTORE_INT32)
         {
             int *Abuf = (int *)bf_util_get_pagebuf(A);
-
-            lambda_csr(A_indptr, A_indices, (int *)Abuf,
-                       B_indptr, B_indices, (double *)Bbuf, nrows, &nnz);
-
-            bf_util_pagebuf_set_unfilled_idx(B, nnz);
-            bf_util_pagebuf_set_unfilled_pagebuf_offset(B, nnz * sizeof(double));
+            lambda_csr(A_indptr, A_indices, (int *)Abuf, nrows, (double *)Bbuf, numcells);
         }
         if (opnd_attr_type == TILESTORE_FLOAT32)
         {
             float *Abuf = (float *)bf_util_get_pagebuf(A);
-
-            lambda_csr(A_indptr, A_indices, (float *)Abuf,
-                       B_indptr, B_indices, (double *)Bbuf, nrows, &nnz);
-
-            bf_util_pagebuf_set_unfilled_idx(B, nnz);
-            bf_util_pagebuf_set_unfilled_pagebuf_offset(B, nnz * sizeof(double));
+            lambda_csr(A_indptr, A_indices, (float *)Abuf, nrows, (double *)Bbuf, numcells);
         }
         if (opnd_attr_type == TILESTORE_FLOAT64)
         {
             double *Abuf = (double *)bf_util_get_pagebuf(A);
-
-            lambda_csr(A_indptr, A_indices, (double *)Abuf,
-                       B_indptr, B_indices, (double *)Bbuf, nrows, &nnz);
-
-            bf_util_pagebuf_set_unfilled_idx(B, nnz);
-            bf_util_pagebuf_set_unfilled_pagebuf_offset(B, nnz * sizeof(double));
+            lambda_csr(A_indptr, A_indices, (double *)Abuf, nrows, (double *)Bbuf, numcells);
         }
     }
 }

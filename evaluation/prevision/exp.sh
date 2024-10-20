@@ -8,9 +8,9 @@ function dense_nmf() {
         noi=$2
         MAT=$DATADIR"/"$DATASET"x100_dense"
         W=$DATADIR"/"$DATASET"x10_dense"
-        H=$DATADIR"/10x100_dense"
+        H=$DATADIR"/regular/10x100_dense"
 
-        echo "dense_nmf: ./exec_eval NMF $MAT $W $H"
+        echo "dense_nmf: ./exec_eval NMF $MAT $W $H $noi"
         for i in $(seq 1 $iter);
         do
                 echo "iter=$i"
@@ -28,9 +28,9 @@ function dense_lr() {
         noi=$2
         MAT=$DATADIR"/"$DATASET"x100_dense"
         y=$DATADIR"/"$DATASET"x1_dense"
-        w=$DATADIR"/100x1_dense"
+        w=$DATADIR"/regular/100x1_dense"
 
-        echo "dense_lr: ./exec_eval LR $MAT $y $w"
+        echo "dense_lr: ./exec_eval LR $MAT $y $w $noi"
         for i in $(seq 1 $iter);
         do
                 echo "iter=$i"
@@ -46,11 +46,11 @@ function dense_lr() {
 function sparse_lr() {
         DATASET=$1
         noi=$2
-        MAT=$DATADIR"/400000000x100_sparse_"$DATASET
-        y=$DATADIR"/400000000x1_sparse_"$DATASET
-        w=$DATADIR"/100x1_sparse_"$DATASET
+        MAT=$DATADIR"/regular/400000000x100_sparse_"$DATASET
+        y=$DATADIR"/regular/400000000x1_sparse_"$DATASET
+        w=$DATADIR"/regular/100x1_sparse_"$DATASET
 
-        echo "dense_lr: ./exec_eval LR $MAT $y $w"
+        echo "dense_lr: ./exec_eval LR $MAT $y $w $noi"
         for i in $(seq 1 $iter);
         do
                 echo "iter=$i"
@@ -66,10 +66,10 @@ function sparse_lr() {
 function pagerank() {
         DATASET=$1
         noi=$2
-        MAT=$DATADIR"/dataset/"$DATASET
-        VEC=$DATADIR"./dataset/"$DATASET"_v"
+        MAT=$DATADIR"/regular/"$DATASET
+        VEC=$DATADIR"./regular/"$DATASET"_v"
 
-        echo "pagerank: ./exec_eval PAGERANK $MAT $VEC"
+        echo "pagerank: ./exec_eval PAGERANK $MAT $VEC $noi"
         for i in $(seq 1 $iter);
         do
                 echo "iter=$i"
@@ -82,22 +82,26 @@ function pagerank() {
         done
 }
 
-function set_env() {
-        export OMP_NUM_THREADS=1
-        export OPENBLAS_NUM_THREADS=1
-        export MKL_NUM_THREADS=1
-        export VECLIB_MAXIMUM_THREADS=1
-        export NUMEXPR_NUM_THREADS=1
+function set_thread() {
+        export OMP_NUM_THREADS=$1
+        export OPENBLAS_NUM_THREADS=$1
+        export MKL_NUM_THREADS=$1
+        export VECLIB_MAXIMUM_THREADS=$1
+        export NUMEXPR_NUM_THREADS=$1
+        export __PREVISION_NUM_THREADS=$1
+}
 
+function set_env() {
+        echo "OPT"
         export BF_DATA_SIZE=30000000000
         export BF_IDATA_SIZE=0
         export BF_KEYSTORE_SIZE=134217728
         export BF_BFSTORE_SIZE=134217728
 
         export BF_EVICTION_POLICY=8
-        export BF_PREEMPTIVE_EVICTION=1
         export BF_LRUK_K=0
         export BF_LRUK_CRP=0
+        export BF_PREEMPTIVE_EVICTION=1
 }
 
 function set_bf_env_mru() {
@@ -106,6 +110,7 @@ function set_bf_env_mru() {
         export BF_IDATA_SIZE=0
         export BF_KEYSTORE_SIZE=134217728
         export BF_BFSTORE_SIZE=134217728
+
         export BF_EVICTION_POLICY=1
         export BF_LRUK_K=0
         export BF_LRUK_CRP=0
@@ -118,14 +123,16 @@ function set_bf_env_lruk() {
         export BF_IDATA_SIZE=0
         export BF_KEYSTORE_SIZE=134217728
         export BF_BFSTORE_SIZE=134217728
+
         export BF_EVICTION_POLICY=9
         export BF_LRUK_K=$1
         export BF_LRUK_CRP=$2
         export BF_PREEMPTIVE_EVICTION=1
 }
 
-set_env
 # evalaution
+set_thread 1
+set_env
 
 dense_lr "regular/10000000" 3
 dense_lr "regular/20000000" 3
@@ -152,7 +159,8 @@ iterlist=(1 2 4 8 16 32 64)
 for noi in ${iterlist[@]}; do
         echo "num_of_iter=$noi";
         echo "NMF"
-        dense_nmf 80000000 $noi
+        dense_nmf "regular/80000000" $noi
+
         echo "PageRank"
         pagerank twitter $noi
 done;
@@ -174,4 +182,15 @@ set_bf_env_lruk 2 8
 dense_lr "regular/80000000" 3
 dense_nmf "regular/80000000" 3
 
+# parallelism
+plist=(2 4 8)
+for p in ${plist[@]}; do
+        set_thread $p
+        echo "num_of_thread=$p";
 
+        echo "NMF"
+        dense_nmf "regular/10000000" 3
+
+        echo "Sparse LR"
+        sparse_lr 0.0125 3
+done;

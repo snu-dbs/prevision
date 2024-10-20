@@ -47,7 +47,8 @@ typedef struct Window
 typedef struct Lambda
 {
     void (*lambda_func)(void *, void *, uint64_t);
-    void (*lambda_func_sparse)(uint64_t *, uint64_t *, void *, uint64_t *, uint64_t *, void *, uint64_t, uint64_t *);
+    // the result of map() function must be dense for now because even zero-valued cell need to be computed
+    void (*lambda_func_sparse)(uint64_t *, uint64_t *, void *, uint64_t, void *, uint64_t);
     int return_type;
 } Lambda;
 

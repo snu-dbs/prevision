@@ -21,6 +21,7 @@ extern unsigned long long bf_write_io_time, bf_write_io_size;
 extern unsigned long long bf_getbuf_cnt_hit, bf_getbuf_cnt_total;
 extern unsigned long long bf_getbuf_io_hit, bf_getbuf_io_total;
 extern unsigned long long ex_min_fl_creation_time, bf_min_sl_update_time, bf_min_fl_retrival_time;
+extern unsigned long long ex_hint_bf_time, ex_planning_time;
 
 extern unsigned long long __lam_matmul_time, __lam_matmul_cnt;
 extern unsigned long long __lam_trans_time, __lam_trans_cnt;
@@ -33,11 +34,11 @@ size_t data_size, idata_size, key_size, bf_size;
 
 
 void eval_printstats() {
-    printf("total\tbf\tio_r\tio_ir\tio_w\tphit\tpreq\tflgen\tflget\tsl\n");
-    printf("%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\n", 
-        bf_this_query, bftime, bf_read_io_time, bf_iread_io_time, bf_write_io_time, bf_getbuf_cnt_hit, bf_getbuf_cnt_total, ex_min_fl_creation_time, bf_min_fl_retrival_time, bf_min_sl_update_time);
-    printf("%d\t%d\t%lld\t%lld\t%lld\t%lld\t%lld\t%d\t%d\t%d\n", 
-        0, 0, bf_read_io_size, bf_iread_io_size, bf_write_io_size, bf_getbuf_io_hit, bf_getbuf_io_total, 0, 0, 0);
+    printf("total\tbf\tio_r\tio_ir\tio_w\tphit\tpreq\tflgen\tflget\tsl\tdelhint\tpureplan\n");
+    printf("%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\n", 
+        bf_this_query, bftime, bf_read_io_time, bf_iread_io_time, bf_write_io_time, bf_getbuf_cnt_hit, bf_getbuf_cnt_total, ex_min_fl_creation_time, bf_min_fl_retrival_time, bf_min_sl_update_time, ex_hint_bf_time, ex_planning_time);
+    printf("%d\t%d\t%lld\t%lld\t%lld\t%lld\t%lld\t%d\t%d\t%d\t%d\t%d\n", 
+        0, 0, bf_read_io_size, bf_iread_io_size, bf_write_io_size, bf_getbuf_io_hit, bf_getbuf_io_total, 0, 0, 0, 0, 0);
 
     printf("matmul\ttrans\telem\telem_c\telem_m\tnewarr\n");
     printf("%lld\t%lld\t%lld\t%lld\t%lld\t%lld\n", 
@@ -341,41 +342,43 @@ void eval_NMF(
     BF_Detach(); BF_Free();
 }
 
-void sigmoid(void *_opnd_bufptr, void *_result_bufptr, uint64_t num_cells) {
+void sigmoid(void *_opnd_bufptr, void *_result_bufptr, uint64_t numCells) {
     double *opnd_bufptr = _opnd_bufptr;
     double *result_bufptr = _result_bufptr;
 
-    for(int i=0; i<num_cells; i++){
+    for(int i=0; i<numCells; i++){
         result_bufptr[i] = 1/ (1 + exp(-((double) opnd_bufptr[i])));
     }
 }
 
-void sigmoid_sparse(uint64_t* opnd_idxptr, uint64_t* opnd_indices, void *_opnd_bufptr,
-                    uint64_t* res_idxptr, uint64_t* res_indices, void *_res_bufptr,
-                    uint64_t nrows, uint64_t* nnz)
-{   
+void sigmoid_sparse(
+        uint64_t* opnd_idxptr, uint64_t* opnd_indices, void *_opnd_bufptr, uint64_t nrows, 
+        void *_res_bufptr, uint64_t numCells) {   
     double *opnd_bufptr = _opnd_bufptr;
     double *res_bufptr = _res_bufptr;
+
+    uint64_t ncols = numCells / nrows;
+
+    // zero value
+    double _default = 1.0 / (double)(1.0 + exp(0));
+    for (uint64_t i = 0; i < numCells; i++)
+        res_bufptr[i] = _default;
 
     for (uint64_t i = 0; i < nrows; i++) // for each row in one tile
     {
         uint64_t opnd_pos = opnd_idxptr[i];
         uint64_t opnd_end = opnd_idxptr[i + 1];
 
-        while (opnd_pos < opnd_end)
-        {
+        while (opnd_pos < opnd_end) {
             uint64_t opnd_col = opnd_indices[opnd_pos];
 
             double res_value = 1.0 / (double)(1.0 + exp((double)-opnd_bufptr[opnd_pos]));
-            if (res_value != 0)
-            {
-                res_indices[(*nnz)] = opnd_col;
-                res_bufptr[(*nnz)] = res_value;
-                (*nnz)++;
-            }
+            uint64_t row_idx = i;
+            uint64_t col_idx = opnd_indices[opnd_pos];
+            res_bufptr[row_idx * ncols + col_idx] = res_value;
+
             opnd_pos++;
         }
-        res_idxptr[i + 1] = *nnz;
     }
 }
 

@@ -26,7 +26,7 @@ Array *window(Array *A, int64_t *window_size, int window_func);
 Array *map(
     Array *A, 
     void (*fp_d)(void *, void *, uint64_t),
-    void (*fp_s)(uint64_t *, uint64_t *, void *, uint64_t *, uint64_t *, void *, uint64_t, uint64_t *), 
+    void (*fp_s)(uint64_t *, uint64_t *, void *, uint64_t, void *, uint64_t),
     int return_type);
 Array *map_dense(Array *A, void (*fp)(void *, void *, uint64_t), int return_type);
 Array *map_sparse(Array *A, void (*fp)(uint64_t *, uint64_t *, void *, uint64_t *, uint64_t *, void *, uint64_t, uint64_t *), int return_type);

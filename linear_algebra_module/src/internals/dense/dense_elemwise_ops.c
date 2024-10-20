@@ -2,6 +2,8 @@
 #include <string.h>
 #include <math.h>
 
+#include <sys/time.h>
+
 #include "bf.h"
 #include "utils.h"
 #include "chunk_struct.h"
@@ -21,8 +23,54 @@
  * @param op 0: ADD   1: SUB  2: MUL  3: DIV
  */
 
+typedef struct ChunkArithmeticOpFloat64Float64Args {
+    double *a;
+    double *b;
+    double *c;
+    uint64_t ncells;
+    int op;
+} ChunkArithmeticOpFloat64Float64Args;
+
+void* chunk_arithmetic_op_float64_float64(void *raw) {
+    ChunkArithmeticOpFloat64Float64Args *args = (ChunkArithmeticOpFloat64Float64Args*) raw;
+    double *a = args->a;
+    double *b = args->b;
+    double *c = args->c;
+    uint64_t ncells = args->ncells;
+    int op = args->op;
+    switch (op) {
+    case CHUNK_OP_ADD:
+        for (uint64_t i = 0; i < ncells; i++)
+        {
+            c[i] = a[i] + b[i];
+        }
+        break;
+    case CHUNK_OP_SUB:
+        for (uint64_t i = 0; i < ncells; i++)
+        {
+            c[i] = a[i] - b[i];
+        }
+        break;
+
+    case CHUNK_OP_MUL:
+        for (uint64_t i = 0; i < ncells; i++)
+        {
+            c[i] = a[i] * b[i];
+        }
+        break;
+    case CHUNK_OP_DIV:
+        for (uint64_t i = 0; i < ncells; i++)
+        {
+            c[i] = a[i] / b[i];
+        }
+        break;
+    }
+}
+
 void chunk_arithmetic_op(PFpage *A, PFpage *B, PFpage *C, int type1, int type2, int op)
 {
+    int num_threads = (getenv("__PREVISION_NUM_THREADS") == NULL) ? 1 : atoi(getenv("__PREVISION_NUM_THREADS"));
+
     if (type1 == ATTR_TYPE_INT)
     { // INT
         if (type2 == ATTR_TYPE_INT)
@@ -323,33 +371,35 @@ void chunk_arithmetic_op(PFpage *A, PFpage *B, PFpage *C, int type1, int type2, 
             double *Abuf = (double *)bf_util_get_pagebuf(A);
             double *Bbuf = (double *)bf_util_get_pagebuf(B);
             double *Cbuf = (double *)bf_util_get_pagebuf(C);
-            switch (op)
-            {
-            case CHUNK_OP_ADD:
-                for (uint64_t i = 0; i < ncells; i++)
-                {
-                    Cbuf[i] = Abuf[i] + Bbuf[i];
-                }
-                break;
-            case CHUNK_OP_SUB:
-                for (uint64_t i = 0; i < ncells; i++)
-                {
-                    Cbuf[i] = Abuf[i] - Bbuf[i];
-                }
-                break;
 
-            case CHUNK_OP_MUL:
-                for (uint64_t i = 0; i < ncells; i++)
-                {
-                    Cbuf[i] = Abuf[i] * Bbuf[i];
+            if (num_threads > 1) {
+                pthread_t *threads = malloc(sizeof(pthread_t) * num_threads);
+                ChunkArithmeticOpFloat64Float64Args *args = malloc(sizeof(ChunkArithmeticOpFloat64Float64Args) * num_threads);
+                uint64_t cell_per_thread = ncells / num_threads;
+                for (int i = 0; i < num_threads; i++) {
+                    args[i].a = Abuf + (cell_per_thread * i);
+                    args[i].b = Bbuf + (cell_per_thread * i);
+                    args[i].c = Cbuf + (cell_per_thread * i);
+                    args[i].ncells = (i + 1 == num_threads) ? ncells - (cell_per_thread * (num_threads - 1)) : cell_per_thread;
+                    args[i].op = op;
+                    
+                    pthread_create(&threads[i], NULL, chunk_arithmetic_op_float64_float64, (void *) &args[i]);
                 }
-                break;
-            case CHUNK_OP_DIV:
-                for (uint64_t i = 0; i < ncells; i++)
-                {
-                    Cbuf[i] = Abuf[i] / Bbuf[i];
+
+                for (int i = 0; i < num_threads; i++) {
+                    pthread_join(threads[i], NULL);
                 }
-                break;
+
+                free(args);
+                free(threads);
+            } else {
+                ChunkArithmeticOpFloat64Float64Args args;
+                args.a = Abuf;
+                args.b = Bbuf;
+                args.c = Cbuf;
+                args.op = op;
+                args.ncells = ncells;
+                chunk_arithmetic_op_float64_float64(&args);
             }
         }
     }
@@ -840,12 +890,30 @@ void chunk_arithmetic_op_constant(PFpage *A, void *param_constant, PFpage *B, in
     }
 }
 
+
+typedef struct ChunkMapOpFloat64Float64Args {
+    double *a;
+    double *b;
+    uint64_t ncells;
+    void (*lambda)(void *, void *, uint64_t);
+} ChunkMapOpFloat64Float64Args;
+
+void* chunk_map_op_float64_float64(void *raw) {
+    ChunkMapOpFloat64Float64Args *args = (ChunkMapOpFloat64Float64Args*) raw;
+    double *a = args->a;
+    double *b = args->b;
+    uint64_t ncells = args->ncells;
+    void (*lambda)(void *, void *, uint64_t) = args->lambda;
+    lambda((double *) a, b, ncells);
+}
+
 void _lam_dense_map(
         PFpage *A,
         PFpage *B,
         int opnd_attr_type,
         Array *output_array) {
 
+    int num_threads = (getenv("__PREVISION_NUM_THREADS") == NULL) ? 1 : atoi(getenv("__PREVISION_NUM_THREADS"));
     int result_attr_type = output_array->op_param.lambda.return_type;
     void (*lambda)(void *, void *, uint64_t) = output_array->op_param.lambda.lambda_func;
 
@@ -911,7 +979,28 @@ void _lam_dense_map(
         if (opnd_attr_type == TILESTORE_FLOAT64)
         {
             double *Abuf = (double *)bf_util_get_pagebuf(A);
-            lambda((double *)Abuf, Bbuf, ncells);
+            if (num_threads > 1) {
+                pthread_t *threads = malloc(sizeof(pthread_t) * num_threads);
+                ChunkMapOpFloat64Float64Args *args = malloc(sizeof(ChunkMapOpFloat64Float64Args) * num_threads);
+                uint64_t cell_per_thread = ncells / num_threads;
+                for (int i = 0; i < num_threads; i++) {
+                    args[i].a = Abuf + (cell_per_thread * i);
+                    args[i].b = Bbuf + (cell_per_thread * i);
+                    args[i].lambda = lambda;
+                    args[i].ncells = (i + 1 == num_threads) ? ncells - (cell_per_thread * (num_threads - 1)) : cell_per_thread;
+                    
+                    pthread_create(&threads[i], NULL, chunk_map_op_float64_float64, (void *) &args[i]);
+                }
+
+                for (int i = 0; i < num_threads; i++) {
+                    pthread_join(threads[i], NULL);
+                }
+
+                free(args);
+                free(threads);
+            } else {
+                lambda((double *)Abuf, Bbuf, ncells);
+            }
         }
     }
 }

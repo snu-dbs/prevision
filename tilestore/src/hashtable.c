@@ -196,6 +196,12 @@ tilestore_ht_errcode_t tilestore_ht_open_wpayload(char* ht_name, StrDiskHT* ht_p
 
 
 tilestore_ht_errcode_t tilestore_ht_close(StrDiskHT* ht_ptr){
+    fflush(ht_ptr->tilestore_ht_entries);
+    fflush(ht_ptr->tilestore_ht_buckets);
+
+    fsync(fileno(ht_ptr->tilestore_ht_entries));
+    fsync(fileno(ht_ptr->tilestore_ht_buckets));
+
     fclose(ht_ptr->tilestore_ht_entries);
     fclose(ht_ptr->tilestore_ht_buckets);
     return NO_ERR;

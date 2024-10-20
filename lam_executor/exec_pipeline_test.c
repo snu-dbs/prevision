@@ -15,41 +15,42 @@
 #include "hashtable.h"
 
 
-void sigmoid(void *_opnd_bufptr, void *_result_bufptr, uint64_t num_cells) {
+void sigmoid(void *_opnd_bufptr, void *_result_bufptr, uint64_t numCells) {
     double *opnd_bufptr = _opnd_bufptr;
     double *result_bufptr = _result_bufptr;
 
-    for(int i=0; i<num_cells; i++){
+    for(int i=0; i<numCells; i++){
         result_bufptr[i] = 1/ (1 + exp(-((double) opnd_bufptr[i])));
     }
 }
 
-void sigmoid_sparse(uint64_t* opnd_idxptr, uint64_t* opnd_indices, void *_opnd_bufptr,
-                    uint64_t* res_idxptr, uint64_t* res_indices, void *_res_bufptr,
-                    uint64_t nrows, uint64_t* nnz)
-{   
+void sigmoid_sparse(
+        uint64_t* opnd_idxptr, uint64_t* opnd_indices, void *_opnd_bufptr, uint64_t nrows, 
+        void *_res_bufptr, uint64_t numCells) {   
     double *opnd_bufptr = _opnd_bufptr;
     double *res_bufptr = _res_bufptr;
+
+    uint64_t ncols = numCells / nrows;
+
+    // zero value
+    double _default = 1.0 / (double)(1.0 + exp(0));
+    memset(res_bufptr, _default, numCells * sizeof(double));
 
     for (uint64_t i = 0; i < nrows; i++) // for each row in one tile
     {
         uint64_t opnd_pos = opnd_idxptr[i];
         uint64_t opnd_end = opnd_idxptr[i + 1];
 
-        while (opnd_pos < opnd_end)
-        {
+        while (opnd_pos < opnd_end) {
             uint64_t opnd_col = opnd_indices[opnd_pos];
 
             double res_value = 1.0 / (double)(1.0 + exp((double)-opnd_bufptr[opnd_pos]));
-            if (res_value != 0)
-            {
-                res_indices[(*nnz)] = opnd_col;
-                res_bufptr[(*nnz)] = res_value;
-                (*nnz)++;
-            }
+            uint64_t row_idx = i;
+            uint64_t col_idx = opnd_indices[opnd_pos];
+            res_bufptr[row_idx * ncols + col_idx] = res_value;
+
             opnd_pos++;
         }
-        res_idxptr[i + 1] = *nnz;
     }
 }
 

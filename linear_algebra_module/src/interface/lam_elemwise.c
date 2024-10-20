@@ -359,7 +359,8 @@ Chunk *lam_chunk_map(Chunk *opnd,
             __LAM_STAT_M_END();
 
         } else if (opnd->curpage->type == SPARSE_FIXED) {
-            chunk_getbuf(result, BF_EMPTYTILE_SPARSE_CSR);
+            // chunk_getbuf(result, BF_EMPTYTILE_SPARSE_CSR);
+            chunk_getbuf(result, BF_EMPTYTILE_DENSE);
 
             __LAM_STAT_M_START();
 

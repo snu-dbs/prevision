@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include <sys/time.h>
+
 #include "tilestore.h"
 
 #define min(a, b) ((a > b) ? b : a)
@@ -238,7 +240,7 @@ int upgrade_4_to_5(const char* input, const char* output) {
 
     // create new one
     if (tilestore_create_array(
-        output, schema->array_size, schema->tile_extents, schema->num_of_dimensions, schema->data_type, schema->format) != TILESTORE_OK) {
+        output, schema->unpadded_array_size, schema->tile_extents, schema->num_of_dimensions, schema->data_type, schema->format) != TILESTORE_OK) {
         return 1;
     }
 
@@ -393,39 +395,39 @@ void _write_csr(char *arrname, uint64_t nnz, uint64_t *tile_extents, uint64_t *t
 int test_compaction() {
     printf("%s started\n", __func__);
 
-
     // define schema
     uint32_t num_of_dim = 2;
-    uint64_t array_size[] = {100000, 100000};
-    uint64_t tile_extents[] = {10000, 10000};
+    uint64_t array_size[] = {400000000, 100};
+    uint64_t tile_extents[] = {4000000, 100};
 
     // create array
     int res = tilestore_create_array(
         "compaction", array_size, tile_extents, num_of_dim, TILESTORE_FLOAT64, TILESTORE_SPARSE_CSR);
     // assert(res == TILESTORE_OK);
 
-    // write_sparse - normal case
+    // write_sparse - big tiles
     uint64_t tile_coords[] = {0, 0};
-    _write_csr("compaction", 1000, tile_extents, tile_coords);
+    for (int i = 0; i < 100; i++) {
+        tile_coords[0] = (uint64_t) i;
+        _write_csr("compaction", 20000000, tile_extents, tile_coords);
+    }
+    
+    // write_sparse - small tiles
+    for (int i = 0; i < 100; i++) {
+        tile_coords[0] = (uint64_t) i;
+        _write_csr("compaction", 5000000, tile_extents, tile_coords);
+    }
+    
+    // struct timeval start;
+    // gettimeofday(&start, NULL);
 
-    tile_coords[0] = 0; tile_coords[1] = 1;
-    _write_csr("compaction", 1000, tile_extents, tile_coords);
+    // tilestore_compaction("compaction");
 
-    tile_coords[0] = 0; tile_coords[1] = 2;
-    _write_csr("compaction", 1000, tile_extents, tile_coords);
-
-    tile_coords[0] = 0; tile_coords[1] = 0;
-    _write_csr("compaction", 400, tile_extents, tile_coords);
-
-    tile_coords[0] = 0; tile_coords[1] = 1;
-    _write_csr("compaction", 2000, tile_extents, tile_coords);
-
-    tile_coords[0] = 0; tile_coords[1] = 2;
-    _write_csr("compaction", 3000, tile_extents, tile_coords);
-
-    tile_coords[0] = 0; tile_coords[1] = 2;
-    _write_csr("compaction", 4000, tile_extents, tile_coords);
-
+    // struct timeval end;
+    // gettimeofday(&end, NULL);
+    // unsigned long long diff = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
+    // fprintf(stderr, "compaction overhead= %lu us\n", diff);
+    
     return 0;
 }
 

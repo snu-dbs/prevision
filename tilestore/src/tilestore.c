@@ -510,6 +510,10 @@ tilestore_write_dense(
         size_t estimated_size = ceil_to_512bytes(data_size);
         if (estimated_size <= tile_meta.nbytes) {
             // size is fit! so overwrite tile
+
+            // fragmentation 
+            *frag_size += tile_meta.nbytes - estimated_size;
+
             // data
             int64_t offset = (int64_t) tile_meta.offset;
             size_t aligned_data_size = ceil_to_512bytes(data_size);
@@ -533,14 +537,11 @@ tilestore_write_dense(
                 goto DEALLOC_WITH_FREE_HDR_UNALIGNED;
             }
 
-            // fragmentation 
-            *frag_size += tile_meta.nbytes - estimated_size;
-
             is_updated = 1;
+        } else {
+            // fragmentation 
+            *frag_size += tile_meta.nbytes;
         }
-
-        // fragmentation 
-        *frag_size += tile_meta.nbytes;
     }
 
     // if it is a new tile or overwriting is not possible
@@ -825,6 +826,10 @@ tilestore_write_sparse_csr(
         // if found, determine the possibility of overwriting
         size_t estimated_size = ceil_to_512bytes(data_size) + ceil_to_512bytes(coord_sizes[0]) + ceil_to_512bytes(coord_sizes[1]);
         if (estimated_size <= tile_meta.nbytes) {
+            // fragmentation 
+            *frag_size += tile_meta.nbytes - estimated_size;
+            // fprintf(stderr, "frag_size=%lu, nbytes=%lu, est_size=%lu\n", (*frag_size), tile_meta.nbytes, estimated_size);
+
             // size is fit! so overwrite tile
             // data
             int64_t offset = (int64_t) tile_meta.offset;
@@ -866,14 +871,11 @@ tilestore_write_sparse_csr(
                 goto DEALLOC_WITH_FREE_HDR_UNALIGNED;
             }
 
-            // fragmentation 
-            *frag_size += tile_meta.nbytes - estimated_size;
-
             is_updated = 1;
+        } else {
+            // fragmentation 
+            *frag_size += tile_meta.nbytes;
         }
-
-        // fragmentation 
-        *frag_size += tile_meta.nbytes;
     }
 
     // if it is a new tile or overwriting is not possible
@@ -1068,6 +1070,7 @@ tilestore_compaction(const char *array_name) {
     size_t *frag_size = (size_t*) ((char *) hdr + sizeof(uint64_t) + sizeof(size_t));
 
     // condition
+    // fprintf(stderr, "%lu %lu %lu\n", (*dataarea_size), ((*dataarea_size) - (*frag_size)), (*frag_size));
     short is_required = (*dataarea_size) >= 1000000000 && ((*dataarea_size) - (*frag_size)) <= (*frag_size);
     if (!is_required) {
         // we dont need to do compaction
@@ -1203,6 +1206,8 @@ tilestore_compaction(const char *array_name) {
             goto DEALLOC;
         }
     }
+
+    tilestore_ht_close(hashtable);
 
     // FIXME: dealloc position
     free(ids);
