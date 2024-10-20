@@ -10,6 +10,13 @@ SELECT madlib.matrix_mult(
 	'w', 'row=row_id, col=col_id, val=val',
 	'Xw', 'fmt=sparse');
 
+-- populate cells
+CREATE UNIQUE INDEX ON Xw(row_num);
+
+INSERT INTO Xw(row_num, col_num, val)
+SELECT generate_series(1, 400000000), 1, 0
+ON CONFLICT (row_num) DO NOTHING;
+
 CREATE TABLE sigmoid AS (
 	SELECT row_num, col_num, (1/(1+EXP(-1*val))) as val
 	FROM Xw
