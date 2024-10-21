@@ -62,13 +62,13 @@ run logit "80000000" "0" "_" 3 900 26100 1
 run slogit "400000000" "0.0125" "_" 3 7200 19800 1
 run slogit "400000000" "0.025" "_" 3 7200 19800 1
 run slogit "400000000" "0.05" "_" 3 7200 19800 1
-run slogit "400000000" "0.1" "_" 3 7200 19800 1
+run slogit "400000000" "0.1" "_" 3 3600 23400 1
 
 # PageRank
 run pagerank "36692" "0" "enron" 3 900 26100 1
 run pagerank "75888" "0" "epinions" 3 900 26100 1
 run pagerank "4847571" "0" "livejournal" 3 900 26100 1
-run pagerank "61578415" "0" "twitter" 3 900 26100 1
+run pagerank2 "61578415" "0" "twitter_20" 3 900 26100 1         # no OOM if 20x20 tiles 
 
 # num iter 
 iterlist=(1 2 4 8 16 32)
@@ -83,7 +83,7 @@ for noi in ${iterlist[@]}; do
         echo "Running PageRank with a Varying Number of Iterations"
         echo "Number of Iterations: $noi"
 	echo "==============================================="
-        run pagerank "61578415" "0" "twitter" $noi 900 26100 1
+        run pagerank2 "61578415" "0" "twitter_20" $noi 900 26100 1
 done;
 
 

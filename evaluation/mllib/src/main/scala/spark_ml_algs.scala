@@ -60,6 +60,8 @@ object SparkMLAlgorithms {
             logit_sparse(density, noi, sc)
         else if (opType == "pagerank")
             pagerank(dataset, nrow, (nrow + 9) / 10, noi, sc)
+        else if (opType == "pagerank2")
+            pagerank(dataset, nrow, (nrow + 19) / 20, noi, sc)
 
         /* Stop */
         val stop = System.nanoTime()
