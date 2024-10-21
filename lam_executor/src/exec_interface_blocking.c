@@ -19,30 +19,42 @@
 
 
 unsigned long long ex_min_fl_creation_time;
+unsigned long long ex_hint_bf_time;
+unsigned long long ex_planning_time;
 
 Array *execute(Array *root)
 {
+    // stats
+    ex_min_fl_creation_time = 0;
+    ex_hint_bf_time = 0;        
+    ex_planning_time = 0;        
+    struct timeval _start, _end;
+
     BF_QueryStart();
 
     // planning
+    gettimeofday(&_start, NULL);
     uint8_t order = gen_plan(root);
+    gettimeofday(&_end, NULL);
+
+    unsigned long long planning_diff = ((_end.tv_sec - _start.tv_sec) * 1000000) + (_end.tv_usec - _start.tv_usec); 
+    ex_planning_time += planning_diff;
 
     // for write prevention
     bool write_prevention_on = true;
     if (write_prevention_on) {
+        gettimeofday(&_start, NULL);
         hint_to_bf(root, ++order);      // all array's visited_for_consumer_cnt become false.
+        gettimeofday(&_end, NULL);
         
-        // stats
-        struct timeval fl_start;
-        gettimeofday(&fl_start, NULL);
+        unsigned long long hint_bf_diff = ((_end.tv_sec - _start.tv_sec) * 1000000) + (_end.tv_usec - _start.tv_usec); 
+        ex_hint_bf_time += hint_bf_diff;
 
+        gettimeofday(&_start, NULL);
         fill_future(root);
-        
-        // stats
-        struct timeval fl_end;
-        gettimeofday(&fl_end, NULL);
+        gettimeofday(&_end, NULL);
 
-        unsigned long long fl_diff = ((fl_end.tv_sec - fl_start.tv_sec) * 1000000) + (fl_end.tv_usec - fl_start.tv_usec); 
+        unsigned long long fl_diff = ((_end.tv_sec - _start.tv_sec) * 1000000) + (_end.tv_usec - _start.tv_usec); 
         ex_min_fl_creation_time += fl_diff;
     } else {
         fprintf(stderr, "[EXECUTOR] write prevention off\n");
@@ -62,7 +74,7 @@ Array *execute(Array *root)
     /* 2. Compute EOCHUNK. */
     uint64_t EOCHUNK = 1;
     for (int d = 0; d < ndim; d++)
-        EOCHUNK *= ceil((result_desc.dim_domains[d][1] - result_desc.dim_domains[d][0] + 1) / result_chunksize[d]);
+        EOCHUNK *= ceil((double) (result_desc.dim_domains[d][1] - result_desc.dim_domains[d][0] + 1) / result_chunksize[d]);
 
     /* 3. Compute the result. */
     if (root->scalar_flag)
@@ -774,6 +786,7 @@ Chunk *lam_operation_matmul(Array **arraylist, Array *result_array, uint64_t pos
         loop = (arraylist[0]->desc.dim_domains[1][1] - arraylist[0]->desc.dim_domains[1][0] + 1) / chunksize_child[0][1];
     }
 
+    bool is_first = true;
     for (int i = 0; i < loop; i++)
     {
         Chunk *lhs_chunk, *rhs_chunk;
@@ -801,12 +814,13 @@ Chunk *lam_operation_matmul(Array **arraylist, Array *result_array, uint64_t pos
         }
         rhs_chunk = get_pos(arraylist[1], rhs_pos, chunksize_child[1]);
 
-        lam_chunk_matmul(
+        is_first = lam_chunk_matmul(
             lhs_chunk, rhs_chunk, result_chunk,
             attrtype[0], attrtype[1], result_array->desc,
             chunksize_parent, i,
             result_array->op_param.matmul.lhs_transposed, 
-            result_array->op_param.matmul.rhs_transposed);
+            result_array->op_param.matmul.rhs_transposed,
+            is_first) && is_first;      // once is_first be false, it could not become true.
 
         chunk_destroy(lhs_chunk);
         chunk_destroy(rhs_chunk);
