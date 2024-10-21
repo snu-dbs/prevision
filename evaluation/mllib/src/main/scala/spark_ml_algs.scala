@@ -348,6 +348,9 @@ object SparkMLAlgorithms {
             H = elem_multiply(H, elem_divide( W.transpose.multiply( X, 100 ),
                                 (W.transpose.multiply( W, 100 ).multiply( H, 100 ))))
             iteration = iteration + 1
+
+            W.blocks.persist(MEMORY_AND_DISK_SER)
+            H.blocks.persist(MEMORY_AND_DISK_SER)
         }
 
         W.blocks.map(x => ((x._1._1.toString + "," + x._1._2.toString),
