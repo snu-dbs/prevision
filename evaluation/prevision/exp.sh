@@ -155,11 +155,11 @@ pagerank livejournal 3
 pagerank twitter 3
 
 # num of iters
-iterlist=(1 2 4 8 16 32 64)
+iterlist=(1 2 4 8 16 32)
 for noi in ${iterlist[@]}; do
         echo "num_of_iter=$noi";
         echo "NMF"
-        dense_nmf "regular/80000000" $noi
+        dense_nmf "regular/10000000" $noi
 
         echo "PageRank"
         pagerank twitter $noi
@@ -171,6 +171,12 @@ dense_nmf "small/400/80000000" 3
 dense_nmf "small/800/80000000" 3
 dense_nmf "small/1600/80000000" 3
 dense_nmf "small/3200/80000000" 3
+
+dense_lr "small/200/80000000" 3
+dense_lr "small/400/80000000" 3
+dense_lr "small/800/80000000" 3
+dense_lr "small/1600/80000000" 3
+dense_lr "small/3200/80000000" 3
 
 # MRU
 set_bf_env_mru
