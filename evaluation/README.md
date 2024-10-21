@@ -309,12 +309,12 @@ matmul  trans   elem    elem_c  elem_m  newarr
 ```
 
 How to record:
-- (The first line under header) The value under `total` is an elapsed time (microseconds). In Fig 14, "the `total` - the other times below" should be recorded as CPU time.
+- (The first line under header) The value under `total` is an elapsed time (microseconds). The "`total` - the other times below" should be recorded as CPU time in Fig 14.
 - (The first line under header) The sum of `io_r`, `io_ir` and `io_w` is I/O time (microseconds), the sum of `flgen` and `pureplan` is query planning time (microseconds), and the sum of `flget` and `sl` is list maintenance time (microseconds). Those will be used for reproducing Fig 14 and Fig 15 in the paper.
-- (The second line under header) The sum of `io_r` and `io_ir` is the I/O volume for read and the `io_w` is the I/O volume for write. Those will be used for reproducing Fig 11 in the paper.
+- (The second line under header) The sum of `io_r` and `io_ir` is the I/O volume for read and the `io_w` is the I/O volume for write. Both read and write volumes are in bytes. Those will be used to reproduce Fig 11 in the paper.
 
 To reproduce the blocking version of PreVision (for Fig 11), 
-please move to `/lam_executor/src/` and replace `exec_interface_blocking.c` and `simulate_blocking.c` to `exec_interface.c` and `simulate.c`, respectively.
+please move to `/lam_executor/src/` of this repository and replace `exec_interface.c` and `simulate.c` with `exec_interface_blocking.c` and `simulate_blocking.c`, respectively.
 Then, build PreVision with `makeall.sh` in the root direcotry of this repository.
 To run experiments, run `exp_blocking.sh` in the `/evaluation/prevision` directory.
 
