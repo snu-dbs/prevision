@@ -186,6 +186,7 @@ dense_nmf "regular/80000000" 3
 # LRU-K
 set_bf_env_lruk 2 8
 dense_lr "regular/80000000" 3
+set_bf_env_lruk 2 64
 dense_nmf "regular/80000000" 3
 
 # parallelism
