@@ -130,80 +130,15 @@ function set_bf_env_lruk() {
         export BF_PREEMPTIVE_EVICTION=1
 }
 
-# evalaution
-set_thread 1
-set_env
+# evalaution                                                                                                                                                                              │·············
+set_thread 1                                                                                                                                                                              │·············
+set_env                                                                                                                                                                                   │·············
 
-dense_lr "regular/10000000" 3
-dense_lr "regular/20000000" 3
-dense_lr "regular/40000000" 3
-dense_lr "regular/80000000" 3
+# Blocking with PE
+dense_lr "regular/80000000" 3                                                                                                                                                            │·············
+dense_nmf "regular/80000000" 3                                                                                                                                                           │·············
 
-dense_nmf "regular/10000000" 3
-dense_nmf "regular/20000000" 3
-dense_nmf "regular/40000000" 3
-dense_nmf "regular/80000000" 3
-
-sparse_lr 0.0125 3
-sparse_lr 0.025 3
-sparse_lr 0.05 3
-sparse_lr 0.1 3
-
-pagerank enron 3
-pagerank epinions 3
-pagerank livejournal 3
-pagerank twitter 3
-
-# num of iters
-iterlist=(1 2 4 8 16 32)
-for noi in ${iterlist[@]}; do
-        echo "num_of_iter=$noi";
-        echo "NMF"
-        dense_nmf "regular/10000000" $noi
-
-        echo "PageRank"
-        pagerank twitter $noi
-done;
-
-# getPos without PE
+# Blocking without PE
 export BF_PREEMPTIVE_EVICTION=0
 dense_lr "regular/80000000" 3
 dense_nmf "regular/80000000" 3
-export BF_PREEMPTIVE_EVICTION=1
-
-# small tile
-dense_nmf "small/200/80000000" 3
-dense_nmf "small/400/80000000" 3
-dense_nmf "small/800/80000000" 3
-dense_nmf "small/1600/80000000" 3
-dense_nmf "small/3200/80000000" 3
-
-dense_lr "small/200/80000000" 3
-dense_lr "small/400/80000000" 3
-dense_lr "small/800/80000000" 3
-dense_lr "small/1600/80000000" 3
-dense_lr "small/3200/80000000" 3
-
-# MRU
-set_bf_env_mru
-dense_lr "regular/80000000" 3
-dense_nmf "regular/80000000" 3
-
-# LRU-K
-set_bf_env_lruk 2 8
-dense_lr "regular/80000000" 3
-set_bf_env_lruk 2 64
-dense_nmf "regular/80000000" 3
-
-# parallelism
-plist=(2 4 8)
-for p in ${plist[@]}; do
-        set_thread $p
-        echo "num_of_thread=$p";
-
-        echo "NMF"
-        dense_nmf "regular/10000000" 3
-
-        echo "Sparse LR"
-        sparse_lr 0.0125 3
-done;

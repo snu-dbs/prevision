@@ -314,6 +314,11 @@ How to record:
 - (The first line under header) The sum of `io_r`, `io_ir` and `io_w` is I/O time (microseconds), the sum of `flgen` and `pureplan` is query planning time (microseconds), and the sum of `flget` and `sl` is list maintenance time (microseconds). Those will be used for reproducing Fig 14 and Fig 15 in the paper.
 - (The second line under header) The sum of `io_r` and `io_ir` is the I/O volume for read and the `io_w` is the I/O volume for write. Those will be used for reproducing Fig 11 in the paper.
 
+To reproduce the blocking version of PreVision (for Fig 11), 
+please move to `/lam_executor/src/` and replace `exec_interface_blocking.c` and `simulate_blocking.c` to `exec_interface.c` and `simulate.c`, respectively.
+Then, build PreVision with `makeall.sh` in the root direcotry of this repository.
+To run experiments, run `exp_blocking.sh` in the `/evaluation/prevision` directory.
+
 PreVision is used to be used as a part of another system and these systems use the shared-memory for sharing buffers.
 Thus, if you don't have enough shared memory space, you can run into a shared-memory error.
 If so, please resize your `/dev/shm` and retry it.
