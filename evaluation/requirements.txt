@@ -5,6 +5,7 @@ dask==2022.6.0
 distributed==2022.6.0
 fsspec==2022.5.0
 graphviz==0.20
+h5py==3.11.0
 HeapDict==1.0.1
 Jinja2==3.1.2
 locket==1.0.0
