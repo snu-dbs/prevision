@@ -36,15 +36,16 @@ We have tested on Ubuntu 18.04 and 20.04.
 Since some systems throw an out-of-memory error when preparing datasets, we recommend using a machine with a large memory size.
 Also, since the size of datasets that will be generated for the evaluation is quite huge, please make sure that you have at least 3 terabytes of free disk space.
 
-Before getting started, you need to install comparison systems.
-This is required since every later step depends on the systems.
+Before install comparsion systems, please install OpenBLAS 0.3.0. 
 
-### MLlib (Spark)
+### Install Comparsion Systems
+
+#### MLlib (Spark)
 
 Download [Spark 3.3.2](https://archive.apache.org/dist/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz) and un-compress it to the current directory.
 Please make sure that add the absolute path of `./spark-3.3.2-bin-hadoop3/bin/` to the `PATH` environmental variable.
 
-### SystemDS
+#### SystemDS
 
 Please install Java 11 before installing SystemDS because the system requires it.
 
@@ -55,7 +56,7 @@ Please make sure the following.
 - Add the absolute path of `./systemds-3.1.0-bin/` to the `SYSTEMDS_ROOT` environmental variable.
 
 
-### MADlib
+#### MADlib
 
 MADlib is a machine learning extension of PostgreSQL.
 Thus, you need to install PostgreSQL first, and then install MADlib.
@@ -64,7 +65,7 @@ Install PostgreSQL 12.14 with plpython support ([`--with-python`](https://www.po
 After that, following [the MADlib installation guide](https://cwiki.apache.org/confluence/display/MADLIB/Installation+Guide), install MADlib 1.21.0 with schema `madlib`.
 If you install MADlib from source code, please make sure the Postgres installation is detected during initializing a cmake build.
 
-### SciDB
+#### SciDB
 
 Since SciDB changed to closed-source software, the latest version we can use is 19.11.
 Fortunately, a well-structured docker image for SciDB 19.11 is published on the Internet, so we can use it.

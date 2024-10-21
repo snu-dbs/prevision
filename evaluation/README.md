@@ -202,18 +202,26 @@ HOP DAGs recompile time:        0.000 sec.
 ### MLlib
 
 Please make sure that you can run `spark-submit` anywhere and an environmental variable `SPARK_ROOT` is set appropriatly.
+Also, please make sure that your Spark leverages OpenBLAS by running the below command in `spark-shell`.
+Please refer to [the Spark documentation](https://archive.apache.org/dist/spark/docs/3.3.2/ml-linalg-guide.html) for more information.
+
+```scala
+import dev.ludovic.netlib.NativeBLAS
+NativeBLAS.getInstance()
+```
 
 Before running, you may need to modify data paths in the source code.
 Please move to the `mllib` directory.
 Then, open `./src/main/scala/spark_ml_algs.scala` and modify paths for your environment.
-Then, run the experiment script as follow.
+
+Run the experiment script as below. 
+Be aware that the temp directory (`spark.local.dir`) is set to the same storage as the data files for precise results.
 
 ```bash
 # current directory: /evaluation/mllib/
 bash ./auto.sh
 ```
 
-Be aware that the temp directory (`spark.local.dir`) is set to the same storage as the data files for precise results.
 
 ### MADlib
 
@@ -289,6 +297,22 @@ To run dense and sparse experiments, run the following script.
 # Current directory: /evaluation/prevision
 bash ./exp.sh
 ```
+
+Each experiment will report elapsed times and I/O volume such as below.
+
+```
+total   bf      io_r    io_ir   io_w    phit    preq    flgen   flget   sl      delhint pureplan
+66374505        26980246        0       26381339        3670    2505    3915    23548   78738   6334    186     2863
+0       0       0       14480002360     800     115440749616    158721027976    0       0       0       0       0
+matmul  trans   elem    elem_c  elem_m  newarr
+15860668        14385764        5215174 4       2877299 0
+600     300     303     3       300     0
+```
+
+How to record:
+- (The first line under header) The value under `total` is an elapsed time (microseconds). In Fig 14, "the `total` - the other times below" should be recorded as CPU time.
+- (The first line under header) The sum of `io_r`, `io_ir` and `io_w` is I/O time (microseconds), the sum of `flgen` and `pureplan` is query planning time (microseconds), and the sum of `flget` and `sl` is list maintenance time (microseconds). Those will be used for reproducing Fig 14 and Fig 15 in the paper.
+- (The second line under header) The sum of `io_r` and `io_ir` is the I/O volume for read and the `io_w` is the I/O volume for write. Those will be used for reproducing Fig 11 in the paper.
 
 PreVision is used to be used as a part of another system and these systems use the shared-memory for sharing buffers.
 Thus, if you don't have enough shared memory space, you can run into a shared-memory error.
