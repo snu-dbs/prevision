@@ -286,7 +286,6 @@ bash auto.sh
 
 If you have not built PreVision yet, please move to the root directory of this repository and run `makeall.sh`.
 Make sure OpenBLAS, LAPACK, and LAPACKe are installed.
-If you are using Ubuntu, you can install those by `sudo apt install liblapack-dev liblapacke-dev libopenblas-dev`.
 
 To run PreVision, go to the `prevision` directory.
 If the `exec_eval` executable file not exist, build the executable file by running the `make` command.
