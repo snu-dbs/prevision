@@ -1,3 +1,6 @@
+DOCKER_NAME="prevision-scidb-exp"
+SCRIPT_PATH="/home/scidb/alg-remote.sh"
+
 function exp() {
 	iter=1
 	noi=$3
@@ -7,11 +10,11 @@ function exp() {
 	for i in $(seq 1 $iter)
 	do
 		echo "iter="$i
-		sudo docker start prevision-scidb-exp
+		sudo docker start $DOCKER_NAME
 		sleep 16
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-		sudo docker exec -it prevision-scidb-exp bash /home/scidb/alg-remote.sh $1 $2 $noi
-		sudo docker stop prevision-scidb-exp
+		sudo docker exec -it $DOCKER_NAME bash $SCRIPT_PATH $1 $2 $noi
+		sudo docker stop $DOCKER_NAME
 	done
 }
 

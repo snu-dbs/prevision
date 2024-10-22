@@ -130,7 +130,7 @@ bash load-sparse.sh
 bash load-pagerank.sh
 ```
 
-Please put guest scripts in appropriate directories and update `exp.sh` (line 13) and `alg-remote.sh` (line 4) to run appropriate script.
+Please put guest scripts in appropriate directories and update `exp.sh` (line 1-2) and `alg-remote.sh` (line 4) to run appropriate script.
 After that, you can start an evaluation with the following command on the host side.
 
 ```bash
