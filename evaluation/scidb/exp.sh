@@ -1,5 +1,5 @@
 DOCKER_NAME="prevision-scidb-exp"
-SCRIPT_PATH="/home/scidb/alg-remote.sh"
+SCRIPT_PATH="/prevision/evaluation/scidb/guest/alg-remote.sh"
 
 function exp() {
 	iter=1
