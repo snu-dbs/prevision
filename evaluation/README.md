@@ -95,6 +95,11 @@ For instance, set `3000` to each of them if parallelism is four; the total # of 
 Sometimes it might cause an out-of-memory error because SciDB overuses memory capacity. 
 In such a case, lowering memory numbers might make the workload run without an OOM error.
 
+If you run SciDB using docker and do not have enough disk space, 
+please consider setting the `base-path` (the data path for SciDB) in the `config.ini` to a volume outside the docker container.
+For example, if you used the example command in the root directory's `README.md` to run a docker container,
+the `/dbpath` would be a good place for `base-path`.
+
 If you are using provided docker image, updated `config.ini` file should be placed in the `/opt/scidb/19.11/etc` directory.
 If you changed the number of instances, you should re-initialize the cluster and load data again.
 **This removes all loaded data.**
@@ -128,6 +133,7 @@ Please review the `DIR` path in the script files.
 bash load-dense.sh
 bash load-sparse.sh
 bash load-pagerank.sh
+bash setup.sh
 ```
 
 Please put guest scripts in appropriate directories and update `exp.sh` (line 1-2) and `alg-remote.sh` (line 4) to run appropriate script.
@@ -137,6 +143,8 @@ After that, you can start an evaluation with the following command on the host s
 # Current directory: /evaluation/scidb/
 bash exp.sh
 ```
+
+Please sum the numbers shown after query executions and record it as an elapsed time (second).
 
 ##### For non-docker user
 
@@ -157,6 +165,8 @@ You can start the evaluation with the following command.
 # Note also that the setup.sh and clean.sh will be executed in the alg-local.sh script.
 bash alg-local.sh
 ```
+
+Please sum the numbers shown after query executions and record it as an elapsed time (second).
 
 ### SystemDS
 
