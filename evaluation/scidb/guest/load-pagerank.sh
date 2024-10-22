@@ -1,5 +1,5 @@
 # /bin/bash
-DIR=../../../slab-benchmark/prevision/output/scidb/
+DIR=/prevision/slab-benchmark/prevision/output/scidb
 
 import() {
 	dataset=$1
@@ -9,8 +9,7 @@ import() {
 
 	# square matrix
 	iquery -aq "CREATE ARRAY mat_"$dataset"_coo <i:int64,j:int64,value:double NOT NULL>[idx=0:*];"
-	#iquery -aq "load(mat_"$dataset"_coo,'$DIR/$dataset/$dataset""_pagerank.tsv', -2, 'TSV');"
-	iquery -aq "load(mat_"$dataset"_coo,'/home/scidb/$dataset""_pagerank.tsv', -2, 'TSV');"
+	iquery -aq "load(mat_"$dataset"_coo,'$DIR/$dataset""_pagerank.tsv', -2, 'TSV');"
 	iquery -aq "store(redimension(mat_"$dataset"_coo, <value:double NOT NULL>[i=0:"$arrend":0:"$tilesize"; j=0:"$arrend":0:"$tilesize"]), mat_"$dataset")"
 	iquery -aq "remove(mat_"$dataset"_coo)"
 
