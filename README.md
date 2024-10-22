@@ -68,8 +68,9 @@ If you install MADlib from source code, please make sure the Postgres installati
 #### SciDB
 
 Since SciDB changed to closed-source software, the latest version we can use is 19.11.
-Fortunately, a well-structured docker image for SciDB 19.11 is published on the Internet, so we can use it.
-You can find the docker image at [here](https://hub.docker.com/r/rvernica/scidb/tags).
+We provide [a docker image with SciDB 19.11](https://hub.docker.com/layers/grammaright/scidb/19.11-xenial/images/sha256-5ccfb9b323ac216b7fec8c7cb44a22a314f1e2575fa9acca0e5eb6ff0b3cb178?context=repo) and [SciDB source code](https://github.com/snu-dbs/scidb-19.11.5.f8334b60).
+We recommend to use the SciDB docker image.
+
 
 Please refer to the below to set up SciDB:
 
@@ -79,11 +80,11 @@ If you do not have enough disk space for that directory, consider using a volume
 - If you use docker, make sure that the shared memory threshold is enough.
 If a container has a limited shared memory size, SciDB may raise a memory error.
 You can use the `--shm-size` option for the `docker run` command (e.g., `--shm-size=30gb`).
-- You must use a normal user (not a root user) to run SciDB. If you run SciDB using the root account, SciDB would make an MPI error. 
+- You must use a normal user (not a root user) to run SciDB. If you run SciDB using the root account, SciDB would make an MPI error. If you use the docker image, log in to the `scidb` user (password is `qwer1234`) to interact with SciDB.
 
 Here is an **example** of running a SciDB container.
 ```bash
-sudo docker run --name prevision-scidb-exp -it --shm-size=30gb -v /prevision/slab-benchmark/prevision:/prevision -v /prevision/evaluation/scidb/dbpath:/dbpath rvernica/scidb:19.11
+sudo docker run --name prevision-scidb-exp -it --shm-size=30gb -v /prevision/slab-benchmark/prevision:/prevision -v /prevision/evaluation/scidb/dbpath:/dbpath grammaright/scidb:19.11-xenial
 ```
 
 SciDB requires at least two instances that one for a coordinator and the other for executors.

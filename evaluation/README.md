@@ -89,12 +89,24 @@ The `setup.sh` and `clean.sh` are scripts that needed to be executed before and 
 The `config.ini` file is a configuration we used for non-parallelism experiments.
 Please adjust the number of instances (the last value of `server-0`) when parallelism experiments are required.
 For example, if parallelism is four, the `server-0` should be `127.0.0.1,4` (one coordinator and four executors).
-After modified, you should load data again.
 
-For the buffer size, the equal-sized values for each instances are set to the `smgr-cache-size` and `mem-array-threshold`.
+For the buffer size, the equal-sized values for each instances should be set to the `smgr-cache-size` and `mem-array-threshold`.
 For instance, set `3000` to each of them if parallelism is four; the total # of instances is 5 so (`smgr-cache-size` + `mem-array-threadhold`) * 5 should be 30GB.
 Sometimes it might cause an out-of-memory error because SciDB overuses memory capacity. 
 In such a case, lowering memory numbers might make the workload run without an OOM error.
+
+If you are using provided docker image, updated `config.ini` file should be placed in the `/opt/scidb/19.11/etc` directory.
+If you changed the number of instances, you should re-initialize the cluster and load data again.
+**This removes all loaded data.**
+To re-initialize the cluster, 1) stop the cluster, 2) replace `config.ini`, 3) re-initialize cluster, and 4) start the cluster by following commands.
+
+```bash
+# you should log in to `scidb` user
+scidbctl.py stop
+mv config.ini /opt/scidb/19.11/etc/  # the config.ini is what you modified
+scidbctl.py init-cluster        # press y to continue
+scidbctl.py start
+```
 
 The other configurations should not be modified.
 For more information, please refer to [the SciDB configuration documentation](https://paradigm4.atlassian.net/wiki/spaces/scidb/pages/3395882557/Configuring+SciDB).
