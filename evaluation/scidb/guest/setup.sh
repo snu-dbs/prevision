@@ -1,4 +1,5 @@
 iquery -aq "load_library('dense_linear_algebra')"
+iquery -aq "load_library('linear_algebra')"
 
 # For LR
 iquery -aq 'CREATE ARRAY zero_10Mx1<val:double>[row=0:9999999:0:1000;col=0:0:0:1000]'

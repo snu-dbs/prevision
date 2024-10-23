@@ -99,6 +99,7 @@ If you run SciDB using docker and do not have enough disk space,
 please consider setting the `base-path` (the data path for SciDB) in the `config.ini` to a volume outside the docker container.
 For example, if you used the example command in the root directory's `README.md` to run a docker container,
 the `/dbpath` would be a good place for `base-path`.
+(in such case, make sure to give the scidb user `dbpath` permissions)
 
 If you are using provided docker image, updated `config.ini` file should be placed in the `/opt/scidb/19.11/etc` directory.
 If you changed the number of instances, you should re-initialize the cluster and load data again.
