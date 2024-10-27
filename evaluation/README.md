@@ -58,7 +58,7 @@ If your directory structure is different from what we presented, please modify t
 ```bash
 # current directory: /evaluation/numpy_memmap/
 # make sure that we are on venv
-bash exp.sh | tee -a numpy.log 2>&1
+bash exp.sh 2>&1 | tee -a numpy.log
 ```
 
 ### Dask
@@ -72,7 +72,7 @@ If your directory structure is different from what we presented, please modify t
 ```bash
 # current directory: /evaluation/dask/
 # make sure that we are on venv
-bash exp_alg.sh | tee -a dask.log 2>&1
+bash exp_alg.sh 2>&1 | tee -a dask.log
 ```
 
 ### SciDB
@@ -81,7 +81,7 @@ Make sure that you used the command in `README.md` in the repository root.
 
 ```bash
 # Current directory: /evaluation/scidb/
-bash exp_all.sh | tee -a scidb.log 2>&1
+bash exp_all.sh 2>&1 | tee -a scidb.log
 ```
 
 Please sum the numbers shown after query executions and record it as an elapsed time (second).
@@ -116,7 +116,7 @@ Once the build is successfully finished, run the following command on `dense` or
 
 ```bash
 # current directory: /evaluation/systemds/dense or /evaluation/systemds/sparse
-bash auto.sh | tee -a systemds.log 2>&1
+bash auto.sh 2>&1 | tee -a systemds.log
 ```
 
 The experiment result will be shown at the end of each execution, looked similar to the following. 
@@ -160,7 +160,7 @@ Be aware that the temp directory (`spark.local.dir`) is set to the same storage 
 
 ```bash
 # current directory: /evaluation/mllib/
-bash ./auto.sh | tee -a mllib.log 2>&1
+bash ./auto.sh 2>&1 | tee -a mllib.log
 ```
 
 
@@ -212,7 +212,7 @@ The command could be different from our environment, thus please update the comm
 
 ```bash
 # Current directory: /evaluation/madlib/exp-scripts
-bash auto.sh | tee -a madlib.log 2>&1
+bash auto.sh 2>&1 | tee -a madlib.log
 ```
 
 To run sparse experiments, move to the `sparse` directory and run the following script.
@@ -220,7 +220,7 @@ Note that the script also contains restarting the PostgreSQL service.
 
 ```bash
 # Current directory: /evaluation/madlib/sparse
-bash auto.sh | tee -a madlib.log 2>&1
+bash auto.sh 2>&1 | tee -a madlib.log
 ```
 
 ### PreVision
@@ -235,7 +235,7 @@ To run dense and sparse experiments, run the following script.
 
 ```bash
 # Current directory: /evaluation/prevision
-bash ./exp.sh | tee -a prevision.log 2>&1
+bash ./exp.sh 2>&1 | tee -a prevision.log
 ```
 
 Each experiment will report elapsed times and I/O volume such as below.
