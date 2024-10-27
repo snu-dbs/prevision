@@ -13,8 +13,8 @@ function init() {
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py start"
 
 	echo "Dataset Load"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash /prevision/evaluation/scidb/guest/load-dense-10m.sh
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash /prevision/evaluation/scidb/guest/setup.sh
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/load-dense-10m.sh"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/setup.sh"
 
 	echo "Done"
 	sudo docker stop $DOCKER_NAME
