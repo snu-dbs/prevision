@@ -7,15 +7,15 @@ function init() {
 	sleep 16
 
 	echo "Database Initialization"
-	sudo docker exec -it $DOCKER_NAME sudo -i scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py stop"
-	sudo docker exec -it $DOCKER_NAME sudo -i scidb bash -c "cp /prevision/evaluation/scidb/guest/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
-	sudo docker exec -it $DOCKER_NAME sudo -i scidb bash -c "echo 'y' | /opt/scidb/19.11/bin/scidbctl.py init-cluster"
-	sudo docker exec -it $DOCKER_NAME sudo -i scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py start"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py stop"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /prevision/evaluation/scidb/guest/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "echo 'y' | /opt/scidb/19.11/bin/scidbctl.py init-cluster"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py start"
 
 	echo "Dataset Load"
-	sudo docker exec -it $DOCKER_NAME sudo -i scidb bash /prevision/evaluation/scidb/guest/load-sparse-slr0025.sh
-	sudo docker exec -it $DOCKER_NAME sudo -i scidb bash /prevision/evaluation/scidb/guest/load-pagerank-twitter.sh
-	sudo docker exec -it $DOCKER_NAME sudo -i scidb bash /prevision/evaluation/scidb/guest/setup.sh
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash /prevision/evaluation/scidb/guest/load-sparse-slr0025.sh
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash /prevision/evaluation/scidb/guest/load-pagerank-twitter.sh
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash /prevision/evaluation/scidb/guest/setup.sh
 
 	echo "Done"
 	sudo docker stop $DOCKER_NAME

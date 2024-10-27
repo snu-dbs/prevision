@@ -79,7 +79,7 @@ After configuration, please run the following commands.
 PREVISION_PATH=<PREVISION_REPOSITORY_PATH_IN_HOST>
 DB_PATH=<DB_PATH_FOR_SCIDB>
 
-sudo docker run --name prevision-scidb-exp -it --shm-size=30gb -v $PREVISION_PATH:/prevision -v $DB_PATH:/dbpath grammaright/scidb:19.11-xenial
+sudo docker run --name prevision-scidb-exp -dit --shm-size=30gb -v $PREVISION_PATH:/prevision -v $DB_PATH:/dbpath grammaright/scidb:19.11-xenial
 ```
 
 If you need to interact with SciDB manually, you must use a `scidb` user (not a root user). If you run SciDB using the root account, SciDB would make an MPI error. The docker image has the `scidb` user with a password is `qwer1234`.
