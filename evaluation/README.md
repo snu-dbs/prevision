@@ -58,7 +58,7 @@ If your directory structure is different from what we presented, please modify t
 ```bash
 # current directory: /evaluation/numpy_memmap/
 # make sure that we are on venv
-bash exp.sh
+bash exp.sh | tee -a numpy.log 2>&1
 ```
 
 ### Dask
@@ -72,102 +72,20 @@ If your directory structure is different from what we presented, please modify t
 ```bash
 # current directory: /evaluation/dask/
 # make sure that we are on venv
-bash exp_alg.sh
+bash exp_alg.sh | tee -a dask.log 2>&1
 ```
 
 ### SciDB
 
-#### Files
-The `./scidb/guest/` contains SciDB queries, data loaders, and configuration files that we used.
-The `load-dense.sh`, `load-sparse.sh`, and `load-pagerank.sh` are data-loading scripts.
-You may need to modify the `DIR` variable of each script to adjust the dataset directory.
-The `alg.sh` script defines the matrix computation queries.
-The `setup.sh` and `clean.sh` are scripts that needed to be executed before and after experiments, respectively.
-
-#### Configuration
-
-The `config.ini` file is a configuration we used for non-parallelism experiments.
-Please adjust the number of instances (the last value of `server-0`) when parallelism experiments are required.
-For example, if parallelism is four, the `server-0` should be `127.0.0.1,4` (one coordinator and four executors).
-
-For the buffer size, the equal-sized values for each instances should be set to the `smgr-cache-size` and `mem-array-threshold`.
-For instance, set `3000` to each of them if parallelism is four; the total # of instances is 5 so (`smgr-cache-size` + `mem-array-threadhold`) * 5 should be 30GB.
-Sometimes it might cause an out-of-memory error because SciDB overuses memory capacity. 
-In such a case, lowering memory numbers might make the workload run without an OOM error.
-
-If you run SciDB using docker and do not have enough disk space, 
-please consider setting the `base-path` (the data path for SciDB) in the `config.ini` to a volume outside the docker container.
-For example, if you used the example command in the root directory's `README.md` to run a docker container,
-the `/dbpath` would be a good place for `base-path`.
-(in such case, make sure to give the scidb user `dbpath` permissions)
-
-If you are using provided docker image, updated `config.ini` file should be placed in the `/opt/scidb/19.11/etc` directory.
-If you changed the number of instances, you should re-initialize the cluster and load data again.
-**This removes all loaded data.**
-To re-initialize the cluster, 1) stop the cluster, 2) replace `config.ini`, 3) re-initialize cluster, and 4) start the cluster by following commands.
-
-```bash
-# you should log in to `scidb` user
-scidbctl.py stop
-mv config.ini /opt/scidb/19.11/etc/  # the config.ini is what you modified
-scidbctl.py init-cluster        # press y to continue
-scidbctl.py start
-```
-
-The other configurations should not be modified.
-For more information, please refer to [the SciDB configuration documentation](https://paradigm4.atlassian.net/wiki/spaces/scidb/pages/3395882557/Configuring+SciDB).
-
-
-#### Evaluation
-
-##### For Docker user
-
-Please transfer the script files in the `guest` directory to the docker container.
-The commands in the `exp.sh` will be sent to the docker container and execute queries remotely.
-Your docker configuration may be different from ours, so please modify the `exp.sh` and `alg-remote.sh` for your environment to use these.
-
-Before running experiments, please run the data loading scripts. 
-Please review the `DIR` path in the script files.
-
-```bash
-# Current directory: /evaluation/scidb/guest/
-bash load-dense.sh
-bash load-sparse.sh
-bash load-pagerank.sh
-bash setup.sh
-```
-
-Please put guest scripts in appropriate directories and update `exp.sh` (line 1-2) and `alg-remote.sh` (line 4) to run appropriate script.
-After that, you can start an evaluation with the following command on the host side.
+Make sure that you used the command in `README.md` in the repository root. 
 
 ```bash
 # Current directory: /evaluation/scidb/
-bash exp.sh
+bash exp_all.sh | tee -a scidb.log 2>&1
 ```
 
 Please sum the numbers shown after query executions and record it as an elapsed time (second).
 
-##### For non-docker user
-
-Before running experiments, please run the data loading scripts. 
-
-```bash
-# Current directory: /evaluation/scidb/guest/
-bash load-dense.sh
-bash load-sparse.sh
-bash load-pagerank.sh
-```
-
-You can start the evaluation with the following command.
-
-```bash
-# Current directory: /evaluation/scidb/guest/
-# Note that alg-local.sh and alg.sh should be placed in the same directory.
-# Note also that the setup.sh and clean.sh will be executed in the alg-local.sh script.
-bash alg-local.sh
-```
-
-Please sum the numbers shown after query executions and record it as an elapsed time (second).
 
 ### SystemDS
 
@@ -198,7 +116,7 @@ Once the build is successfully finished, run the following command on `dense` or
 
 ```bash
 # current directory: /evaluation/systemds/dense or /evaluation/systemds/sparse
-bash auto.sh
+bash auto.sh | tee -a systemds.log 2>&1
 ```
 
 The experiment result will be shown at the end of each execution, looked similar to the following. 
@@ -242,7 +160,7 @@ Be aware that the temp directory (`spark.local.dir`) is set to the same storage 
 
 ```bash
 # current directory: /evaluation/mllib/
-bash ./auto.sh
+bash ./auto.sh | tee -a mllib.log 2>&1
 ```
 
 
@@ -294,7 +212,7 @@ The command could be different from our environment, thus please update the comm
 
 ```bash
 # Current directory: /evaluation/madlib/exp-scripts
-bash auto.sh
+bash auto.sh | tee -a madlib.log 2>&1
 ```
 
 To run sparse experiments, move to the `sparse` directory and run the following script.
@@ -302,7 +220,7 @@ Note that the script also contains restarting the PostgreSQL service.
 
 ```bash
 # Current directory: /evaluation/madlib/sparse
-bash auto.sh
+bash auto.sh | tee -a madlib.log 2>&1
 ```
 
 ### PreVision
@@ -317,7 +235,7 @@ To run dense and sparse experiments, run the following script.
 
 ```bash
 # Current directory: /evaluation/prevision
-bash ./exp.sh
+bash ./exp.sh | tee -a prevision.log 2>&1
 ```
 
 Each experiment will report elapsed times and I/O volume such as below.

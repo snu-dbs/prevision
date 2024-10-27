@@ -68,27 +68,22 @@ If you install MADlib from source code, please make sure the Postgres installati
 #### SciDB
 
 Since SciDB changed to closed-source software, the latest version we can use is 19.11.
-We provide [a docker image with SciDB 19.11](https://hub.docker.com/layers/grammaright/scidb/19.11-xenial/images/sha256-5ccfb9b323ac216b7fec8c7cb44a22a314f1e2575fa9acca0e5eb6ff0b3cb178?context=repo) and [SciDB source code](https://github.com/snu-dbs/scidb-19.11.5.f8334b60).
-We recommend to use the SciDB docker image.
+We provide [a docker image with SciDB 19.11](https://hub.docker.com/layers/grammaright/scidb/19.11-xenial/images/sha256-5ccfb9b323ac216b7fec8c7cb44a22a314f1e2575fa9acca0e5eb6ff0b3cb178?context=repo).
+We recommend to use this SciDB docker image.
 
+Please change `PREVISION_PATH` and `DB_PATH` to your one. 
+Since `DB_PATH` will be used for SciDB database path, make sure that there is enough disk space.
+After configuration, please run the following commands.
 
-Please refer to the below to set up SciDB:
-
-- If you run SciDB using docker without setting a volume, every imported data will be stored in the docker directory (e.g., `/var/lib/docker/`).
-If you do not have enough disk space for that directory, consider using a volume to store SciDB data outside the docker directory. 
-
-- If you use docker, make sure that the shared memory threshold is enough.
-If a container has a limited shared memory size, SciDB may raise a memory error.
-You can use the `--shm-size` option for the `docker run` command (e.g., `--shm-size=30gb`).
-- You must use a normal user (not a root user) to run SciDB. If you run SciDB using the root account, SciDB would make an MPI error. If you use the docker image, log in to the `scidb` user (password is `qwer1234`) to interact with SciDB.
-
-Here is an **example** of running a SciDB container.
 ```bash
-sudo docker run --name prevision-scidb-exp -it --shm-size=30gb -v /prevision/slab-benchmark/prevision:/prevision -v /prevision/evaluation/scidb/dbpath:/dbpath grammaright/scidb:19.11-xenial
+PREVISION_PATH=<PREVISION_REPOSITORY_PATH_IN_HOST>
+DB_PATH=<DB_PATH_FOR_SCIDB>
+
+sudo docker run --name prevision-scidb-exp -it --shm-size=30gb -v $PREVISION_PATH:/prevision -v $DB_PATH:/dbpath grammaright/scidb:19.11-xenial
 ```
 
-SciDB requires at least two instances that one for a coordinator and the other for executors.
-So please use additional one instance for all SciDB experiments.
+If you need to interact with SciDB manually, you must use a `scidb` user (not a root user). If you run SciDB using the root account, SciDB would make an MPI error. The docker image has the `scidb` user with a password is `qwer1234`.
+
 
 
 ## Data Generation

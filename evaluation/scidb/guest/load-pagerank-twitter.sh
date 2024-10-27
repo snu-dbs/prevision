@@ -18,7 +18,4 @@ import() {
 	iquery -aq "store(build(mat_"$dataset"_v, double(1)/"$arrsize"), mat_"$dataset"_v);"
 }
 
-import enron 36692 3670
-import epinions 75888 7589
-import livejournal 4847571 484758
-import twitter 61578415 6157842
+import twitter 61578415 3078921
