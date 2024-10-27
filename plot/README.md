@@ -26,6 +26,9 @@ The generated files will be placed in the `output` directory.
 python gen_all.py
 ```
 
+If you see `findfont: Font familty 'Times New Roman' not found' error even though
+you have installed it, please try again after removing the `~/.cache/matplotlib` directory.
+
 ## Script Files
 
 - Figure 8 is generated from `gen_fig8.py`
