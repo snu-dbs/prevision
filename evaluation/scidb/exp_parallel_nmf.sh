@@ -43,7 +43,6 @@ function exp() {
 }
 
 # Evaluation
-init
 
 # iteration
 p=(2 4 8)
@@ -54,5 +53,6 @@ do
 	echo "###############################################"
 
 	CONFIG="config_p""$parallelism"".ini"
+	init
     exp nmf 10M 3
 done
