@@ -251,7 +251,8 @@ matmul  trans   elem    elem_c  elem_m  newarr
 
 How to record:
 - (The first line under header) The value under `total` is an elapsed time (microseconds). The "`total` - the other times below" should be recorded as CPU time in Fig 14.
-- (The first line under header) The sum of `io_r`, `io_ir` and `io_w` is I/O time (microseconds), the sum of `flgen` and `pureplan` is query planning time (microseconds), and the sum of `flget` and `sl` is list maintenance time (microseconds). Those will be used for reproducing Fig 14 and Fig 15 in the paper.
+- (The first line under header) The sum of `io_r`, `io_ir` and `io_w` is I/O time (microseconds), the sum of `flgen` and `pureplan` is query planning time (microseconds), and the sum of `flget` and `sl` is list maintenance time (microseconds). Those will be used to reproduce Fig 14 and Fig 15 in the paper.
+- (The first line under header) The values of `phit` and `preq` indicate the number of page hits and the number of page requests, respectivly. They will be used to reproduce Table 3 in the paper.
 - (The second line under header) The sum of `io_r` and `io_ir` is the I/O volume for read and the `io_w` is the I/O volume for write. Both read and write volumes are in bytes. Those will be used to reproduce Fig 11 in the paper.
 
 To reproduce the blocking version of PreVision (for Fig 11), 
