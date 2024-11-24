@@ -27,6 +27,9 @@ run_lr() {
 		cp -r $bin_tall "__TEMP_X"
 		cp -r $bin_lr_y "__TEMP_y"
 		cp -r $bin_lr_w "__TEMP_w"
+		cp -r "${bin_tall}.mtd" "__TEMP_X.mtd"
+		cp -r "${bin_lr_y}.mtd" "__TEMP_y.mtd"
+		cp -r "${bin_lr_w}.mtd" "__TEMP_w.mtd"
 
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
 		bash lr.sh $dataset $noi "__TEMP_X" "__TEMP_y" "__TEMP_w" output/res $p 2>&1 | tee -a /tmp/exp_result.log
@@ -52,6 +55,9 @@ run_nmf() {
 		cp -r $bin_tall "__TEMP_X"
 		cp -r $bin_nmf_w "__TEMP_W"
 		cp -r $bin_nmf_h "__TEMP_H"
+		cp -r "${bin_tall}.mtd" "__TEMP_X.mtd"
+		cp -r "${bin_nmf_w}.mtd" "__TEMP_W.mtd"
+		cp -r "${bin_nmf_h}.mtd" "__TEMP_H.mtd"
 
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
 		bash nmf.sh $dataset $noi "__TEMP_X" "__TEMP_W" "__TEMP_H" output/res_w output/res_h $p 2>&1 | tee -a /tmp/exp_result.log
@@ -82,4 +88,4 @@ fi
 eval $_func $_dataset
 
 # collect result
-gawk '{if (match($0, /^Total elapsed time: *([0-9]*\.?[0-9]+) sec\.$/, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/time-systemds-"$task"-"$data"-"$noi"-"$p".log" 
+gawk '{if (match($0, /^Total elapsed time: *([0-9]*\.?[0-9]+) sec\./, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/time-systemds-"$task"-"$data"-"$noi"-"$p".log" 

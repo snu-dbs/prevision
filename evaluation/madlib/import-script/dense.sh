@@ -4,6 +4,7 @@ DATA=$2
 DATAPATH="/data/prevision/slab-benchmark/prevision/output/csv"
 
 sudo -u postgres /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data start
+sleep 10;
 
 if [[ $DATA == "10m" ]]; then
 	python2.7 main.py $DATAPATH/10000000x100_dense.csv 	mat_10Mx100_dense   0

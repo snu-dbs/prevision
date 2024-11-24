@@ -142,6 +142,7 @@ function exp() {
 
 # create a docker container; first volume for repository and second volume for scidb result
 service docker start
+sleep 10
 docker run --name $DOCKER_NAME -dit --shm-size=30gb -v /data/prevision:/prevision -v $SCIDB_RESULT_PATH:/data grammaright/scidb:19.11-xenial
 
 # run task
