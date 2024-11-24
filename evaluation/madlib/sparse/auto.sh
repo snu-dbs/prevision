@@ -63,7 +63,7 @@ echo "max_parallel_workers_per_gather = "$p >> /usr/local/pgsql/data/postgresql.
 echo "max_parallel_workers = "$p >> /usr/local/pgsql/data/postgresql.conf
 
 # run task
-if [[ $task == "lr" ]]; then
+if [[ $task == "slr" ]]; then
 	if [[ $data == "0.0125" ]]; then
 		lr mat_400mx100_sparse_0_0125 mat_400mx1_sparse_0_0125 mat_100x1_sparse_0_0125
 	elif [[ $data == "0.025" ]]; then
