@@ -88,4 +88,4 @@ fi
 eval $_func $_dataset
 
 # collect result
-gawk '{if (match($0, /^Total elapsed time: *([0-9]*\.?[0-9]+) sec\./, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/time-systemds-"$task"-"$data"-"$noi"-"$p".log" 
+gawk '{if (match($0, /^Total elapsed time:\t*([0-9]*\.?[0-9]+) sec\./, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/time-systemds-"$task"-"$data"-"$noi"-"$p".log" 
