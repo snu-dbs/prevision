@@ -30,6 +30,9 @@ with open(sys.argv[1], 'r') as f:
         values='\'{' + ','.join(map(lambda x: str(x), items)) + '}\''
         cur.execute("INSERT INTO {arrname} (row_id, row_vec) VALUES ( {idx}, {values} );".format(arrname=arrname, idx=idx + 1, values=values))
 
+cur.execute("CREATE INDEX ON {arrname} (row_id);".format(arrname=arrname))
+cur.execute("CREATE INDEX ON {arrname} USING HASH (row_id);".format(arrname=arrname))
+
 conn.commit()
 cur.close()
 conn.close()

@@ -1,4 +1,7 @@
-DATAPATH="../../slab-benchmark/prevision/output/ijv"
+DATAPATH="/prevision/slab-benchmark/prevision/output/ijv"
+
+TASK=$1
+DATA=$2
 
 function import_pagerank() {
 	dataset=$1
@@ -64,79 +67,69 @@ function ensure_size() {
 			"
 }
 
-####################
-# Sparse density=0.0125
-####################
-import 400000000 100 0.0125 0_0125 400M
-import 400000000 1 0.0125 0_0125 400M
-import 100 1 0.0125 0_0125 100
+if [[ $TASK == "slr" ]]; then
+	if [[ $DATA == "0.0125" ]]; then
+		import 400000000 100 0.0125 0_0125 400M
+		import 400000000 1 0.0125 0_0125 400M
+		import 100 1 0.0125 0_0125 100
 
-ensure_size mat_100x1_sparse_0_0125 1 1
-ensure_size mat_100x1_sparse_0_0125 100 1
-ensure_size mat_400mx1_sparse_0_0125 1 1
-ensure_size mat_400mx1_sparse_0_0125 400000000 1
-ensure_size mat_400mx100_sparse_0_0125 1 1
-ensure_size mat_400mx100_sparse_0_0125 400000000 100
+		ensure_size mat_100x1_sparse_0_0125 1 1
+		ensure_size mat_100x1_sparse_0_0125 100 1
+		ensure_size mat_400mx1_sparse_0_0125 1 1
+		ensure_size mat_400mx1_sparse_0_0125 400000000 1
+		ensure_size mat_400mx100_sparse_0_0125 1 1
+		ensure_size mat_400mx100_sparse_0_0125 400000000 100
+	elif [[ $DATA == "0.025" ]]; then
+		import 400000000 100 0.025 0_025 400M
+		import 400000000 1 0.025 0_025 400M
+		import 100 1 0.025 0_025 100
 
-####################
-# Sparse density=0.025 (run if you want to test timeout)
-####################
-# import 400000000 100 0.025 0_025 400M
-# import 400000000 1 0.025 0_025 400M
-# import 100 1 0.025 0_025 100
+		ensure_size mat_100x1_sparse_0_025 1 1
+		ensure_size mat_100x1_sparse_0_025 100 1
+		ensure_size mat_400mx1_sparse_0_025 1 1
+		ensure_size mat_400mx1_sparse_0_025 400000000 1
+		ensure_size mat_400mx100_sparse_0_025 1 1
+		ensure_size mat_400mx100_sparse_0_025 400000000 100
+	elif [[ $DATA == "0.05" ]]; then
+		import 400000000 100 0.05 0_05 400M
+		import 400000000 1 0.05 0_05 400M
+		import 100 1 0.05 0_05 100
 
-# ensure_size mat_100x1_sparse_0_025 1 1
-# ensure_size mat_100x1_sparse_0_025 100 1
-# ensure_size mat_400mx1_sparse_0_025 1 1
-# ensure_size mat_400mx1_sparse_0_025 400000000 1
-# ensure_size mat_400mx100_sparse_0_025 1 1
-# ensure_size mat_400mx100_sparse_0_025 400000000 100
+		ensure_size mat_100x1_sparse_0_05 1 1
+		ensure_size mat_100x1_sparse_0_05 100 1
+		ensure_size mat_400mx1_sparse_0_05 1 1
+		ensure_size mat_400mx1_sparse_0_05 400000000 1
+		ensure_size mat_400mx100_sparse_0_05 1 1
+		ensure_size mat_400mx100_sparse_0_05 400000000 100
+	elif [[ $DATA == "0.1" ]]; then
+		import 400000000 100 0.1 0_1 400M
+		import 400000000 1 0.1 0_1 400M
+		import 100 1 0.1 0_1 100
 
-####################
-# Sparse density=0.05 (run if you want to test timeout)
-####################
-# import 400000000 100 0.05 0_05 400M
-# import 400000000 1 0.05 0_05 400M
-# import 100 1 0.05 0_05 100
+		ensure_size mat_100x1_sparse_0_1 1 1
+		ensure_size mat_100x1_sparse_0_1 100 1
+		ensure_size mat_400mx1_sparse_0_1 1 1
+		ensure_size mat_400mx1_sparse_0_1 400000000 1
+		ensure_size mat_400mx100_sparse_0_1 1 1
+		ensure_size mat_400mx100_sparse_0_1 400000000 100
+	fi
+elif [[ $TASK == "pagerank" ]]; then
+	if [[ $DATA == "enron" ]]; then
+		import_pagerank enron 36692
+		ensure_size mat_enron 1 1
+		ensure_size mat_enron 36692 36692
+	elif [[ $DATA == "epinions" ]]; then
+		import_pagerank epinions 75888
+		ensure_size mat_epinions 1 1
+		ensure_size mat_epinions 75888 75888
+	elif [[ $DATA == "livejournal" ]]; then
+		import_pagerank livejournal 4847571
+		ensure_size mat_livejournal 1 1
+		ensure_size mat_livejournal 4847571 4847571
+	elif [[ $DATA == "twitter" ]]; then
+		import_pagerank twitter 61578415
+		ensure_size mat_twitter 1 1
+		ensure_size mat_twitter 61578415 61578415
+	fi
+fi
 
-# ensure_size mat_100x1_sparse_0_05 1 1
-# ensure_size mat_100x1_sparse_0_05 100 1
-# ensure_size mat_400mx1_sparse_0_05 1 1
-# ensure_size mat_400mx1_sparse_0_05 400000000 1
-# ensure_size mat_400mx100_sparse_0_05 1 1
-# ensure_size mat_400mx100_sparse_0_05 400000000 100
-
-####################
-# Sparse density=0.1 (run if you want to test timeout)
-####################
-# import 400000000 100 0.1 0_1 400M
-# import 400000000 1 0.1 0_1 400M
-# import 100 1 0.1 0_1 100
-
-#ensure_size mat_100x1_sparse_0_1 1 1
-#ensure_size mat_100x1_sparse_0_1 100 1
-#ensure_size mat_400mx1_sparse_0_1 1 1
-#ensure_size mat_400mx1_sparse_0_1 400000000 1
-#ensure_size mat_400mx100_sparse_0_1 1 1
-#ensure_size mat_400mx100_sparse_0_1 400000000 100
-
-
-####################
-# PageRank
-####################
-
-import_pagerank enron 36692
-ensure_size mat_enron 1 1
-ensure_size mat_enron 36692 36692
-
-import_pagerank epinions 75888
-ensure_size mat_epinions 1 1
-ensure_size mat_epinions 75888 75888
-
-import_pagerank livejournal 4847571
-ensure_size mat_livejournal 1 1
-ensure_size mat_livejournal 4847571 4847571
-
-import_pagerank twitter 61578415
-ensure_size mat_twitter 1 1
-ensure_size mat_twitter 61578415 61578415

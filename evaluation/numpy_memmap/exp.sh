@@ -1,7 +1,16 @@
-num_of_iter=1
+#!/bin/bash
 
-DATADIR="../../slab-benchmark/prevision/output/npy/"
+# input arguments
+task=$1
+data=$2
+iter=$3
+p=$4
+repetition=$5
 
+# static
+DATADIR="/prevision/slab-benchmark/prevision/output/npy/"
+
+# functions
 run_lr() {
 	dataset=$1
 	noi=$2
@@ -11,12 +20,14 @@ run_lr() {
 
 	echo "dataset=""$dataset"
 	echo 'LR ' $noi
-	for i in $(seq 1 $num_of_iter); do
+	for i in $(seq 1 $repetition); do
+		cp $npy_tall "__TEMP_X.npy"
+		cp $npy_lr_y "__TEMP_y.npy"
 		cp $npy_lr_w "__TEMP_w.npy"
+
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-		sleep 2
-		echo 'started'
-		/usr/bin/time -f '%e, %U, %S' python eval_numpy_memmap.py LR $npy_tall $npy_lr_y "__TEMP_w.npy" $noi 0.0000001
+		/usr/bin/time -f '%e, %U, %S' python eval_numpy_memmap.py LR "__TEMP_X.npy" "__TEMP_y.npy" "__TEMP_w.npy" $noi 0.0000001 2>&1 | tee -a /tmp/exp_result.log
+
 		rm __*
 	done;
 }
@@ -31,42 +42,41 @@ run_nmf() {
 
 	echo "dataset=""$dataset"
 	echo 'NMF ' $noi
-	for i in $(seq 1 $num_of_iter); do
+	for i in $(seq 1 $repetition); do
+		cp $npy_tall "__TEMP_X.npy"
 		cp $npy_nmf_w "__TEMP_W.npy"
 		cp $npy_nmf_h "__TEMP_H.npy"
+
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-		sleep 2
-		echo 'started'
-		/usr/bin/time -f '%e, %U, %S' python eval_numpy_memmap.py NMF $npy_tall "__TEMP_W.npy" "__TEMP_H.npy" $noi
+		/usr/bin/time -f '%e, %U, %S' python eval_numpy_memmap.py NMF "__TEMP_X.npy" "__TEMP_W.npy" "__TEMP_H.npy" $noi 2>&1 | tee -a /tmp/exp_result.log
+
 		rm __*
 	done;
 
 }
 
-export PARALLELISM=1
+# _func and _dataset will be set
+if [[ $task == "lr" ]]; then
+  _func = "run_lr"
+elif [[ $task == "nmf" ]]; then
+  _func = "run_nmf"
+fi
 
-run_lr 10000000 3
-run_lr 20000000 3
-run_lr 40000000 3
-run_lr 80000000 3
+if [[ $data == "10m" ]]; then
+  _dataset = 10000000 
+elif [[ $data == "20m" ]]; then
+  _dataset = 20000000 
+elif [[ $data == "40m" ]]; then
+  _dataset = 40000000 
+elif [[ $data == "80m" ]]; then
+  _dataset = 80000000 
+fi
+    
+# set parallelism
+export PARALLELISM=$p
 
-run_nmf 10000000 3
-run_nmf 20000000 3
-run_nmf 40000000 3
-run_nmf 80000000 3
+# run
+$_func $_dataset $iter
 
-iterlist=(1 2 4 8 16 32)
-for noi in ${iterlist[@]}; do
-        echo "num_of_iter=$noi";
-        echo "NMF"
-        run_nmf 10000000 $noi
-done;
-
-plist=(2 4 8)
-for p in ${plist[@]}; do
-        echo "parallelism=$p";
-        echo "NMF"
-        export PARALLELISM=$p
-        run_nmf 10000000 3
-done;
-
+# collect result
+awk -F "," 'END {print $1}' /tmp/exp_result.log >> "/data/results/time-numpy-"$task"-"$data"-"$iter"-"$p".log" 

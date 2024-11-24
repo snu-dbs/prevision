@@ -44,8 +44,8 @@ UINTERNAL_SRCS = lam_util.c
 UINTERNAL_OBJS = ${UINTERNAL_SRCS:.c=.o}
 
 # 3rd party libraries
-OUT_INCS 	=
-OUT_LIBS 	= -L${TILESTORE}/lib -L${BF}/lib -L${CHK}/lib -lchunk -lbf -ltilestore -lm -lrt -lpthread -lopenblas
+OUT_INCS 	= -I/opt/OpenBLAS/include 
+OUT_LIBS 	= -L/opt/OpenBLAS/lib -L${TILESTORE}/lib -L${BF}/lib -L${CHK}/lib -lchunk -lbf -ltilestore -lm -lrt -lpthread -lopenblas
 #############################################################################
 # This macro definition can be overwritten by command-line definitions.
 CC	= gcc

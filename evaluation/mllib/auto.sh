@@ -1,3 +1,15 @@
+#!/bin/bash
+
+# input arguments
+task=$1
+data=$2
+iter=$3
+p=$4
+repetition=$5
+
+# static
+DATADIR="/prevision/slab-benchmark/prevision/output/sequencefile"
+
 function run() {
         alg=$1
         nrow=$2
@@ -35,70 +47,118 @@ function run() {
                 noi=$noi \
                 fixedAxis=100 \
                 step=10 \
-                nproc=1
+                nproc=1 2>&1 | tee -a /tmp/exp_result.log
         
-        rm -rf __*
+        rm -rf *.sf
 
         $SPARK_ROOT/sbin/stop-worker.sh
         $SPARK_ROOT/sbin/stop-master.sh
 }
 
-sbt clean;
-sbt assembly;
+# run task
+for i in $(seq 1 $repetition); do
+	if [[ $task == "lr" ]]; then
+		if [[ $data == "10m" ]]; then
+			cp $DATADIR/10000000x100_dense.sf .
+			cp $DATADIR/10000000x1_dense.sf .
+			cp $DATADIR/100x1_dense.sf .
 
-# NMF
-run gnmf "10000000" "0" "_" 3 7200 19800 1
-run gnmf "20000000" "0" "_" 3 7200 19800 1
-run gnmf "40000000" "0" "_" 3 7200 19800 1
-run gnmf "80000000" "0" "_" 3 7200 19800 1
+			run logit "10000000" "0" "_" $iter 900 26100 $p
+		elif [[ $data == "20m" ]]; then
+			cp $DATADIR/20000000x100_dense.sf .
+			cp $DATADIR/20000000x1_dense.sf .
+			cp $DATADIR/100x1_dense.sf .
 
-# LR
-run logit "10000000" "0" "_" 3 900 26100 1
-run logit "20000000" "0" "_" 3 900 26100 1
-run logit "40000000" "0" "_" 3 900 26100 1
-run logit "80000000" "0" "_" 3 900 26100 1
+			run logit "20000000" "0" "_" $iter 900 26100 $p
+		elif [[ $data == "40m" ]]; then
+			cp $DATADIR/40000000x100_dense.sf .
+			cp $DATADIR/40000000x1_dense.sf .
+			cp $DATADIR/100x1_dense.sf .
 
-# Sparse LR
-run slogit "400000000" "0.0125" "_" 3 7200 19800 1
-run slogit "400000000" "0.025" "_" 3 7200 19800 1
-run slogit "400000000" "0.05" "_" 3 7200 19800 1
-run slogit "400000000" "0.1" "_" 3 3600 23400 1
+			run logit "40000000" "0" "_" $iter 900 26100 $p
+		elif [[ $data == "80m" ]]; then
+			cp $DATADIR/80000000x100_dense.sf .
+			cp $DATADIR/80000000x1_dense.sf .
+			cp $DATADIR/100x1_dense.sf .
 
-# PageRank
-run pagerank "36692" "0" "enron" 3 900 26100 1
-run pagerank "75888" "0" "epinions" 3 900 26100 1
-run pagerank "4847571" "0" "livejournal" 3 900 26100 1
-run pagerank2 "61578415" "0" "twitter_20" 3 900 26100 1         # no OOM if 20x20 tiles 
+			run logit "80000000" "0" "_" $iter 900 26100 $p
+		fi
+	elif [[ $task == "nmf" ]]; then
+		if [[ $data == "10m" ]]; then
+			cp $DATADIR/10000000x100_dense.sf .
+			cp $DATADIR/10000000x10_dense.sf .
+			cp $DATADIR/10x100_dense.sf .
 
-# num iter 
-iterlist=(1 2 4 8 16 32)
-for noi in ${iterlist[@]}; do
-        echo "==============================================="
-	echo "Running NMF with a Varying Number of Iterations"
-	echo "Number of Iterations: $noi"
-        echo "==============================================="
-        run gnmf "10000000" "0" "_" $noi 7200 19800 1
+			run gnmf "10000000" "0" "_" $iter 7200 19800 $p
+		elif [[ $data == "20m" ]]; then
+			cp $DATADIR/20000000x100_dense.sf .
+			cp $DATADIR/20000000x10_dense.sf .
+			cp $DATADIR/10x100_dense.sf .
 
-	echo "==============================================="
-        echo "Running PageRank with a Varying Number of Iterations"
-        echo "Number of Iterations: $noi"
-	echo "==============================================="
-        run pagerank2 "61578415" "0" "twitter_20" $noi 900 26100 1
+			run gnmf "20000000" "0" "_" $iter 7200 19800 $p
+		elif [[ $data == "40m" ]]; then
+			cp $DATADIR/40000000x100_dense.sf .
+			cp $DATADIR/40000000x10_dense.sf .
+			cp $DATADIR/10x100_dense.sf .
+
+			run gnmf "40000000" "0" "_" $iter 7200 19800 $p
+		elif [[ $data == "80m" ]]; then
+			cp $DATADIR/80000000x100_dense.sf .
+			cp $DATADIR/80000000x10_dense.sf .
+			cp $DATADIR/10x100_dense.sf .
+
+			run gnmf "80000000" "0" "_" $iter 7200 19800 $p
+		fi
+	elif [[ $task == "slr" ]]; then
+		if [[ $data == "0.0125" ]]; then
+			cp $DATADIR/400000000x100_sparse_0.0125.sf .
+			cp $DATADIR/400000000x1_sparse_0.0125.sf .
+			cp $DATADIR/100x1_sparse_0.0125.sf .
+
+			run slogit "400000000" "0.0125" "_" $iter 7200 19800 $p
+		elif [[ $data == "0.025" ]]; then
+			cp $DATADIR/400000000x100_sparse_0.025.sf .
+			cp $DATADIR/400000000x1_sparse_0.025.sf .
+			cp $DATADIR/100x1_sparse_0.025.sf .
+
+			run slogit "400000000" "0.025" "_" $iter 7200 19800 $p
+		elif [[ $data == "0.05" ]]; then
+			cp $DATADIR/400000000x100_sparse_0.05.sf .
+			cp $DATADIR/400000000x1_sparse_0.05.sf .
+			cp $DATADIR/100x1_sparse_0.05.sf .
+
+			run slogit "400000000" "0.05" "_" $iter 7200 19800 $p
+		elif [[ $data == "0.1" ]]; then
+			cp $DATADIR/400000000x100_sparse_0.1.sf .
+			cp $DATADIR/400000000x1_sparse_0.1.sf .
+			cp $DATADIR/100x1_sparse_0.1.sf .
+
+			run slogit "400000000" "0.1" "_" $iter 3600 23400 $p
+		fi
+	elif [[ $task == "pagerank" ]]; then
+		if [[ $data == "enron" ]]; then
+			cp $DATADIR/enron.sf .
+			cp $DATADIR/enron_v.sf .
+
+			run pagerank "36692" "0" "enron" $iter 900 26100 $p
+		elif [[ $data == "epinions" ]]; then
+			cp $DATADIR/epinions.sf .
+			cp $DATADIR/epinions_v.sf .
+
+			run pagerank "75888" "0" "epinions" $iter 900 26100 $p
+		elif [[ $data == "livejournal" ]]; then
+			cp $DATADIR/livejournal.sf .
+			cp $DATADIR/livejournal_v.sf .
+
+			run pagerank "4847571" "0" "livejournal" $iter 900 26100 $p
+		elif [[ $data == "twitter" ]]; then
+			cp $DATADIR/twitter.sf .
+			cp $DATADIR/twitter_v.sf .
+
+			run pagerank2 "61578415" "0" "twitter_20" $iter 900 26100 $p         # no OOM if 20x20 tiles 
+		fi
+	fi
 done;
 
-
-# parallelism
-plist=(2 4 8)
-for p in ${plist[@]}; do
-	echo "==============================================="
-        echo "Running NMF with a Varying Degree of Parallelism"
-	echo "Number of Parallelism: $p"
-        echo "==============================================="
-        run gnmf "10000000" "0" "_" 3 7200 19800 $p
-
-        echo "==============================================="
-        echo "Running Sparse LR with a Varying Degree of Parallelism"
-        echo "Number of Parallelism: $p"
-        echo "==============================================="
-        run slogit "400000000" "0.0125" "_" 3 7200 19800 $p
-done;
+# collect result
+gawk '{if (match($0, /^Elapsed Time \(s\): ([0-9]*\.?[0-9]+)$/, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/results/time-mllib-"$task"-"$data"-"$iter"-"$p".log" 

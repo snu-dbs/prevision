@@ -14,8 +14,8 @@ TESTS	= chunk_test.c
 OBJS	= ${SRCS:.c=.o}
 
 # 3rd party libraries
-OUT_INCS 	= -I$(TILESTORE)/include
-OUT_LIBS 	= -L${TILESTORE}/lib -L${BF}/lib -lbf -ltilestore -lrt -lpthread -lopenblas -lm
+OUT_INCS 	= -I/opt/OpenBLAS/include -I$(TILESTORE)/include
+OUT_LIBS 	= -L/opt/OpenBLAS/lib -L${TILESTORE}/lib -L${BF}/lib -lbf -ltilestore -lrt -lpthread -lopenblas -lm
 #############################################################################
 # This macro definition can be overwritten by command-line definitions.
 CC	= gcc

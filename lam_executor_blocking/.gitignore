@@ -1,0 +1,6 @@
+.vscode
+.idea
+__test_*
+__*
+*.tilestore
+array_generator.c
