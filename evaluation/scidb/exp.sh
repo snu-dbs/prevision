@@ -8,7 +8,7 @@ p=$4
 repetition=$5
 
 DOCKER_NAME="prevision-scidb-exp"
-SCRIPT_PATH="/prevision/evaluation/scidb/guest/alg-remote.sh"
+SCRIPT_PATH="/data/prevision/evaluation/scidb/guest/alg-remote.sh"
 SCIDB_RESULT_PATH="/data/scidb_result"
 
 function init_normal() {
@@ -212,4 +212,4 @@ elif [[ $task == "pagerank" ]]; then
 fi
 
 # collect result
-awk -F "," '{if (NF == 1 && $1 ~ /^[0-9]*\.?[0-9]+$/) {sum += $1}} END {print sum}' $SCIDB_RESULT_PATH"/exp_result.log" >> "/data/results/time-scidb-"$task"-"$data"-"$iter"-"$p".log" 
+awk -F "," '{if (NF == 1 && $1 ~ /^[0-9]*\.?[0-9]+$/) {sum += $1}} END {print sum}' $SCIDB_RESULT_PATH"/exp_result.log" >> "/data/prevision/evaluation/results/time-scidb-"$task"-"$data"-"$iter"-"$p".log" 

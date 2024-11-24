@@ -12,7 +12,7 @@ execmethod=$8
 
 
 # static
-DATADIR="/previsions/lab-benchmark/prevision/output/prevision"
+DATADIR="/data/previsions/lab-benchmark/prevision/output/prevision"
 
 # functions
 function dense_nmf() {
@@ -249,13 +249,13 @@ fi
 
 # collect result
 # get time
-gawk -F "\t" '/^total\tbf/ {getline; print $1}' /tmp/exp_result.log >> "/data/results/time-prevision-"$task"-"$data"-"$iter"-"$p"-"$replacement"-"$pe"-"$execmethod".log" 
+gawk -F "\t" '/^total\tbf/ {getline; print $1}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/time-prevision-"$task"-"$data"-"$iter"-"$p"-"$replacement"-"$pe"-"$execmethod".log" 
 
 # get I/O
-gawk -F "\t" '/^total\tbf/ {getline; getline; readio = $3 + $4; writeio = $5; print readio "," writeio}' /tmp/exp_result.log >> "/data/results/io-prevision-"$task"-"$data"-"$iter"-"$p"-"$replacement"-"$pe"-"$execmethod".log" 
+gawk -F "\t" '/^total\tbf/ {getline; getline; readio = $3 + $4; writeio = $5; print readio "," writeio}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/io-prevision-"$task"-"$data"-"$iter"-"$p"-"$replacement"-"$pe"-"$execmethod".log" 
 
 # get breakdown
-gawk -F "\t" '/^total\tbf/ {getline; io = $3 + $4 + $5; plan = $8 + $12; list = $9 + $10; cpu = $1 - io - plan - list; print cpu "," io "," plan "," list}' /tmp/exp_result.log >> "/data/results/breakdown-prevision-"$task"-"$data"-"$iter"-"$p"-"$replacement"-"$pe"-"$execmethod".log" 
+gawk -F "\t" '/^total\tbf/ {getline; io = $3 + $4 + $5; plan = $8 + $12; list = $9 + $10; cpu = $1 - io - plan - list; print cpu "," io "," plan "," list}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/breakdown-prevision-"$task"-"$data"-"$iter"-"$p"-"$replacement"-"$pe"-"$execmethod".log" 
 
 # get hitratio
-gawk -F "\t" '/^total\tbf/ {getline; print $6 / $7}' /tmp/exp_result.log >> "/data/results/breakdown-prevision-"$task"-"$data"-"$iter"-"$p"-"$replacement"-"$pe"-"$execmethod".log" 
+gawk -F "\t" '/^total\tbf/ {getline; print $6 / $7}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/breakdown-prevision-"$task"-"$data"-"$iter"-"$p"-"$replacement"-"$pe"-"$execmethod".log" 

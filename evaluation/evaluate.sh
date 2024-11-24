@@ -17,7 +17,7 @@ fi
 
 # print info
 echo "/********************************************************************************************/"
-echo " * SYSTEM=$SYSTEM TASK=$TASK DATA=$DATA ITER=$ITER PARALLELISM=$PRALLELISM REPETITION=$REPETITION DATAPATH=$DATAPATH"
+echo " * SYSTEM=$SYSTEM TASK=$TASK DATA=$DATA ITER=$ITER PARALLELISM=$PARALLELISM REPETITION=$REPETITION DATAPATH=$DATAPATH"
 echo "/********************************************************************************************/"
 
 # function for eacy-to-call
@@ -26,6 +26,7 @@ function run() {
 		--name prevision-ari \
 		-m 31g --shm-size=30gb --privileged \
 		-v $DATAPATH:/data/prevision/slab-benchmark/prevision/output \
+		-v $(pwd)/results:/data/prevision/evaluation/results \
 		grammaright/prevision:latest "$@"
     docker rm prevision-ari
 }

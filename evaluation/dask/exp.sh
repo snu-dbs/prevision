@@ -8,7 +8,7 @@ p=$4
 repetition=$5
 
 # static
-DATADIR="/prevision/slab-benchmark/prevision/output/hdf5/"
+DATADIR="/data/prevision/slab-benchmark/prevision/output/hdf5/"
 
 # functions
 run_lr() {
@@ -26,7 +26,7 @@ run_lr() {
 		cp $npy_lr_w "__TEMP_w.hdf5"
 
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-		/usr/bin/time -f '%e,%U,%S' python eval_dask.py LR "__TEMP_X.hdf5" "__TEMP_y.hdf5" "__TEMP_w.hdf5" $noi 2>&1 | tee -a /tmp/exp_result.log
+		/usr/bin/time -f '%e,%U,%S' python3 eval_dask.py LR "__TEMP_X.hdf5" "__TEMP_y.hdf5" "__TEMP_w.hdf5" $noi 2>&1 | tee -a /tmp/exp_result.log
 
 		rm *.hdf5
 	done;
@@ -48,7 +48,7 @@ run_nmf() {
 		cp $npy_nmf_h "__TEMP_H.hdf5"
 
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-		/usr/bin/time -f '%e,%U,%S' python eval_dask.py NMF "__TEMP_X.hdf5" "__TEMP_W.hdf5" "__TEMP_H.hdf5" $noi 2>&1 | tee -a /tmp/exp_result.log
+		/usr/bin/time -f '%e,%U,%S' python3 eval_dask.py NMF "__TEMP_X.hdf5" "__TEMP_W.hdf5" "__TEMP_H.hdf5" $noi 2>&1 | tee -a /tmp/exp_result.log
 
 		rm *.hdf5
 	done;
@@ -89,4 +89,4 @@ export _PREVISION_DASK_THREAD=$p
 eval $_func $_dataset $iter
 
 # collect result
-awk -F "," 'END {print $1}' /tmp/exp_result.log >> "/data/results/time-dask-"$task"-"$data"-"$iter"-"$p".log" 
+awk -F "," 'END {print $1}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/time-dask-"$task"-"$data"-"$iter"-"$p".log" 

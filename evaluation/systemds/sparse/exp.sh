@@ -8,7 +8,7 @@ p=$4
 repetition=$5
 
 # static
-DATADIR="/prevision/slab-benchmark/prevision/output/sysds"
+DATADIR="/data/prevision/slab-benchmark/prevision/output/sysds"
 
 # functions
 run_sparse_lr() {
@@ -83,4 +83,4 @@ elif [[ $task == "pagerank" ]]; then
 fi
 
 # collect result
-gawk '{if (match($0, /^Total elapsed time: *([0-9]*\.?[0-9]+) sec\.$/, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/results/time-systemds-"$task"-"$data"-"$iter"-"$p".log" 
+gawk '{if (match($0, /^Total elapsed time: *([0-9]*\.?[0-9]+) sec\.$/, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/time-systemds-"$task"-"$data"-"$iter"-"$p".log" 

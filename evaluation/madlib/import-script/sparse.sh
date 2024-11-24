@@ -1,4 +1,4 @@
-DATAPATH="/prevision/slab-benchmark/prevision/output/ijv"
+DATAPATH="/data/prevision/slab-benchmark/prevision/output/ijv"
 
 TASK=$1
 DATA=$2

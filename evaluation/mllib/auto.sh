@@ -8,7 +8,7 @@ p=$4
 repetition=$5
 
 # static
-DATADIR="/prevision/slab-benchmark/prevision/output/sequencefile"
+DATADIR="/data/prevision/slab-benchmark/prevision/output/sequencefile"
 
 function run() {
         alg=$1
@@ -161,4 +161,4 @@ for i in $(seq 1 $repetition); do
 done;
 
 # collect result
-gawk '{if (match($0, /^Elapsed Time \(s\): ([0-9]*\.?[0-9]+)$/, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/results/time-mllib-"$task"-"$data"-"$iter"-"$p".log" 
+gawk '{if (match($0, /^Elapsed Time \(s\): ([0-9]*\.?[0-9]+)$/, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/time-mllib-"$task"-"$data"-"$iter"-"$p".log" 

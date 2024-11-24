@@ -111,7 +111,8 @@ RUN cd /data/prevision/evaluation/systemds/dense && \
 # SystemDS config file
 COPY evaluation/systemds/SystemDS-config.xml /data/systemds-3.1.0-bin/conf/
 
-# Postgres config file
+# Postgres 
+# config file
 COPY evaluation/madlib/postgresql.conf /usr/local/pgsql/data/postgresql.conf
 
 # import tool
@@ -120,14 +121,11 @@ RUN cd /data/prevision/evaluation/madlib && \
 
 # Install NumPy and Dask
 RUN cd /data/prevision/evaluation && \
-	pip install --upgrade pip && \
-	pip install -r requirements.txt
+	pip3 install --upgrade pip && \
+	pip3 install -r requirements.txt
 
 # Build PreVision
 ENV LD_LIBRARY_PATH=/opt/OpenBLAS/lib
 RUN apt-get install -y liblapacke-dev liblapack-dev
 RUN cd /data/prevision && bash makeall.sh
 
-COPY docker-entrypoint.sh /
-
-ENTRYPOINT ["/bin/bash", "/docker-entrypoint.sh"]

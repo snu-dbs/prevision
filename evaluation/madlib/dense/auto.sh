@@ -17,7 +17,7 @@ function lr() {
 	do 
 		echo "iter=$j"
 		# setup
-		sudo service postgresql@12-main restart;
+		sudo -u postgres /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data restart
 		sleep 10;
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
 
@@ -42,7 +42,7 @@ function nmf() {
 	do 
 		echo "iter=$j"
 		# setup
-		sudo service postgresql@12-main restart;
+		sudo -u postgres /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data restart
 		sleep 10;
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
 
@@ -87,4 +87,4 @@ fi
 
 
 # collect result
-awk -F "," '{if (NF == 1 && $1 ~ /^[0-9]*\.?[0-9]+$/) {sum += $1}} END {print sum}' /tmp/exp_result.log >> "/data/results/time-madlib-"$task"-"$data"-"$noi"-"$p".log" 
+awk -F "," '{if (NF == 1 && $1 ~ /^[0-9]*\.?[0-9]+$/) {sum += $1}} END {print sum}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/time-madlib-"$task"-"$data"-"$noi"-"$p".log" 
