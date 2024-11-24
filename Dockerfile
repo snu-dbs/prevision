@@ -77,6 +77,8 @@ RUN adduser postgres && \
 	chown postgres /usr/local/pgsql/data
 RUN sudo -u postgres /usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data && \
 	sudo -u postgres /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l /usr/local/pgsql/data/logfile start && \
+	sudo -u postgres /usr/local/pgsql/bin/createuser root && \
+	sudo -u postgres /usr/local/pgsql/bin/createdb -O root root && \
 	sudo -u postgres /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data stop
 ENV PATH="$PATH:/usr/local/pgsql/bin"
 
@@ -116,8 +118,11 @@ COPY evaluation/systemds/SystemDS-config.xml /data/systemds-3.1.0-bin/conf/
 COPY evaluation/madlib/postgresql.conf /usr/local/pgsql/data/postgresql.conf
 
 # import tool
+RUN cd /data && wget https://bootstrap.pypa.io/pip/2.7/get-pip.py && \
+        python2.7 get-pip.py && \
+	apt-get install -y libpq-dev
 RUN cd /data/prevision/evaluation/madlib && \
-	pip install -r requirements.txt
+	pip2.7 install -r requirements.txt
 
 # Install NumPy and Dask
 RUN cd /data/prevision/evaluation && \

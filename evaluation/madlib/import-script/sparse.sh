@@ -67,6 +67,8 @@ function ensure_size() {
 			"
 }
 
+sudo -u postgres /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data start
+
 if [[ $TASK == "slr" ]]; then
 	if [[ $DATA == "0.0125" ]]; then
 		import 400000000 100 0.0125 0_0125 400M

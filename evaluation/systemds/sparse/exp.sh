@@ -3,7 +3,7 @@
 # input arguments
 task=$1
 data=$2
-iter=$3
+noi=$3
 p=$4
 repetition=$5
 
@@ -26,9 +26,9 @@ run_sparse_lr() {
         echo "==============================================="
 	for i in $(seq 1 $repetition); do
 		echo ">> Run $i out of $repetition"
-		cp $bin_tall "__TEMP_X"
-		cp $bin_lr_y "__TEMP_y"
-		cp $bin_lr_w "__TEMP_w"
+		cp -r $bin_tall "__TEMP_X"
+		cp -r $bin_lr_y "__TEMP_y"
+		cp -r $bin_lr_w "__TEMP_w"
 
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
                 bash lr.sh $nrows $noi "__TEMP_X" "__TEMP_y" "__TEMP_w" output/res $p $dmem $emem 2>&1 | tee -a /tmp/exp_result.log
@@ -49,7 +49,7 @@ run_pagerank() {
         echo "==============================================="
 	for i in $(seq 1 $repetition); do
                 echo ">> Run $i out of $repetition"
-		cp $dataset "__TEMP_X"
+		cp -r $dataset "__TEMP_X"
 
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
 		bash pagerank.sh $nrows $noi "__TEMP_X" output/res_pr 1 2>&1 | tee -a /tmp/exp_result.log
@@ -83,4 +83,4 @@ elif [[ $task == "pagerank" ]]; then
 fi
 
 # collect result
-gawk '{if (match($0, /^Total elapsed time: *([0-9]*\.?[0-9]+) sec\.$/, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/time-systemds-"$task"-"$data"-"$iter"-"$p".log" 
+gawk '{if (match($0, /^Total elapsed time: *([0-9]*\.?[0-9]+) sec\.$/, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/prevision/evaluation/results/time-systemds-"$task"-"$data"-"$noi"-"$p".log" 

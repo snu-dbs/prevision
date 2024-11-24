@@ -40,6 +40,8 @@ elif [[ $SYSTEM == "madlib" ]]; then
   run sh -c "cd /data/prevision/evaluation/madlib; bash exp.sh $TASK $DATA $ITER $PARALLELISM $REPETITION"
 elif [[ $SYSTEM == "scidb" ]]; then
   run sh -c "cd /data/prevision/evaluation/scidb; bash exp.sh $TASK $DATA $ITER $PARALLELISM $REPETITION"
+elif [[ $SYSTEM == "mllib" ]]; then
+  run sh -c "cd /data/prevision/evaluation/mllib; bash auto.sh $TASK $DATA $ITER $PARALLELISM $REPETITION"
 elif [[ $SYSTEM == "systemds" ]]; then
 	if [[ $TASK == "lr" || $TASK == "nmf" ]]; then
 		  run sh -c "cd /data/prevision/evaluation/systemds/dense; bash exp.sh $TASK $DATA $ITER $PARALLELISM $REPETITION"

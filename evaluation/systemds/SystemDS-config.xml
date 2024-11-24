@@ -6,5 +6,5 @@
     <sysds.cp.parallel.io>false</sysds.cp.parallel.io>
     <sysds.parallel.encode>false</sysds.parallel.encode>
     <sysds.parallel.tokenize>false</sysds.parallel.tokenize>    
-    <sysds.native.blas.directory>/opt/OpenBLAS</sysds.native.blas.directory>
+    <sysds.native.blas.directory>/opt/OpenBLAS/lib</sysds.native.blas.directory>
 </root>
