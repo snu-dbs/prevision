@@ -57,26 +57,26 @@ run_nmf() {
 
 # _func and _dataset will be set
 if [[ $task == "lr" ]]; then
-  _func = "run_lr"
+  _func="run_lr"
 elif [[ $task == "nmf" ]]; then
-  _func = "run_nmf"
+  _func="run_nmf"
 fi
 
 if [[ $data == "10m" ]]; then
-  _dataset = 10000000 
+  _dataset=10000000 
 elif [[ $data == "20m" ]]; then
-  _dataset = 20000000 
+  _dataset=20000000 
 elif [[ $data == "40m" ]]; then
-  _dataset = 40000000 
+  _dataset=40000000 
 elif [[ $data == "80m" ]]; then
-  _dataset = 80000000 
+  _dataset=80000000 
 fi
     
 # set parallelism
 export PARALLELISM=$p
 
 # run
-$_func $_dataset $iter
+eval $_func $_dataset $iter
 
 # collect result
 awk -F "," 'END {print $1}' /tmp/exp_result.log >> "/data/results/time-numpy-"$task"-"$data"-"$iter"-"$p".log" 

@@ -63,23 +63,23 @@ run_nmf() {
 
 # _func and _dataset will be set
 if [[ $task == "lr" ]]; then
-  _func = "run_lr"
+  _func="run_lr"
 elif [[ $task == "nmf" ]]; then
-  _func = "run_nmf"
+  _func="run_nmf"
 fi
 
 if [[ $data == "10m" ]]; then
-  _dataset = 10000000 
+  _dataset=10000000 
 elif [[ $data == "20m" ]]; then
-  _dataset = 20000000 
+  _dataset=20000000 
 elif [[ $data == "40m" ]]; then
-  _dataset = 40000000 
+  _dataset=40000000 
 elif [[ $data == "80m" ]]; then
-  _dataset = 80000000 
+  _dataset=80000000 
 fi
 
 # run
-$_func $_dataset
+eval $_func $_dataset
 
 # collect result
 gawk '{if (match($0, /^Total elapsed time: *([0-9]*\.?[0-9]+) sec\.$/, arr)) {print arr[1]}}' /tmp/exp_result.log >> "/data/results/time-systemds-"$task"-"$data"-"$iter"-"$p".log" 

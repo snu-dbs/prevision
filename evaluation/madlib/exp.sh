@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# TODO: update to record time
-
 # input arguments
 task=$1
 data=$2

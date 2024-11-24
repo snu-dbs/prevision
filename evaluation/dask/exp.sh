@@ -57,36 +57,36 @@ run_nmf() {
 
 # _func and _dataset will be set
 if [[ $task == "lr" ]]; then
-  _func = "run_lr"
+  _func="run_lr"
 elif [[ $task == "nmf" ]]; then
-  _func = "run_nmf"
+  _func="run_nmf"
 fi
 
 if [[ $data == "10m" ]]; then
-  _dataset = "regular/10000000"
+  _dataset="regular/10000000"
 elif [[ $data == "20m" ]]; then
-  _dataset = "regular/20000000"
+  _dataset="regular/20000000"
 elif [[ $data == "40m" ]]; then
-  _dataset = "regular/40000000" 
+  _dataset="regular/40000000" 
 elif [[ $data == "80m" ]]; then
-  _dataset = "regular/80000000" 
+  _dataset="regular/80000000" 
 elif [[ $data == "80m_200x1" ]]; then
-  _dataset = "small/200/80000000" 
+  _dataset="small/200/80000000" 
 elif [[ $data == "80m_400x1" ]]; then
-  _dataset = "small/400/80000000" 
+  _dataset="small/400/80000000" 
 elif [[ $data == "80m_800x1" ]]; then
-  _dataset = "small/800/80000000" 
+  _dataset="small/800/80000000" 
 elif [[ $data == "80m_1600x1" ]]; then
-  _dataset = "small/1600/80000000" 
+  _dataset="small/1600/80000000" 
 elif [[ $data == "80m_3200x1" ]]; then
-  _dataset = "small/3200/80000000" 
+  _dataset="small/3200/80000000" 
 fi
     
 # set parallelism
 export _PREVISION_DASK_THREAD=$p
 
 # run
-$_func $_dataset $iter
+eval $_func $_dataset $iter
 
 # collect result
 awk -F "," 'END {print $1}' /tmp/exp_result.log >> "/data/results/time-dask-"$task"-"$data"-"$iter"-"$p".log" 
