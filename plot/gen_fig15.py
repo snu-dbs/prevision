@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+from util import collect_time, collect_breakdown
+
 def render_fig15_a(prevision_data, numpy_data):
     x = ['100', '200', '400', '800', '1600', '3200']
 
@@ -93,8 +95,51 @@ def render_fig15_b(prevision_data, dask_data):
     plt.savefig('output/fig15_b.pdf', format='pdf', bbox_inches='tight')
 
 
+def prepare_data():
+    lr_prevision_raw = [
+        collect_breakdown('breakdown-prevision-lr-80m-3-1.log'),
+        collect_breakdown('breakdown-prevision-lr-80m_200x1-3-1.log'),
+        collect_breakdown('breakdown-prevision-lr-80m_400x1-3-1.log'),
+        collect_breakdown('breakdown-prevision-lr-80m_800x1-3-1.log'),
+        collect_breakdown('breakdown-prevision-lr-80m_1600x1-3-1.log'),
+        collect_breakdown('breakdown-prevision-lr-80m_3200x1-3-1.log')
+    ]
+
+    nmf_prevision_raw = [
+        collect_breakdown('breakdown-prevision-nmf-80m-3-1.log'),
+        collect_breakdown('breakdown-prevision-nmf-80m_200x1-3-1.log'),
+        collect_breakdown('breakdown-prevision-nmf-80m_400x1-3-1.log'),
+        collect_breakdown('breakdown-prevision-nmf-80m_800x1-3-1.log'),
+        collect_breakdown('breakdown-prevision-nmf-80m_1600x1-3-1.log'),
+        collect_breakdown('breakdown-prevision-nmf-80m_3200x1-3-1.log')
+    ]
+
+    fig15_lr_prevision_data = [[], []]
+    fig15_nmf_prevision_data = [[], []]
+
+    for t in lr_prevision_raw:
+        fig15_lr_prevision_data[0].append(t[0] + t[1] + t[2] + t[3])
+        fig15_lr_prevision_data[1].append(t[2] + t[3])
+    
+    for t in nmf_prevision_raw:
+        fig15_nmf_prevision_data[0].append(t[0] + t[1] + t[2] + t[3])
+        fig15_nmf_prevision_data[1].append(t[2] + t[3])
+    
+
+    fig15_lr_numpy_data = collect_time('time-numpy-nmf-80m-3-1.log') * 1000000
+    fig15_nmf_dask_data = [
+        collect_time('time-dask-nmf-80m-3-1.log') * 1000000,
+        collect_time('time-dask-nmf-80m_200x1-3-1.log') * 1000000,
+        collect_time('time-dask-nmf-80m_400x1-3-1.log') * 1000000,
+        collect_time('time-dask-nmf-80m_800x1-3-1.log') * 1000000,
+        collect_time('time-dask-nmf-80m_1600x1-3-1.log') * 1000000,
+        collect_time('time-dask-nmf-80m_3200x1-3-1.log') * 1000000
+    ]
+
+    return fig15_lr_prevision_data, fig15_lr_numpy_data, fig15_nmf_prevision_data, fig15_nmf_dask_data
+
 def render_all_fig15():
-    from data import fig15_lr_prevision_data, fig15_lr_numpy_data, fig15_nmf_prevision_data, fig15_nmf_dask_data
+    fig15_lr_prevision_data, fig15_lr_numpy_data, fig15_nmf_prevision_data, fig15_nmf_dask_data = prepare_data()
     
     mpl.rcParams.update(mpl.rcParamsDefault)
 

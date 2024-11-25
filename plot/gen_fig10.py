@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+from util import collect_time
 
 def render_fig10a(nmf_data):
     x = [1, 2, 4, 8]
@@ -52,8 +53,87 @@ def render_fig10b(slr_data):
     plt.savefig('output/fig10_b.pdf', format='pdf', bbox_inches='tight')
 
 
+def prepare_data():
+    fig10_nmf_data = [
+        [
+            collect_time('time-prevision-nmf-10m-3-1.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-3-2.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-3-4.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-3-8.log') / 1000000,
+        ],
+        [
+            collect_time('time-systemds-nmf-10m-3-1.log'),
+            collect_time('time-systemds-nmf-10m-3-2.log'),
+            collect_time('time-systemds-nmf-10m-3-4.log'),
+            collect_time('time-systemds-nmf-10m-3-8.log'),
+        ],
+        [
+            collect_time('time-mllib-nmf-10m-3-1.log'),
+            collect_time('time-mllib-nmf-10m-3-2.log'),
+            collect_time('time-mllib-nmf-10m-3-4.log'),
+            collect_time('time-mllib-nmf-10m-3-8.log'),
+        ],
+        [
+            collect_time('time-madlib-nmf-10m-3-1.log'),
+            collect_time('time-madlib-nmf-10m-3-2.log'),
+            collect_time('time-madlib-nmf-10m-3-4.log'),
+            collect_time('time-madlib-nmf-10m-3-8.log'),
+        ],
+        [
+            collect_time('time-scidb-nmf-10m-3-1.log'),
+            collect_time('time-scidb-nmf-10m-3-2.log'),
+            collect_time('time-scidb-nmf-10m-3-4.log'),
+            collect_time('time-scidb-nmf-10m-3-8.log'),
+        ],
+        [
+            collect_time('time-numpy-nmf-10m-3-1.log'),
+            collect_time('time-numpy-nmf-10m-3-2.log'),
+            collect_time('time-numpy-nmf-10m-3-4.log'),
+            collect_time('time-numpy-nmf-10m-3-8.log'),
+        ],
+        [
+            collect_time('time-dask-nmf-10m-3-1.log'),
+            collect_time('time-dask-nmf-10m-3-2.log'),
+            collect_time('time-dask-nmf-10m-3-4.log'),
+            collect_time('time-dask-nmf-10m-3-8.log'),
+        ]
+    ]
+
+    fig10_slr_data = [
+        [
+            collect_time('time-prevision-slr-0.0125-3-1.log') / 1000000,
+            collect_time('time-prevision-slr-0.0125-3-2.log') / 1000000,
+            collect_time('time-prevision-slr-0.0125-3-4.log') / 1000000,
+            collect_time('time-prevision-slr-0.0125-3-8.log') / 1000000,
+        ],
+        [
+            collect_time('time-systemds-slr-0.0125-3-1.log'),
+            collect_time('time-systemds-slr-0.0125-3-2.log'),
+            collect_time('time-systemds-slr-0.0125-3-4.log'),
+            collect_time('time-systemds-slr-0.0125-3-8.log'),
+        ],
+        [
+            collect_time('time-mllib-slr-0.0125-3-1.log'),
+            collect_time('time-mllib-slr-0.0125-3-2.log'),
+            collect_time('time-mllib-slr-0.0125-3-4.log'),
+            collect_time('time-mllib-slr-0.0125-3-8.log'),
+        ],
+        [
+            collect_time('time-madlib-slr-0.0125-3-1.log'),
+            collect_time('time-madlib-slr-0.0125-3-2.log'),
+            collect_time('time-madlib-slr-0.0125-3-4.log'),
+            collect_time('time-madlib-slr-0.0125-3-8.log'),
+        ],
+        [
+            collect_time('time-scidb-slr-0.0125-3-1.log'),
+            collect_time('time-scidb-slr-0.0125-3-2.log'),
+        ]
+    ]
+
+    return fig10_nmf_data, fig10_slr_data
+
 def render_all_fig10():
-    from data import fig10_nmf_data, fig10_slr_data
+    fig10_nmf_data, fig10_slr_data = prepare_data()
 
     plt.rcParams.update(plt.rcParamsDefault)
 

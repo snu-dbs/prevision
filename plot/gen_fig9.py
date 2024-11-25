@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+from util import collect_time
+
 def render_fig9a(nmf_data):
     label = ['TilePACK', 'SystemDS', 'NumPy',
              'Dask', 'SciDB', 'MADlib', 'MLlib']
@@ -76,8 +78,103 @@ def render_fig9b(pr_data):
     plt.savefig('output/fig9_b.pdf', format='pdf', bbox_inches='tight')
 
 
+def prepare_data():
+    fig9_nmf_data = [
+        [
+            collect_time('time-prevision-nmf-10m-1-1.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-2-1.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-4-1.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-8-1.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-16-1.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-32-1.log') / 1000000
+        ],
+        [
+            collect_time('time-systemds-nmf-10m-1-1.log'),
+            collect_time('time-systemds-nmf-10m-2-1.log'),
+            collect_time('time-systemds-nmf-10m-4-1.log'),
+            collect_time('time-systemds-nmf-10m-8-1.log'),
+            collect_time('time-systemds-nmf-10m-16-1.log'),
+            collect_time('time-systemds-nmf-10m-32-1.log')
+        ],
+        [
+            collect_time('time-mllib-nmf-10m-1-1.log'),
+            collect_time('time-mllib-nmf-10m-2-1.log'),
+            collect_time('time-mllib-nmf-10m-4-1.log'),
+            collect_time('time-mllib-nmf-10m-8-1.log'),
+            collect_time('time-mllib-nmf-10m-16-1.log'),
+            collect_time('time-mllib-nmf-10m-32-1.log')
+        ],
+        [
+            collect_time('time-madlib-nmf-10m-1-1.log'),
+            collect_time('time-madlib-nmf-10m-2-1.log'),
+            collect_time('time-madlib-nmf-10m-4-1.log'),
+            collect_time('time-madlib-nmf-10m-8-1.log'),
+            collect_time('time-madlib-nmf-10m-16-1.log'),
+            collect_time('time-madlib-nmf-10m-32-1.log')
+        ],
+        [
+            collect_time('time-scidb-nmf-10m-1-1.log'),
+            collect_time('time-scidb-nmf-10m-2-1.log'),
+            collect_time('time-scidb-nmf-10m-4-1.log'),
+            collect_time('time-scidb-nmf-10m-8-1.log'),
+            collect_time('time-scidb-nmf-10m-16-1.log'),
+            collect_time('time-scidb-nmf-10m-32-1.log')
+        ],
+        [
+            collect_time('time-numpy-nmf-10m-1-1.log'),
+            collect_time('time-numpy-nmf-10m-2-1.log'),
+            collect_time('time-numpy-nmf-10m-4-1.log'),
+            collect_time('time-numpy-nmf-10m-8-1.log'),
+            collect_time('time-numpy-nmf-10m-16-1.log'),
+            collect_time('time-numpy-nmf-10m-32-1.log')
+        ],
+        [
+            collect_time('time-dask-nmf-10m-1-1.log'),
+            collect_time('time-dask-nmf-10m-2-1.log'),
+            collect_time('time-dask-nmf-10m-4-1.log'),
+            collect_time('time-dask-nmf-10m-8-1.log'),
+            collect_time('time-dask-nmf-10m-16-1.log'),
+            collect_time('time-dask-nmf-10m-32-1.log')
+        ]
+    ]
+
+    fig9_pr_data = [
+        [
+            collect_time('time-prevision-pagerank-twitter-1-1.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-2-1.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-4-1.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-8-1.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-16-1.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-32-1.log') / 1000000
+        ],
+        [
+            collect_time('time-mllib-pagerank-twitter-1-1.log'),
+            collect_time('time-mllib-pagerank-twitter-2-1.log'),
+            collect_time('time-mllib-pagerank-twitter-4-1.log'),
+            collect_time('time-mllib-pagerank-twitter-8-1.log'),
+            collect_time('time-mllib-pagerank-twitter-16-1.log'),
+            collect_time('time-mllib-pagerank-twitter-32-1.log')
+        ],
+        [
+            collect_time('time-madlib-pagerank-twitter-1-1.log'),
+            collect_time('time-madlib-pagerank-twitter-2-1.log'),
+            collect_time('time-madlib-pagerank-twitter-4-1.log'),
+            collect_time('time-madlib-pagerank-twitter-8-1.log'),
+        ],
+        [
+            collect_time('time-scidb-pagerank-twitter-1-1.log'),
+            collect_time('time-scidb-pagerank-twitter-2-1.log'),
+            collect_time('time-scidb-pagerank-twitter-4-1.log'),
+            collect_time('time-scidb-pagerank-twitter-8-1.log'),
+            collect_time('time-scidb-pagerank-twitter-16-1.log'),
+            collect_time('time-scidb-pagerank-twitter-32-1.log')
+        ]
+    ]
+
+    return fig9_nmf_data, fig9_pr_data
+
 def render_all_fig9():
-    from data import fig9_nmf_data, fig9_pr_data
+    fig9_nmf_data, fig9_pr_data = prepare_data()
 
     mpl.rcParams.update(mpl.rcParamsDefault)
 

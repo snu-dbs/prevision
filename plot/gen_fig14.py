@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+from util import collect_breakdown
+
 def sb(ax, theme, label, stacktype, data, title, ylabel=None):
     width = 0.64
     bars = None
@@ -53,8 +55,24 @@ def render_fig14(lr_data, nmf_data):
     lfig.savefig('output/fig14_legend.pdf', format='pdf', bbox_inches='tight')
 
 
+def prepare_data():
+    fig14_lr_data = [
+	list(collect_breakdown('breakdown-prevision-lr-80m-3-1.log')),
+	list(collect_breakdown('breakdown-prevision_mru-lr-80m-3-1.log')),
+	list(collect_breakdown('breakdown-prevision_lruk-lr-80m-3-1.log')),
+    ]
+
+    fig14_nmf_data = [
+	list(collect_breakdown('breakdown-prevision-nmf-80m-3-1.log')),
+	list(collect_breakdown('breakdown-prevision_mru-nmf-80m-3-1.log')),
+	list(collect_breakdown('breakdown-prevision_lruk-nmf-80m-3-1.log')),
+    ]
+
+    return fig14_lr_data, fig14_nmf_data
+
+
 def render_all_fig14():
-    from data import fig14_lr_data, fig14_nmf_data
+    fig14_lr_data, fig14_nmf_data = prepare_data()
 
     plt.rcParams.update(plt.rcParamsDefault)
 

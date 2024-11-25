@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+from util import collect_time
+
 def render(ax, theme, label, data, title, hide_ylabel=False, _type=1, ylabel_type='s', hint=None, xticks=['8GB','16GB','32GB','64GB'], xlabel=""):
     X = np.arange(4)
     width = 0.12
@@ -118,8 +120,169 @@ def render_fig8_sparse(slr_data, pr_data):
                  xlabel='Dataset Label')
     plt.savefig('output/fig8_sparse_pr.pdf', format='pdf', bbox_inches='tight')
 
+
+def prepare_data():
+    fig8_dense_lr_data = [
+        [
+            collect_time('time-prevision-lr-10m-3-1.log') / 1000000,
+            collect_time('time-prevision-lr-20m-3-1.log') / 1000000,
+            collect_time('time-prevision-lr-40m-3-1.log') / 1000000,
+            collect_time('time-prevision-lr-80m-3-1.log') / 1000000,
+        ],
+        [
+            collect_time('time-systemds-lr-10m-3-1.log'),
+            collect_time('time-systemds-lr-20m-3-1.log'),
+            collect_time('time-systemds-lr-40m-3-1.log'),
+            collect_time('time-systemds-lr-80m-3-1.log'),
+        ],
+        [
+            collect_time('time-mllib-lr-10m-3-1.log'),
+            collect_time('time-mllib-lr-20m-3-1.log'),
+            collect_time('time-mllib-lr-40m-3-1.log'),
+            collect_time('time-mllib-lr-80m-3-1.log'),
+        ],
+        [
+            collect_time('time-madlib-lr-10m-3-1.log'),
+            collect_time('time-madlib-lr-20m-3-1.log'),
+            collect_time('time-madlib-lr-40m-3-1.log'),
+            collect_time('time-madlib-lr-80m-3-1.log'),
+        ],
+        [ 
+            collect_time('time-scidb-lr-10m-3-1.log'),
+            collect_time('time-scidb-lr-20m-3-1.log'),
+            collect_time('time-scidb-lr-40m-3-1.log'),
+            collect_time('time-scidb-lr-80m-3-1.log'),
+        ],
+        [
+            collect_time('time-numpy-lr-10m-3-1.log'),
+            collect_time('time-numpy-lr-20m-3-1.log'),
+            collect_time('time-numpy-lr-40m-3-1.log'),
+            collect_time('time-numpy-lr-80m-3-1.log'),
+        ],
+        [
+            collect_time('time-dask-lr-10m-3-1.log'),
+            collect_time('time-dask-lr-20m-3-1.log'),
+            collect_time('time-dask-lr-40m-3-1.log'),
+            collect_time('time-dask-lr-80m-3-1.log'),
+        ]
+    ]
+
+    fig8_dense_nmf_data = [
+        [
+            collect_time('time-prevision-nmf-10m-3-1.log') / 1000000,
+            collect_time('time-prevision-nmf-20m-3-1.log') / 1000000,
+            collect_time('time-prevision-nmf-40m-3-1.log') / 1000000,
+            collect_time('time-prevision-nmf-80m-3-1.log') / 1000000,
+        ],
+        [
+            collect_time('time-systemds-nmf-10m-3-1.log'),
+            collect_time('time-systemds-nmf-20m-3-1.log'),
+            collect_time('time-systemds-nmf-40m-3-1.log'),
+            collect_time('time-systemds-nmf-80m-3-1.log'),
+        ],
+        [
+            collect_time('time-mllib-nmf-10m-3-1.log'),
+            collect_time('time-mllib-nmf-20m-3-1.log'),
+            collect_time('time-mllib-nmf-40m-3-1.log'),
+            collect_time('time-mllib-nmf-80m-3-1.log'),
+        ],
+        [
+            collect_time('time-madlib-nmf-10m-3-1.log'),
+            collect_time('time-madlib-nmf-20m-3-1.log'),
+            collect_time('time-madlib-nmf-40m-3-1.log'),
+            collect_time('time-madlib-nmf-80m-3-1.log'),
+        ],
+        [ 
+            collect_time('time-scidb-nmf-10m-3-1.log'),
+            collect_time('time-scidb-nmf-20m-3-1.log'),
+            collect_time('time-scidb-nmf-40m-3-1.log'),
+            collect_time('time-scidb-nmf-80m-3-1.log'),
+        ],
+        [
+            collect_time('time-numpy-nmf-10m-3-1.log'),
+            collect_time('time-numpy-nmf-20m-3-1.log'),
+            collect_time('time-numpy-nmf-40m-3-1.log'),
+            collect_time('time-numpy-nmf-80m-3-1.log'),
+        ],
+        [
+            collect_time('time-dask-nmf-10m-3-1.log'),
+            collect_time('time-dask-nmf-20m-3-1.log'),
+            collect_time('time-dask-nmf-40m-3-1.log'),
+            collect_time('time-dask-nmf-80m-3-1.log'),
+        ]
+    ]
+
+    fig8_sparse_lr_data = [
+        [
+            collect_time('time-prevision-slr-0.0125-3-1.log') / 1000000,
+            collect_time('time-prevision-slr-0.025-3-1.log') / 1000000,
+            collect_time('time-prevision-slr-0.05-3-1.log') / 1000000,
+            collect_time('time-prevision-slr-0.1-3-1.log') / 1000000,
+        ],
+        [
+            collect_time('time-systemds-slr-0.0125-3-1.log'),
+            collect_time('time-systemds-slr-0.025-3-1.log'),
+            collect_time('time-systemds-slr-0.05-3-1.log'),
+            collect_time('time-systemds-slr-0.1-3-1.log'),
+        ],
+        [
+            collect_time('time-mllib-slr-0.0125-3-1.log'),
+            collect_time('time-mllib-slr-0.025-3-1.log'),
+            collect_time('time-mllib-slr-0.05-3-1.log'),
+            collect_time('time-mllib-slr-0.1-3-1.log'),
+        ],
+        [
+            collect_time('time-madlib-slr-0.0125-3-1.log'),
+            collect_time('time-madlib-slr-0.025-3-1.log'),
+            collect_time('time-madlib-slr-0.05-3-1.log'),
+            collect_time('time-madlib-slr-0.1-3-1.log'),
+        ],
+        [ 
+            collect_time('time-scidb-slr-0.0125-3-1.log'),
+            collect_time('time-scidb-slr-0.025-3-1.log'),
+            collect_time('time-scidb-slr-0.05-3-1.log'),
+            collect_time('time-scidb-slr-0.1-3-1.log'),
+        ]
+    ]
+
+    fig8_sparse_pr_data = [
+        [
+            collect_time('time-prevision-pagerank-enron-3-1.log') / 1000000,
+            collect_time('time-prevision-pagerank-epinions-3-1.log') / 1000000,
+            collect_time('time-prevision-pagerank-livejournal-3-1.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-3-1.log') / 1000000,
+        ],
+        [
+            collect_time('time-systemds-pagerank-enron-3-1.log'),
+            collect_time('time-systemds-pagerank-epinions-3-1.log'),
+            collect_time('time-systemds-pagerank-livejournal-3-1.log'),
+            collect_time('time-systemds-pagerank-twitter-3-1.log'),
+        ],
+        [
+            collect_time('time-mllib-pagerank-enron-3-1.log'),
+            collect_time('time-mllib-pagerank-epinions-3-1.log'),
+            collect_time('time-mllib-pagerank-livejournal-3-1.log'),
+            collect_time('time-mllib-pagerank-twitter-3-1.log'),
+        ],
+        [
+            collect_time('time-madlib-pagerank-enron-3-1.log'),
+            collect_time('time-madlib-pagerank-epinions-3-1.log'),
+            collect_time('time-madlib-pagerank-livejournal-3-1.log'),
+            collect_time('time-madlib-pagerank-twitter-3-1.log'),
+        ],
+        [ 
+            collect_time('time-scidb-pagerank-enron-3-1.log'),
+            collect_time('time-scidb-pagerank-epinions-3-1.log'),
+            collect_time('time-scidb-pagerank-livejournal-3-1.log'),
+            collect_time('time-scidb-pagerank-twitter-3-1.log'),
+        ]
+    ]
+
+    return fig8_dense_lr_data, fig8_dense_nmf_data, fig8_sparse_lr_data, fig8_sparse_pr_data
+
+
 def render_all_fig8():
-    from data import fig8_dense_lr_data, fig8_dense_nmf_data, fig8_sparse_lr_data, fig8_sparse_pr_data
+    fig8_dense_lr_data, fig8_dense_nmf_data, fig8_sparse_lr_data, fig8_sparse_pr_data = prepare_data()
 
     mpl.rcParams.update(mpl.rcParamsDefault)
 

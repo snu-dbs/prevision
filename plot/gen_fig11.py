@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+from util import collect_io
+
 def sb(ax, theme, label, stacktype, data, title, ylabel=None):
     width = 0.62
     bars = None
@@ -47,8 +49,26 @@ def render_fig11(lr_data, nmf_data):
     lfig.savefig('output/fig11_legend.pdf', format='pdf', bbox_inches='tight')
 
 
+def prepare_data():
+    fig11_lr_data = [
+	list(collect_io('io-prevision-lr-80m-3-1.log')),
+	list(collect_io('io-prevision_wo_pe-lr-80m-3-1.log')),
+	list(collect_io('io-prevision_blocking-lr-80m-3-1.log')),
+	list(collect_io('io-prevision_blocking_wo_pe-lr-80m-3-1.log'))
+    ]
+
+    fig11_nmf_data = [
+	list(collect_io('io-prevision-nmf-80m-3-1.log')),
+	list(collect_io('io-prevision_wo_pe-nmf-80m-3-1.log')),
+	list(collect_io('io-prevision_blocking-nmf-80m-3-1.log')),
+	list(collect_io('io-prevision_blocking_wo_pe-nmf-80m-3-1.log'))
+    ]
+
+    return fig11_lr_data, fig11_nmf_data
+
+
 def render_all_fig11():
-    from data import fig11_lr_data, fig11_nmf_data
+    fig11_lr_data, fig11_nmf_data = prepare_data()
 
     plt.rcParams.update(plt.rcParamsDefault)
 
