@@ -13,11 +13,13 @@ if [[ $task == "lr" || $task == "nmf" ]]; then
 	bash ./import-script/dense.sh $task $data
 
 	# run
-	bash ./dense/auto.sh $task $data $iter $p $repetition
+	cd dense
+	bash auto.sh $task $data $iter $p $repetition
 elif [[ $task == "slr" || $task == "pagerank" ]]; then
 	# import dataset
 	bash ./import-script/sparse.sh $task $data
 
 	# run
+	cd sparse
 	bash ./sparse/auto.sh $task $data $iter $p $repetition
 fi

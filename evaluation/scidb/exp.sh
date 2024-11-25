@@ -8,8 +8,11 @@ p=$4
 repetition=$5
 
 DOCKER_NAME="prevision-scidb-exp"
-SCRIPT_PATH="/data/prevision/evaluation/scidb/guest/alg-remote.sh"
 SCIDB_RESULT_PATH="/data/scidb_result"
+SCRIPT_PATH="/data/prevision/evaluation/scidb/guest"
+RUN_SCRIPT="${SCRIPT_PATH}/alg-remote.sh"
+LOAD_SCRIPT="${SCRIPT_PATH}/load.sh"
+SETUP_SCRIPT="${SCRIPT_PATH}/setup.sh"
 
 function init_normal() {
 	CONFIG="config.ini"
@@ -25,9 +28,7 @@ function init_normal() {
 	sudo docker restart $DOCKER_NAME
 	sleep 10
 
-	echo "Dataset Load"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/load-dense-all.sh"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/setup.sh"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
 	echo "Done"
 	sudo docker stop $DOCKER_NAME
@@ -47,10 +48,7 @@ function init_sparse_7500() {
 	sudo docker restart $DOCKER_NAME
 	sleep 10
 
-	echo "Dataset Load"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/load-sparse-slr00125.sh"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/load-pagerank-small.sh"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/setup.sh"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
 	echo "Done"
 	sudo docker stop $DOCKER_NAME
@@ -70,10 +68,7 @@ function init_sparse_4000() {
 	sudo docker restart $DOCKER_NAME
 	sleep 10
 
-	echo "Dataset Load"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/load-sparse-slr0025.sh"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/load-pagerank-twitter.sh"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/setup.sh"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
 	echo "Done"
 	sudo docker stop $DOCKER_NAME
@@ -92,9 +87,7 @@ function init_parallel_nmf() {
 	sudo docker restart $DOCKER_NAME
 	sleep 10
 
-	echo "Dataset Load"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/load-dense-10m.sh"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/setup.sh"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
 	echo "Done"
 	sudo docker stop $DOCKER_NAME
@@ -113,9 +106,7 @@ function init_parallel_slr() {
 	sudo docker restart $DOCKER_NAME
 	sleep 10
 
-	echo "Dataset Load"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/load-sparse-slr00125.sh"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH /prevision/evaluation/scidb/guest/setup.sh"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
 	echo "Done"
 	sudo docker stop $DOCKER_NAME
@@ -135,19 +126,23 @@ function exp() {
 		sudo docker start $DOCKER_NAME
 		sleep 10
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-		sudo docker exec -it $DOCKER_NAME bash $SCRIPT_PATH $1 $2 $noi
+		sudo docker exec -it $DOCKER_NAME bash $RUN_SCRIPT $1 $2 $noi
 		sudo docker stop $DOCKER_NAME
 	done
 }
 
-# create a docker container; first volume for repository and second volume for scidb result
+# create a docker container
 service docker start
 sleep 10
-docker run --name $DOCKER_NAME -dit --shm-size=30gb -v /data/prevision:/prevision -v $SCIDB_RESULT_PATH:/data grammaright/scidb:19.11-xenial
+sh -c "cd /data; tar -cC 'scidb' . | docker load"
+docker run --name $DOCKER_NAME -dit --shm-size=30gb -v /data/prevision:/data/prevision -v $SCIDB_RESULT_PATH:$SCIDB_RESULT_PATH grammaright/scidb:19.11-xenial
+sleep 10
+docker exec -it $DOCKER_NAME sh -c "apt-get update; apt-get install -y time"
 
 # run task
 if [[ $task == "lr" ]]; then
-	init
+	init_normal
+	docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 	if [[ $data == "10m" ]]; then
 		exp lr 10M $iter
 	elif [[ $data == "20m" ]]; then
@@ -159,17 +154,20 @@ if [[ $task == "lr" ]]; then
 	fi
 elif [[ $task == "nmf" ]]; then
 	if [[ $data == "10m" ]]; then
-		init
+		init_normal
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp nmf 10M $iter
 	elif [[ $data == "20m" ]]; then
-		init
+		init_normal
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp nmf 20M $iter
 	elif [[ $data == "40m" ]]; then
-		init
+		init_normal
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp nmf 40M $iter
 	elif [[ $data == "80m" ]]; then
 		if [[ $p == "1" ]]; then
-			init
+			init_normal
 		elif [[ $p == "2" ]]; then
 			init_parallel_nmf "config_p2.ini"
 		elif [[ $p == "4" ]]; then
@@ -177,6 +175,7 @@ elif [[ $task == "nmf" ]]; then
 		elif [[ $p == "8" ]]; then
 			init_parallel_nmf "config_p8.ini"
 		fi
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp nmf 80M $iter
 	fi
 elif [[ $task == "slr" ]]; then
@@ -186,29 +185,37 @@ elif [[ $task == "slr" ]]; then
 		elif [[ $p == "2" ]]; then
 			init_parallel_slr
 		fi
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp sparse_lr 0_0125 $iter
 	elif [[ $data == "0.025" ]]; then
 		init_sparse_4000
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp sparse_lr 0_025 $iter
 	elif [[ $data == "0.05" ]]; then
 		init_sparse_4000
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp sparse_lr 0_05 $iter
 	elif [[ $data == "0.1" ]]; then
 		init_sparse_4000
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp sparse_lr 0_1 $iter
 	fi
 elif [[ $task == "pagerank" ]]; then
 	if [[ $data == "enron" ]]; then
 		init_sparse_7500
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp pagerank enron $iter
 	elif [[ $data == "epinions" ]]; then
 		init_sparse_7500
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp pagerank epinions $iter
 	elif [[ $data == "livejournal" ]]; then
 		init_sparse_7500
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp pagerank livejournal $iter
 	elif [[ $data == "twitter" ]]; then
 		init_sparse_4000
+		docker exec -it $DOCKER_NAME bash $LOAD_SCRIPT $task $data
 		exp pagerank twitter $iter
 	fi
 fi

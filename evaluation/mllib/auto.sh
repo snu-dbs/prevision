@@ -59,101 +59,101 @@ function run() {
 for i in $(seq 1 $repetition); do
 	if [[ $task == "lr" ]]; then
 		if [[ $data == "10m" ]]; then
-			cp $DATADIR/10000000x100_dense.sf .
-			cp $DATADIR/10000000x1_dense.sf .
-			cp $DATADIR/100x1_dense.sf .
+			cp -r $DATADIR/10000000x100_dense.sf .
+			cp -r $DATADIR/10000000x1_dense.sf .
+			cp -r $DATADIR/100x1_dense.sf .
 
 			run logit "10000000" "0" "_" $iter 900 26100 $p
 		elif [[ $data == "20m" ]]; then
-			cp $DATADIR/20000000x100_dense.sf .
-			cp $DATADIR/20000000x1_dense.sf .
-			cp $DATADIR/100x1_dense.sf .
+			cp -r $DATADIR/20000000x100_dense.sf .
+			cp -r $DATADIR/20000000x1_dense.sf .
+			cp -r $DATADIR/100x1_dense.sf .
 
 			run logit "20000000" "0" "_" $iter 900 26100 $p
 		elif [[ $data == "40m" ]]; then
-			cp $DATADIR/40000000x100_dense.sf .
-			cp $DATADIR/40000000x1_dense.sf .
-			cp $DATADIR/100x1_dense.sf .
+			cp -r $DATADIR/40000000x100_dense.sf .
+			cp -r $DATADIR/40000000x1_dense.sf .
+			cp -r $DATADIR/100x1_dense.sf .
 
 			run logit "40000000" "0" "_" $iter 900 26100 $p
 		elif [[ $data == "80m" ]]; then
-			cp $DATADIR/80000000x100_dense.sf .
-			cp $DATADIR/80000000x1_dense.sf .
-			cp $DATADIR/100x1_dense.sf .
+			cp -r $DATADIR/80000000x100_dense.sf .
+			cp -r $DATADIR/80000000x1_dense.sf .
+			cp -r $DATADIR/100x1_dense.sf .
 
 			run logit "80000000" "0" "_" $iter 900 26100 $p
 		fi
 	elif [[ $task == "nmf" ]]; then
 		if [[ $data == "10m" ]]; then
-			cp $DATADIR/10000000x100_dense.sf .
-			cp $DATADIR/10000000x10_dense.sf .
-			cp $DATADIR/10x100_dense.sf .
+			cp -r $DATADIR/10000000x100_dense.sf .
+			cp -r $DATADIR/10000000x10_dense.sf .
+			cp -r $DATADIR/10x100_dense.sf .
 
 			run gnmf "10000000" "0" "_" $iter 7200 19800 $p
 		elif [[ $data == "20m" ]]; then
-			cp $DATADIR/20000000x100_dense.sf .
-			cp $DATADIR/20000000x10_dense.sf .
-			cp $DATADIR/10x100_dense.sf .
+			cp -r $DATADIR/20000000x100_dense.sf .
+			cp -r $DATADIR/20000000x10_dense.sf .
+			cp -r $DATADIR/10x100_dense.sf .
 
 			run gnmf "20000000" "0" "_" $iter 7200 19800 $p
 		elif [[ $data == "40m" ]]; then
-			cp $DATADIR/40000000x100_dense.sf .
-			cp $DATADIR/40000000x10_dense.sf .
-			cp $DATADIR/10x100_dense.sf .
+			cp -r $DATADIR/40000000x100_dense.sf .
+			cp -r $DATADIR/40000000x10_dense.sf .
+			cp -r $DATADIR/10x100_dense.sf .
 
 			run gnmf "40000000" "0" "_" $iter 7200 19800 $p
 		elif [[ $data == "80m" ]]; then
-			cp $DATADIR/80000000x100_dense.sf .
-			cp $DATADIR/80000000x10_dense.sf .
-			cp $DATADIR/10x100_dense.sf .
+			cp -r $DATADIR/80000000x100_dense.sf .
+			cp -r $DATADIR/80000000x10_dense.sf .
+			cp -r $DATADIR/10x100_dense.sf .
 
 			run gnmf "80000000" "0" "_" $iter 7200 19800 $p
 		fi
 	elif [[ $task == "slr" ]]; then
 		if [[ $data == "0.0125" ]]; then
-			cp $DATADIR/400000000x100_sparse_0.0125.sf .
-			cp $DATADIR/400000000x1_sparse_0.0125.sf .
-			cp $DATADIR/100x1_sparse_0.0125.sf .
+			cp -r $DATADIR/400000000x100_sparse_0.0125.sf .
+			cp -r $DATADIR/400000000x1_sparse_0.0125.sf .
+			cp -r $DATADIR/100x1_sparse_0.0125.sf .
 
 			run slogit "400000000" "0.0125" "_" $iter 7200 19800 $p
 		elif [[ $data == "0.025" ]]; then
-			cp $DATADIR/400000000x100_sparse_0.025.sf .
-			cp $DATADIR/400000000x1_sparse_0.025.sf .
-			cp $DATADIR/100x1_sparse_0.025.sf .
+			cp -r $DATADIR/400000000x100_sparse_0.025.sf .
+			cp -r $DATADIR/400000000x1_sparse_0.025.sf .
+			cp -r $DATADIR/100x1_sparse_0.025.sf .
 
 			run slogit "400000000" "0.025" "_" $iter 7200 19800 $p
 		elif [[ $data == "0.05" ]]; then
-			cp $DATADIR/400000000x100_sparse_0.05.sf .
-			cp $DATADIR/400000000x1_sparse_0.05.sf .
-			cp $DATADIR/100x1_sparse_0.05.sf .
+			cp -r $DATADIR/400000000x100_sparse_0.05.sf .
+			cp -r $DATADIR/400000000x1_sparse_0.05.sf .
+			cp -r $DATADIR/100x1_sparse_0.05.sf .
 
 			run slogit "400000000" "0.05" "_" $iter 7200 19800 $p
 		elif [[ $data == "0.1" ]]; then
-			cp $DATADIR/400000000x100_sparse_0.1.sf .
-			cp $DATADIR/400000000x1_sparse_0.1.sf .
-			cp $DATADIR/100x1_sparse_0.1.sf .
+			cp -r $DATADIR/400000000x100_sparse_0.1.sf .
+			cp -r $DATADIR/400000000x1_sparse_0.1.sf .
+			cp -r $DATADIR/100x1_sparse_0.1.sf .
 
 			run slogit "400000000" "0.1" "_" $iter 3600 23400 $p
 		fi
 	elif [[ $task == "pagerank" ]]; then
 		if [[ $data == "enron" ]]; then
-			cp $DATADIR/enron.sf .
-			cp $DATADIR/enron_v.sf .
+			cp -r $DATADIR/enron.sf .
+			cp -r $DATADIR/enron_v.sf .
 
 			run pagerank "36692" "0" "enron" $iter 900 26100 $p
 		elif [[ $data == "epinions" ]]; then
-			cp $DATADIR/epinions.sf .
-			cp $DATADIR/epinions_v.sf .
+			cp -r $DATADIR/epinions.sf .
+			cp -r $DATADIR/epinions_v.sf .
 
 			run pagerank "75888" "0" "epinions" $iter 900 26100 $p
 		elif [[ $data == "livejournal" ]]; then
-			cp $DATADIR/livejournal.sf .
-			cp $DATADIR/livejournal_v.sf .
+			cp -r $DATADIR/livejournal.sf .
+			cp -r $DATADIR/livejournal_v.sf .
 
 			run pagerank "4847571" "0" "livejournal" $iter 900 26100 $p
 		elif [[ $data == "twitter" ]]; then
-			cp $DATADIR/twitter.sf .
-			cp $DATADIR/twitter_v.sf .
+			cp -r $DATADIR/twitter.sf .
+			cp -r $DATADIR/twitter_v.sf .
 
 			run pagerank2 "61578415" "0" "twitter_20" $iter 900 26100 $p         # no OOM if 20x20 tiles 
 		fi

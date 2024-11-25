@@ -37,18 +37,18 @@ function lr() {
 		    project(apply(
 			join(gemm(X, w, zero_1), y), delta, pow(1+EXP(-gemm), -1) - value), 
 		    delta), zero_2, transa:true), norm, 0.0000001*gemm), norm)
-		), update, value - norm), update), w_new)' 2>&1 | tee -a /data/exp_result.log
+		), update, value - norm), update), w_new)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 
 		# change name
 		if [ $i -eq 1 ]
 		then
-			/usr/bin/time -f '%e' iquery -aq 'rename(w, '$IN_w')' 2>&1 | tee -a /data/exp_result.log
+			/usr/bin/time -f '%e' iquery -aq 'rename(w, '$IN_w')' 2>&1 | tee -a /data/scidb_result/exp_result.log
 		else
-			/usr/bin/time -f '%e' iquery -aq 'remove(w)' 2>&1 | tee -a /data/exp_result.log
+			/usr/bin/time -f '%e' iquery -aq 'remove(w)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 		fi
 
-		/usr/bin/time -f '%e' iquery -aq 'store(project(apply(w_new, value, update), value), w)' 2>&1 | tee -a /data/exp_result.log
-		/usr/bin/time -f '%e' iquery -aq 'remove(w_new)' 2>&1 | tee -a /data/exp_result.log
+		/usr/bin/time -f '%e' iquery -aq 'store(project(apply(w_new, value, update), value), w)' 2>&1 | tee -a /data/scidb_result/exp_result.log
+		/usr/bin/time -f '%e' iquery -aq 'remove(w_new)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 	done
 
 	# restore
@@ -93,15 +93,15 @@ function nmf() {
 			project(apply(gemm(X, H_old, ZXHT, transb: true), prod, gemm), prod),
 			gemm(W_old, gemm(H_old, H_old, zero_10x10, transb: true), ZWHHT)),
 		    div, prod/gemm), div)),
-		value_new, value*div), value_new), value, value_new), value), W_new)' 2>&1 | tee -a /data/exp_result.log
+		value_new, value*div), value_new), value, value_new), value), W_new)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 
 		if [ $i -eq 1 ]
 		then
-			/usr/bin/time -f '%e' iquery -aq 'rename(W_old, '$IN_W')' 2>&1 | tee -a /data/exp_result.log
+			/usr/bin/time -f '%e' iquery -aq 'rename(W_old, '$IN_W')' 2>&1 | tee -a /data/scidb_result/exp_result.log
 		else
-			/usr/bin/time -f '%e' iquery -aq 'remove(W_old)' 2>&1 | tee -a /data/exp_result.log
+			/usr/bin/time -f '%e' iquery -aq 'remove(W_old)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 		fi
-		/usr/bin/time -f '%e' iquery -aq 'rename(W_new, W_old)' 2>&1 | tee -a /data/exp_result.log
+		/usr/bin/time -f '%e' iquery -aq 'rename(W_new, W_old)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 
 		# build H
 		/usr/bin/time -f '%e' iquery -aq 'store(project(apply(project(apply(join(H_old,
@@ -109,16 +109,16 @@ function nmf() {
 			project(apply(gemm(W_old, X, zero_10x100, transa: true), prod, gemm), prod),
 			gemm(gemm(W_old, W_old, zero_10x10, transa: true), H_old, zero_10x100)),
 		    div, prod/gemm), div)),
-		value_new, value*div), value_new), value, value_new), value), H_new)' 2>&1 | tee -a /data/exp_result.log
+		value_new, value*div), value_new), value, value_new), value), H_new)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 
 		# change name
 		if [ $i -eq 1 ]
 		then
-			/usr/bin/time -f '%e' iquery -aq 'rename(H_old, '$IN_H')' 2>&1 | tee -a /data/exp_result.log
+			/usr/bin/time -f '%e' iquery -aq 'rename(H_old, '$IN_H')' 2>&1 | tee -a /data/scidb_result/exp_result.log
 		else
-			/usr/bin/time -f '%e' iquery -aq 'remove(H_old)' 2>&1 | tee -a /data/exp_result.log
+			/usr/bin/time -f '%e' iquery -aq 'remove(H_old)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 		fi
-		/usr/bin/time -f '%e' iquery -aq 'rename(H_new, H_old)' 2>&1 | tee -a /data/exp_result.log
+		/usr/bin/time -f '%e' iquery -aq 'rename(H_new, H_old)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 	done
 
 	# restore
@@ -161,18 +161,18 @@ function sparse_lr() {
 		    project(apply(
 			join(spgemm(X, w), y), delta, pow(1+EXP(-multiply), -1) - value), 
 		    delta)), norm, 0.0000001*multiply), norm)
-		), update, value - norm), update), w_new)' 2>&1 | tee -a /data/exp_result.log
+		), update, value - norm), update), w_new)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 
 		# change name
 		if [ $i -eq 1 ]
 		then
-			/usr/bin/time -f '%e' iquery -aq 'rename(w, '$IN_w')' 2>&1 | tee -a /data/exp_result.log
+			/usr/bin/time -f '%e' iquery -aq 'rename(w, '$IN_w')' 2>&1 | tee -a /data/scidb_result/exp_result.log
 		else
-			/usr/bin/time -f '%e' iquery -aq 'remove(w)' 2>&1 | tee -a /data/exp_result.log
+			/usr/bin/time -f '%e' iquery -aq 'remove(w)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 		fi
 
-		/usr/bin/time -f '%e' iquery -aq 'store(project(apply(w_new, value, update), value), w)' 2>&1 | tee -a /data/exp_result.log
-		/usr/bin/time -f '%e' iquery -aq 'remove(w_new)' 2>&1 | tee -a /data/exp_result.log
+		/usr/bin/time -f '%e' iquery -aq 'store(project(apply(w_new, value, update), value), w)' 2>&1 | tee -a /data/scidb_result/exp_result.log
+		/usr/bin/time -f '%e' iquery -aq 'remove(w_new)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 	done
 
 	# restore
@@ -221,17 +221,17 @@ function pagerank() {
 		/usr/bin/time -f '%e' iquery -aq 'store(project(apply(project(apply(join(
   			spgemm(X, v) AS a,
 			with_one AS b
-		), res, (0.85 * a.multiply) + b.value), res), value, res), value), v_new);' 2>&1 | tee -a /data/exp_result.log
+		), res, (0.85 * a.multiply) + b.value), res), value, res), value), v_new);' 2>&1 | tee -a /data/scidb_result/exp_result.log
 
 		# change name
 		if [ $i -eq 1 ]
 		then
-			/usr/bin/time -f '%e' iquery -aq 'rename(v, '$IN_v')' 2>&1 | tee -a /data/exp_result.log
+			/usr/bin/time -f '%e' iquery -aq 'rename(v, '$IN_v')' 2>&1 | tee -a /data/scidb_result/exp_result.log
 		else
-			/usr/bin/time -f '%e' iquery -aq 'remove(v)' 2>&1 | tee -a /data/exp_result.log
+			/usr/bin/time -f '%e' iquery -aq 'remove(v)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 		fi
 
-		/usr/bin/time -f '%e' iquery -aq 'rename(v_new, v)' 2>&1 | tee -a /data/exp_result.log
+		/usr/bin/time -f '%e' iquery -aq 'rename(v_new, v)' 2>&1 | tee -a /data/scidb_result/exp_result.log
 	done
 
 	# restore

@@ -69,6 +69,7 @@ RUN sed -i '62s/^/#/' /etc/init.d/docker
 
 # Install MADlib
 # Postgres First
+RUN ln -s /usr/bin/python2.7 /usr/bin/python
 RUN cd /data && curl -O https://ftp.postgresql.org/pub/source/v12.14/postgresql-12.14.tar.gz && \
 	tar zxvf postgresql-12.14.tar.gz && cd postgresql-12.14 && \
 	./configure --with-python && make -j9 && make install
@@ -77,19 +78,20 @@ RUN adduser postgres && \
 	chown postgres /usr/local/pgsql/data
 RUN sudo -u postgres /usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data && \
 	sudo -u postgres /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l /usr/local/pgsql/data/logfile start && \
-	sudo -u postgres /usr/local/pgsql/bin/createuser root && \
+	sudo -u postgres /usr/local/pgsql/bin/createuser --superuser root && \
 	sudo -u postgres /usr/local/pgsql/bin/createdb -O root root && \
 	sudo -u postgres /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data stop
 ENV PATH="$PATH:/usr/local/pgsql/bin"
 
 # MADlib
+RUN apt-get install -y m4
 RUN cd /data && curl -O https://dist.apache.org/repos/dist/release/madlib/1.21.0/apache-madlib-1.21.0-src.tar.gz && \
 	tar zxvf apache-madlib-1.21.0-src.tar.gz && \
 	cd apache-madlib-1.21.0-src && mkdir build && cd build && \
-	cmake .. && make
+	cmake .. && (make -j9 || make -j9)
 RUN sudo -u postgres /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l /usr/local/pgsql/data/logfile start && \
 	sudo chmod a+x /data/apache-madlib-1.21.0-src/src/bin/madpack && \
-	sudo -E -u postgres sh -c "PATH=$PATH:/usr/local/pgsql/bin/data/" apache-madlib-1.21.0-src/src/bin/madpack -s madlib -p postgres install && \
+	sudo -E -u postgres sh -c "PATH=$PATH:/usr/local/pgsql/bin/ PGUSER=root PGDATABASE=root /data/apache-madlib-1.21.0-src/build/src/bin/madpack -s madlib -p postgres install" && \
 	sudo -u postgres /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data stop
 
 ##############################
@@ -97,6 +99,11 @@ RUN sudo -u postgres /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l /us
 ##############################
 
 COPY . /data/prevision
+
+# Pull docker image for SciDB
+RUN cd /data && wget https://raw.githubusercontent.com/moby/moby/master/contrib/download-frozen-image-v2.sh && \
+	apt-get install -y jq && \
+	bash download-frozen-image-v2.sh scidb grammaright/scidb:19.11-xenial
 
 # Build MLlib src
 ENV SPARK_ROOT="/data/spark-3.3.2-bin-hadoop3"

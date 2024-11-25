@@ -12,7 +12,7 @@ execmethod=$8
 
 
 # static
-DATADIR="/data/previsions/slab-benchmark/prevision/output/prevision"
+DATADIR="/data/prevision/slab-benchmark/prevision/output/prevision"
 
 # functions
 function dense_nmf() {

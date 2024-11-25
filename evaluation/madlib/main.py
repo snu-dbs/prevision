@@ -3,7 +3,7 @@ import csv
 import tqdm
 import psycopg2
 
-conn = psycopg2.connect("dbname=root user=root")
+conn = psycopg2.connect("dbname=root user=root host=/tmp/")
 cur = conn.cursor()
 arrname = sys.argv[2] 
 is_vec = int(sys.argv[3]) == 1
