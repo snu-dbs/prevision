@@ -21,9 +21,9 @@ function init_normal() {
 	sleep 10
 
 	echo "Database Initialization"
-	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x /prevision/evaluation/scidb/guest/*"
+	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x ${SCRIPT_PATH}/*"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py stop"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /data/prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "echo 'y' | /opt/scidb/19.11/bin/scidbctl.py init-cluster"
 	sudo docker restart $DOCKER_NAME
 	sleep 10
@@ -31,7 +31,6 @@ function init_normal() {
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
 	echo "Done"
-	sudo docker stop $DOCKER_NAME
 }
 
 function init_sparse_7500() {
@@ -41,9 +40,9 @@ function init_sparse_7500() {
 	sleep 10
 
 	echo "Database Initialization"
-	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x /prevision/evaluation/scidb/guest/*"
+	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x ${SCRIPT_PATH}/*"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py stop"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /data/prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "echo 'y' | /opt/scidb/19.11/bin/scidbctl.py init-cluster"
 	sudo docker restart $DOCKER_NAME
 	sleep 10
@@ -51,7 +50,6 @@ function init_sparse_7500() {
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
 	echo "Done"
-	sudo docker stop $DOCKER_NAME
 }
 
 function init_sparse_4000() {
@@ -61,9 +59,9 @@ function init_sparse_4000() {
 	sleep 10
 
 	echo "Database Initialization"
-	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x /prevision/evaluation/scidb/guest/*"
+	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x ${SCRIPT_PATH}/*"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py stop"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /data/prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "echo 'y' | /opt/scidb/19.11/bin/scidbctl.py init-cluster"
 	sudo docker restart $DOCKER_NAME
 	sleep 10
@@ -71,7 +69,6 @@ function init_sparse_4000() {
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
 	echo "Done"
-	sudo docker stop $DOCKER_NAME
 }
 
 function init_parallel_nmf() {
@@ -80,9 +77,9 @@ function init_parallel_nmf() {
 	sleep 10
 
 	echo "Database Initialization"
-	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x /prevision/evaluation/scidb/guest/*"
+	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x ${SCRIPT_PATH}/*"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py stop"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /data/prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "echo 'y' | /opt/scidb/19.11/bin/scidbctl.py init-cluster"
 	sudo docker restart $DOCKER_NAME
 	sleep 10
@@ -90,7 +87,6 @@ function init_parallel_nmf() {
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
 	echo "Done"
-	sudo docker stop $DOCKER_NAME
 }
 
 function init_parallel_slr() {
@@ -99,9 +95,9 @@ function init_parallel_slr() {
 	sleep 10
 
 	echo "Database Initialization"
-	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x /prevision/evaluation/scidb/guest/*"
+	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x ${SCRIPT_PATH}/*"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py stop"
-	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
+	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /data/prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "echo 'y' | /opt/scidb/19.11/bin/scidbctl.py init-cluster"
 	sudo docker restart $DOCKER_NAME
 	sleep 10
@@ -109,7 +105,6 @@ function init_parallel_slr() {
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
 	echo "Done"
-	sudo docker stop $DOCKER_NAME
 }
 
 function exp() {
@@ -117,13 +112,13 @@ function exp() {
 
 	for i in $(seq 1 $repetition)
 	do
-        echo "###############################################"
-        echo "# Algorithm: $1"
-        echo "# Dataset: $2"
-        echo "# Iterations: $noi"
-        echo "###############################################"
+		echo "###############################################"
+		echo "# Algorithm: $1"
+		echo "# Dataset: $2"
+		echo "# Iterations: $noi"
+		echo "###############################################"
 
-		sudo docker start $DOCKER_NAME
+		sudo docker restart $DOCKER_NAME
 		sleep 10
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
 		sudo docker exec -it $DOCKER_NAME bash $RUN_SCRIPT $1 $2 $noi
@@ -135,7 +130,8 @@ function exp() {
 service docker start
 sleep 10
 sh -c "cd /data; tar -cC 'scidb' . | docker load"
-docker run --name $DOCKER_NAME -dit --shm-size=30gb -v /data/prevision:/data/prevision -v $SCIDB_RESULT_PATH:$SCIDB_RESULT_PATH grammaright/scidb:19.11-xenial
+mkdir -p /data/scidb-dbpath
+docker run --name $DOCKER_NAME -dit --shm-size=30gb -v /data/prevision:/data/prevision -v $SCIDB_RESULT_PATH:$SCIDB_RESULT_PATH -v/data/scidb-dbpath:/dbpath grammaright/scidb:19.11-xenial
 sleep 10
 docker exec -it $DOCKER_NAME sh -c "apt-get update; apt-get install -y time"
 
