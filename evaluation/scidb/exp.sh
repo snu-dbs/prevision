@@ -18,16 +18,13 @@ function init_normal() {
 	# XXX: it is adjusted to 7250 from 7500 since oom error when using docker
 	CONFIG="config.ini"
 
-	sudo docker start $DOCKER_NAME
-	sleep 15
-
 	echo "Database Initialization"
 	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x ${SCRIPT_PATH}/*"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py stop"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /data/prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "echo 'y' | /opt/scidb/19.11/bin/scidbctl.py init-cluster"
-	sudo docker restart $DOCKER_NAME
-	sleep 15
+	sudo docker exec $DOCKER_NAME sudo -u scidb /opt/scidb/19.11/bin/scidbctl.py start 
+	sleep 10
 
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
@@ -38,16 +35,13 @@ function init_sparse_4000() {
 	# XXX: config_3500 is used since oom error when using docker
 	CONFIG="config_3500.ini"
 
-	sudo docker start $DOCKER_NAME
-	sleep 15
-
 	echo "Database Initialization"
 	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x ${SCRIPT_PATH}/*"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py stop"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /data/prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "echo 'y' | /opt/scidb/19.11/bin/scidbctl.py init-cluster"
-	sudo docker restart $DOCKER_NAME
-	sleep 15
+	sudo docker exec $DOCKER_NAME sudo -u scidb /opt/scidb/19.11/bin/scidbctl.py start 
+	sleep 10
 
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
@@ -56,16 +50,14 @@ function init_sparse_4000() {
 
 function init_parallel_nmf() {
 	CONFIG=$1
-	sudo docker start $DOCKER_NAME
-	sleep 15
 
 	echo "Database Initialization"
 	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x ${SCRIPT_PATH}/*"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py stop"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /data/prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "echo 'y' | /opt/scidb/19.11/bin/scidbctl.py init-cluster"
-	sudo docker restart $DOCKER_NAME
-	sleep 15
+	sudo docker exec $DOCKER_NAME sudo -u scidb /opt/scidb/19.11/bin/scidbctl.py start 
+	sleep 10
 
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
@@ -74,16 +66,14 @@ function init_parallel_nmf() {
 
 function init_parallel_slr() {
 	CONFIG="config_p2.ini"
-	sudo docker start $DOCKER_NAME
-	sleep 15
 
 	echo "Database Initialization"
 	sudo docker exec -it $DOCKER_NAME bash -c "chown scidb /dbpath; chmod a+x ${SCRIPT_PATH}/*"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "/opt/scidb/19.11/bin/scidbctl.py stop"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "cp /data/prevision/evaluation/scidb/config/""$CONFIG"" /opt/scidb/19.11/etc/config.ini"
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "echo 'y' | /opt/scidb/19.11/bin/scidbctl.py init-cluster"
-	sudo docker restart $DOCKER_NAME
-	sleep 15
+	sudo docker exec $DOCKER_NAME sudo -u scidb /opt/scidb/19.11/bin/scidbctl.py start 
+	sleep 10
 
 	sudo docker exec -it $DOCKER_NAME sudo -u scidb bash -c "PATH=/opt/scidb/19.11/bin:$PATH $SETUP_SCRIPT"
 
@@ -102,7 +92,7 @@ function exp() {
 		echo "###############################################"
 
 		sudo docker restart $DOCKER_NAME
-		sleep 15
+		sleep 10
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
 		sudo docker exec -it $DOCKER_NAME bash $RUN_SCRIPT $1 $2 $noi
 		sudo docker stop $DOCKER_NAME
@@ -111,11 +101,11 @@ function exp() {
 
 # create a docker container
 service docker start
-sleep 15
+sleep 10
 sh -c "cd /data; tar -cC 'scidb' . | docker load"
 mkdir -p /data/scidb-dbpath
 docker run --name $DOCKER_NAME -dit --shm-size=30gb -v /data/prevision:/data/prevision -v $SCIDB_RESULT_PATH:$SCIDB_RESULT_PATH -v/data/scidb-dbpath:/dbpath grammaright/scidb:19.11-xenial
-sleep 15
+sleep 10
 docker exec -it $DOCKER_NAME sh -c "apt-get update; apt-get install -y time"
 
 # run task
