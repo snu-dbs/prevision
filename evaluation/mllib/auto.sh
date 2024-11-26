@@ -152,8 +152,8 @@ for i in $(seq 1 $repetition); do
 
 			run pagerank "4847571" "0" "livejournal" $iter 900 26100 $p
 		elif [[ $data == "twitter" ]]; then
-			cp -r $DATADIR/twitter.sf .
-			cp -r $DATADIR/twitter_v.sf .
+			cp -r $DATADIR/twitter_20.sf .
+			cp -r $DATADIR/twitter_20_v.sf .
 
 			run pagerank2 "61578415" "0" "twitter_20" $iter 900 26100 $p         # no OOM if 20x20 tiles 
 		fi
