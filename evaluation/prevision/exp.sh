@@ -163,7 +163,7 @@ set_thread $p
 # Set buffer replacement algorithm
 if [[ $replacement == "mru" ]]; then
 	set_bf_env_mru
-elif [[ $varient == "lruk" ]]; then
+elif [[ $replacement == "lruk" ]]; then
 	if [[ $task == "lr" ]]; then
 		set_bf_env_lruk 2 8
 	elif [[ $task == "nmf" ]]; then
