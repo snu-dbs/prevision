@@ -124,10 +124,10 @@ def render_fig8_sparse(slr_data, pr_data):
 def prepare_data():
     fig8_dense_lr_data = [
         [
-            collect_time('time-prevision-lr-10m-3-1.log') / 1000000,
-            collect_time('time-prevision-lr-20m-3-1.log') / 1000000,
-            collect_time('time-prevision-lr-40m-3-1.log') / 1000000,
-            collect_time('time-prevision-lr-80m-3-1.log') / 1000000,
+            collect_time('time-prevision-lr-10m-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-lr-20m-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-lr-40m-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-lr-80m-3-1-opt-pe-getpos.log') / 1000000,
         ],
         [
             collect_time('time-systemds-lr-10m-3-1.log'),
@@ -169,10 +169,10 @@ def prepare_data():
 
     fig8_dense_nmf_data = [
         [
-            collect_time('time-prevision-nmf-10m-3-1.log') / 1000000,
-            collect_time('time-prevision-nmf-20m-3-1.log') / 1000000,
-            collect_time('time-prevision-nmf-40m-3-1.log') / 1000000,
-            collect_time('time-prevision-nmf-80m-3-1.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-nmf-20m-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-nmf-40m-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-nmf-80m-3-1-opt-pe-getpos.log') / 1000000,
         ],
         [
             collect_time('time-systemds-nmf-10m-3-1.log'),
@@ -214,10 +214,10 @@ def prepare_data():
 
     fig8_sparse_lr_data = [
         [
-            collect_time('time-prevision-slr-0.0125-3-1.log') / 1000000,
-            collect_time('time-prevision-slr-0.025-3-1.log') / 1000000,
-            collect_time('time-prevision-slr-0.05-3-1.log') / 1000000,
-            collect_time('time-prevision-slr-0.1-3-1.log') / 1000000,
+            collect_time('time-prevision-slr-0.0125-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-slr-0.025-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-slr-0.05-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-slr-0.1-3-1-opt-pe-getpos.log') / 1000000,
         ],
         [
             collect_time('time-systemds-slr-0.0125-3-1.log'),
@@ -247,10 +247,10 @@ def prepare_data():
 
     fig8_sparse_pr_data = [
         [
-            collect_time('time-prevision-pagerank-enron-3-1.log') / 1000000,
-            collect_time('time-prevision-pagerank-epinions-3-1.log') / 1000000,
-            collect_time('time-prevision-pagerank-livejournal-3-1.log') / 1000000,
-            collect_time('time-prevision-pagerank-twitter-3-1.log') / 1000000,
+            collect_time('time-prevision-pagerank-enron-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-pagerank-epinions-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-pagerank-livejournal-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-3-1-opt-pe-getpos.log') / 1000000,
         ],
         [
             collect_time('time-systemds-pagerank-enron-3-1.log'),

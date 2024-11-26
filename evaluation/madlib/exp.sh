@@ -21,5 +21,5 @@ elif [[ $task == "slr" || $task == "pagerank" ]]; then
 
 	# run
 	cd sparse
-	bash ./sparse/auto.sh $task $data $iter $p $repetition
+	bash auto.sh $task $data $iter $p $repetition
 fi

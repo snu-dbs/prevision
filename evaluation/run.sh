@@ -305,20 +305,20 @@ bash evaluate.sh prevision slr 0.0125 3 8 1 $DATAPATH
 
 # I/O (figure 11)
 bash evaluate.sh prevision_wo_pe lr 80m 3 1 1 $DATAPATH
-bash evaluate.sh prevision_wo_pe 80m 3 1 1 $DATAPATH
+bash evaluate.sh prevision_wo_pe nmf 80m 3 1 1 $DATAPATH
 
 bash evaluate.sh prevision_blocking lr 80m 3 1 1 $DATAPATH
-bash evaluate.sh prevision_blocking 80m 3 1 1 $DATAPATH
+bash evaluate.sh prevision_blocking nmf 80m 3 1 1 $DATAPATH
 
 bash evaluate.sh prevision_blocking_wo_pe lr 80m 3 1 1 $DATAPATH
-bash evaluate.sh prevision_blocking_wo_pe 80m 3 1 1 $DATAPATH
+bash evaluate.sh prevision_blocking_wo_pe nmf 80m 3 1 1 $DATAPATH
 
 # Buffer Replacement (figure 14)
 bash evaluate.sh prevision_mru lr 80m 3 1 1 $DATAPATH
-bash evaluate.sh prevision_mru 80m 3 1 1 $DATAPATH
+bash evaluate.sh prevision_mru nmf 80m 3 1 1 $DATAPATH
 
 bash evaluate.sh prevision_lruk lr 80m 3 1 1 $DATAPATH
-bash evaluate.sh prevision_lruk 80m 3 1 1 $DATAPATH
+bash evaluate.sh prevision_lruk nmf 80m 3 1 1 $DATAPATH
 
 # smalltiles - lr (fig 15)
 bash evaluate.sh prevision lr 80m_200x1 3 1 1 $DATAPATH

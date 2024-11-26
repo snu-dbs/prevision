@@ -57,15 +57,15 @@ def render_fig14(lr_data, nmf_data):
 
 def prepare_data():
     fig14_lr_data = [
-	list(collect_breakdown('breakdown-prevision-lr-80m-3-1.log')),
-	list(collect_breakdown('breakdown-prevision_mru-lr-80m-3-1.log')),
-	list(collect_breakdown('breakdown-prevision_lruk-lr-80m-3-1.log')),
+	list(collect_breakdown('breakdown-prevision-lr-80m-3-1-opt-pe-getpos.log')),
+	list(collect_breakdown('breakdown-prevision-lr-80m-3-1-mru-pe-getpos.log')),
+	list(collect_breakdown('breakdown-prevision-lr-80m-3-1-lruk-pe-getpos.log')),
     ]
 
     fig14_nmf_data = [
-	list(collect_breakdown('breakdown-prevision-nmf-80m-3-1.log')),
-	list(collect_breakdown('breakdown-prevision_mru-nmf-80m-3-1.log')),
-	list(collect_breakdown('breakdown-prevision_lruk-nmf-80m-3-1.log')),
+	list(collect_breakdown('breakdown-prevision-nmf-80m-3-1-opt-pe-getpos.log')),
+	list(collect_breakdown('breakdown-prevision-nmf-80m-3-1-mru-pe-getpos.log')),
+	list(collect_breakdown('breakdown-prevision-nmf-80m-3-1-lruk-pe-getpos.log')),
     ]
 
     return fig14_lr_data, fig14_nmf_data

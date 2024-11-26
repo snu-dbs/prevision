@@ -24,7 +24,7 @@ function import_pagerank() {
 	psql -c "CREATE INDEX ON mat_"$dataset"_v (col_id);"
 	psql -c "CREATE INDEX ON mat_"$dataset"_v (row_id, col_id);"
 	psql -c "CREATE INDEX ON mat_"$dataset"_v (col_id, row_id);"
-	psql -c "CREATE INDEX ON mat_"$dataset"_v USING HASH (col_id, row_id);"
+	psql -c "CREATE INDEX ON mat_"$dataset"_v USING HASH (row_id);"
 }
 
 function import() {

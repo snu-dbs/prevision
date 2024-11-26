@@ -97,21 +97,21 @@ def render_fig15_b(prevision_data, dask_data):
 
 def prepare_data():
     lr_prevision_raw = [
-        collect_breakdown('breakdown-prevision-lr-80m-3-1.log'),
-        collect_breakdown('breakdown-prevision-lr-80m_200x1-3-1.log'),
-        collect_breakdown('breakdown-prevision-lr-80m_400x1-3-1.log'),
-        collect_breakdown('breakdown-prevision-lr-80m_800x1-3-1.log'),
-        collect_breakdown('breakdown-prevision-lr-80m_1600x1-3-1.log'),
-        collect_breakdown('breakdown-prevision-lr-80m_3200x1-3-1.log')
+        collect_breakdown('breakdown-prevision-lr-80m-3-1-opt-pe-getpos.log'),
+        collect_breakdown('breakdown-prevision-lr-80m_200x1-3-1-opt-pe-getpos.log'),
+        collect_breakdown('breakdown-prevision-lr-80m_400x1-3-1-opt-pe-getpos.log'),
+        collect_breakdown('breakdown-prevision-lr-80m_800x1-3-1-opt-pe-getpos.log'),
+        collect_breakdown('breakdown-prevision-lr-80m_1600x1-3-1-opt-pe-getpos.log'),
+        collect_breakdown('breakdown-prevision-lr-80m_3200x1-3-1-opt-pe-getpos.log')
     ]
 
     nmf_prevision_raw = [
-        collect_breakdown('breakdown-prevision-nmf-80m-3-1.log'),
-        collect_breakdown('breakdown-prevision-nmf-80m_200x1-3-1.log'),
-        collect_breakdown('breakdown-prevision-nmf-80m_400x1-3-1.log'),
-        collect_breakdown('breakdown-prevision-nmf-80m_800x1-3-1.log'),
-        collect_breakdown('breakdown-prevision-nmf-80m_1600x1-3-1.log'),
-        collect_breakdown('breakdown-prevision-nmf-80m_3200x1-3-1.log')
+        collect_breakdown('breakdown-prevision-nmf-80m-3-1-opt-pe-getpos.log'),
+        collect_breakdown('breakdown-prevision-nmf-80m_200x1-3-1-opt-pe-getpos.log'),
+        collect_breakdown('breakdown-prevision-nmf-80m_400x1-3-1-opt-pe-getpos.log'),
+        collect_breakdown('breakdown-prevision-nmf-80m_800x1-3-1-opt-pe-getpos.log'),
+        collect_breakdown('breakdown-prevision-nmf-80m_1600x1-3-1-opt-pe-getpos.log'),
+        collect_breakdown('breakdown-prevision-nmf-80m_3200x1-3-1-opt-pe-getpos.log')
     ]
 
     fig15_lr_prevision_data = [[], []]

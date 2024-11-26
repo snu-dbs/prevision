@@ -81,12 +81,12 @@ def render_fig9b(pr_data):
 def prepare_data():
     fig9_nmf_data = [
         [
-            collect_time('time-prevision-nmf-10m-1-1.log') / 1000000,
-            collect_time('time-prevision-nmf-10m-2-1.log') / 1000000,
-            collect_time('time-prevision-nmf-10m-4-1.log') / 1000000,
-            collect_time('time-prevision-nmf-10m-8-1.log') / 1000000,
-            collect_time('time-prevision-nmf-10m-16-1.log') / 1000000,
-            collect_time('time-prevision-nmf-10m-32-1.log') / 1000000
+            collect_time('time-prevision-nmf-10m-1-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-2-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-4-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-8-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-16-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-32-1-opt-pe-getpos.log') / 1000000
         ],
         [
             collect_time('time-systemds-nmf-10m-1-1.log'),
@@ -140,12 +140,12 @@ def prepare_data():
 
     fig9_pr_data = [
         [
-            collect_time('time-prevision-pagerank-twitter-1-1.log') / 1000000,
-            collect_time('time-prevision-pagerank-twitter-2-1.log') / 1000000,
-            collect_time('time-prevision-pagerank-twitter-4-1.log') / 1000000,
-            collect_time('time-prevision-pagerank-twitter-8-1.log') / 1000000,
-            collect_time('time-prevision-pagerank-twitter-16-1.log') / 1000000,
-            collect_time('time-prevision-pagerank-twitter-32-1.log') / 1000000
+            collect_time('time-prevision-pagerank-twitter-1-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-2-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-4-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-8-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-16-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-pagerank-twitter-32-1-opt-pe-getpos.log') / 1000000
         ],
         [
             collect_time('time-mllib-pagerank-twitter-1-1.log'),

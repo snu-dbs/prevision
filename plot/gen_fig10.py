@@ -56,10 +56,10 @@ def render_fig10b(slr_data):
 def prepare_data():
     fig10_nmf_data = [
         [
-            collect_time('time-prevision-nmf-10m-3-1.log') / 1000000,
-            collect_time('time-prevision-nmf-10m-3-2.log') / 1000000,
-            collect_time('time-prevision-nmf-10m-3-4.log') / 1000000,
-            collect_time('time-prevision-nmf-10m-3-8.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-3-2-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-3-4-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-nmf-10m-3-8-opt-pe-getpos.log') / 1000000,
         ],
         [
             collect_time('time-systemds-nmf-10m-3-1.log'),
@@ -101,10 +101,10 @@ def prepare_data():
 
     fig10_slr_data = [
         [
-            collect_time('time-prevision-slr-0.0125-3-1.log') / 1000000,
-            collect_time('time-prevision-slr-0.0125-3-2.log') / 1000000,
-            collect_time('time-prevision-slr-0.0125-3-4.log') / 1000000,
-            collect_time('time-prevision-slr-0.0125-3-8.log') / 1000000,
+            collect_time('time-prevision-slr-0.0125-3-1-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-slr-0.0125-3-2-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-slr-0.0125-3-4-opt-pe-getpos.log') / 1000000,
+            collect_time('time-prevision-slr-0.0125-3-8-opt-pe-getpos.log') / 1000000,
         ],
         [
             collect_time('time-systemds-slr-0.0125-3-1.log'),

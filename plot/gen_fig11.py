@@ -51,17 +51,17 @@ def render_fig11(lr_data, nmf_data):
 
 def prepare_data():
     fig11_lr_data = [
-	list(collect_io('io-prevision-lr-80m-3-1.log')),
-	list(collect_io('io-prevision_wo_pe-lr-80m-3-1.log')),
-	list(collect_io('io-prevision_blocking-lr-80m-3-1.log')),
-	list(collect_io('io-prevision_blocking_wo_pe-lr-80m-3-1.log'))
+	list(collect_io('io-prevision-lr-80m-3-1-opt-pe-getpos.log')),
+	list(collect_io('io-prevision-lr-80m-3-1-opt-wo_pe-getpos.log')),
+	list(collect_io('io-prevision-lr-80m-3-1-opt-pe-blocking.log')),
+	list(collect_io('io-prevision-lr-80m-3-1-opt-wo_pe-blocking.log'))
     ]
 
     fig11_nmf_data = [
-	list(collect_io('io-prevision-nmf-80m-3-1.log')),
-	list(collect_io('io-prevision_wo_pe-nmf-80m-3-1.log')),
-	list(collect_io('io-prevision_blocking-nmf-80m-3-1.log')),
-	list(collect_io('io-prevision_blocking_wo_pe-nmf-80m-3-1.log'))
+	list(collect_io('io-prevision-nmf-80m-3-1-opt-pe-getpos.log')),
+	list(collect_io('io-prevision-nmf-80m-3-1-opt-wo_pe-getpos.log')),
+	list(collect_io('io-prevision-nmf-80m-3-1-opt-pe-blocking.log')),
+	list(collect_io('io-prevision-nmf-80m-3-1-opt-wo_pe-blocking.log'))
     ]
 
     return fig11_lr_data, fig11_nmf_data

@@ -60,6 +60,6 @@ elif [[ $SYSTEM == "prevision_wo_pe" ]]; then
 elif [[ $SYSTEM == "prevision_blocking" ]]; then
   run sh -c "cd /data/prevision/evaluation/prevision; bash exp.sh $TASK $DATA $ITER $PARALLELISM $REPETITION opt pe blocking"
 elif [[ $SYSTEM == "prevision_blocking_wo_pe" ]]; then
-  run sh -c "cd /data/prevision/evaluation/prevision; bash exp.sh $TASK $DATA $ITER $PARALLELISM $REPETITION opt we_po blocking"
+  run sh -c "cd /data/prevision/evaluation/prevision; bash exp.sh $TASK $DATA $ITER $PARALLELISM $REPETITION opt we_pe blocking"
 fi
 

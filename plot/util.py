@@ -20,9 +20,9 @@ def collect_io(path: str) -> float:
                 return 0, 0
 
             last = lines[-1]
-            items = last.split()
+            items = last.split(',')
             return int(items[0]), int(items[1])
-    except:
+    except Exception as e:
         return 0, 0
 
 def collect_breakdown(path: str) -> float:
@@ -32,8 +32,8 @@ def collect_breakdown(path: str) -> float:
             if len(lines) == 0:
                 return 0, 0, 0, 0
 
-            last = lines[-1]
-            items = last.split()
+            last = lines[-2]	# since there is a bug in gawk script
+            items = last.split(',')
             return int(items[0]), int(items[1]), int(items[2]), int(items[3])
     except:
         return 0, 0, 0, 0
