@@ -26,17 +26,17 @@ run_sparse_lr() {
         echo "==============================================="
 	for i in $(seq 1 $repetition); do
 		echo ">> Run $i out of $repetition"
-		cp -r $bin_tall "__TEMP_X"
-		cp -r $bin_lr_y "__TEMP_y"
-		cp -r $bin_lr_w "__TEMP_w"
-		cp -r "${bin_tall}.mtd" "__TEMP_X.mtd"
-		cp -r "${bin_lr_y}.mtd" "__TEMP_y.mtd"
-		cp -r "${bin_lr_w}.mtd" "__TEMP_w.mtd"
+		cp -r $bin_tall "TEMP_X"
+		cp -r $bin_lr_y "TEMP_y"
+		cp -r $bin_lr_w "TEMP_w"
+		cp -r "${bin_tall}.mtd" "TEMP_X.mtd"
+		cp -r "${bin_lr_y}.mtd" "TEMP_y.mtd"
+		cp -r "${bin_lr_w}.mtd" "TEMP_w.mtd"
 
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-                bash lr.sh $nrows $noi "__TEMP_X" "__TEMP_y" "__TEMP_w" output/res $p $dmem $emem 2>&1 | tee -a /tmp/exp_result.log
+                bash lr.sh $nrows $noi "TEMP_X" "TEMP_y" "TEMP_w" output/res $p $dmem $emem 2>&1 | tee -a /tmp/exp_result.log
               
-		rm -rf __*
+		rm -rf TEMP_*
 		rm -rf output/*
         done;
 }
@@ -50,16 +50,16 @@ run_pagerank() {
         echo "Running PageRank"
         echo "Dataset: $dataset | Iterations: $noi"
         echo "==============================================="
-	for i in $(seq 1 $repetition); do
-                echo ">> Run $i out of $repetition"
-		cp -r $dataset "__TEMP_X"
-		cp -r "${dataset}.mtd" "__TEMP_X.mtd"
+        for i in $(seq 1 $repetition); do
+            echo ">> Run $i out of $repetition"
+            cp -r $dataset "TEMP_X"
+            cp -r "${dataset}.mtd" "TEMP_X.mtd"
 
-		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-		bash pagerank.sh $nrows $noi "__TEMP_X" output/res_pr 1 2>&1 | tee -a /tmp/exp_result.log
+            sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+            bash pagerank.sh $nrows $noi "TEMP_X" output/res_pr 1 2>&1 | tee -a /tmp/exp_result.log
 
-		rm -rf __*
-                rm -rf output/*
+            rm -rf TEMP_*
+            rm -rf output/*
         done;
 }
 

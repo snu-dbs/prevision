@@ -24,17 +24,17 @@ run_lr() {
 	for i in $(seq 1 $repetition); do
 		echo ">> Run $i out of $repetition"
 
-		cp -r $bin_tall "__TEMP_X"
-		cp -r $bin_lr_y "__TEMP_y"
-		cp -r $bin_lr_w "__TEMP_w"
-		cp -r "${bin_tall}.mtd" "__TEMP_X.mtd"
-		cp -r "${bin_lr_y}.mtd" "__TEMP_y.mtd"
-		cp -r "${bin_lr_w}.mtd" "__TEMP_w.mtd"
+		cp -r $bin_tall "TEMP_X"
+		cp -r $bin_lr_y "TEMP_y"
+		cp -r $bin_lr_w "TEMP_w"
+		cp -r "${bin_tall}.mtd" "TEMP_X.mtd"
+		cp -r "${bin_lr_y}.mtd" "TEMP_y.mtd"
+		cp -r "${bin_lr_w}.mtd" "TEMP_w.mtd"
 
 		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-		bash lr.sh $dataset $noi "__TEMP_X" "__TEMP_y" "__TEMP_w" output/res $p 2>&1 | tee -a /tmp/exp_result.log
+		bash lr.sh $dataset $noi "TEMP_X" "TEMP_y" "TEMP_w" output/res $p 2>&1 | tee -a /tmp/exp_result.log
                 
-		rm -rf __*
+		rm -rf TEMP_*
 		rm -rf output/*
         done;
 }
@@ -45,25 +45,25 @@ run_nmf() {
         bin_nmf_w="$DATADIR"/"$dataset""x10_dense"
         bin_nmf_h="$DATADIR"/"10x100_dense"
 
-	echo "==============================================="
-        echo "Running Non-negative Matrix Factorization (NMF)"
-	echo "Dataset: $dataset rows | Iterations: $noi"
         echo "==============================================="
-	for i in $(seq 1 $repetition); do
-                echo ">> Run $i out of $repetition"
+        echo "Running Non-negative Matrix Factorization (NMF)"
+        echo "Dataset: $dataset rows | Iterations: $noi"
+        echo "==============================================="
+        for i in $(seq 1 $repetition); do
+            echo ">> Run $i out of $repetition"
 
-		cp -r $bin_tall "__TEMP_X"
-		cp -r $bin_nmf_w "__TEMP_W"
-		cp -r $bin_nmf_h "__TEMP_H"
-		cp -r "${bin_tall}.mtd" "__TEMP_X.mtd"
-		cp -r "${bin_nmf_w}.mtd" "__TEMP_W.mtd"
-		cp -r "${bin_nmf_h}.mtd" "__TEMP_H.mtd"
+            cp -r $bin_tall "TEMP_X"
+            cp -r $bin_nmf_w "TEMP_W"
+            cp -r $bin_nmf_h "TEMP_H"
+            cp -r "${bin_tall}.mtd" "TEMP_X.mtd"
+            cp -r "${bin_nmf_w}.mtd" "TEMP_W.mtd"
+            cp -r "${bin_nmf_h}.mtd" "TEMP_H.mtd"
 
-		sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-		bash nmf.sh $dataset $noi "__TEMP_X" "__TEMP_W" "__TEMP_H" output/res_w output/res_h $p 2>&1 | tee -a /tmp/exp_result.log
+            sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+            bash nmf.sh $dataset $noi "TEMP_X" "TEMP_W" "TEMP_H" output/res_w output/res_h $p 2>&1 | tee -a /tmp/exp_result.log
 
-		rm -rf __*
-                rm -rf output/*
+            rm -rf TEMP_*
+            rm -rf output/*
         done;
 }
 
