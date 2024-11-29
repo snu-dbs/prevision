@@ -126,7 +126,7 @@ def prepare_data():
         fig15_nmf_prevision_data[1].append(t[2] + t[3])
     
 
-    fig15_lr_numpy_data = collect_time('time-numpy-nmf-80m-3-1.log') * 1000000
+    fig15_lr_numpy_data = collect_time('time-numpy-lr-80m-3-1.log') * 1000000
     fig15_nmf_dask_data = [
         collect_time('time-dask-nmf-80m-3-1.log') * 1000000,
         collect_time('time-dask-nmf-80m_200x1-3-1.log') * 1000000,
