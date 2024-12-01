@@ -34,6 +34,6 @@ def collect_breakdown(path: str) -> float:
 
             last = lines[-2]	# since there is a bug in gawk script
             items = last.split(',')
-            return int(items[0]), int(items[1]), int(items[2]), int(items[3])
+            return int(items[1]), int(items[3]), int(items[2]), int(items[0])
     except:
         return 0, 0, 0, 0
