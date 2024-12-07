@@ -7,10 +7,10 @@ If there is any problem in the repository, we will notify you.
 **How to run experiments?:**
 1. Make sure that you have downloaded pre-generated dataset from our FTP server.
 2. Move to the `evaluation` directory.
-3. Customize the `run.sh` script
+3. Customize the `run.sh` script.
     - Update the `DATAPATH` variable to point the `output` directory that downloaded from our FTP server. Our docker container will copy/import dataset from the directory.
     - (Optional) The entire experiments would take about a week. If you don't want to run the entire things, please delete commands you don't want to evaluate. The usage of the `evaluate.sh` script is `bash evaluate.sh [SYSTEM] [TASK] [DATA] [ITER] [PARALLELISM] [REPETITION] [DATAPATH]`.
-4. Run experiments with `sudo bash run.sh 2>&1 | tee -a result.log`
+4. Run experiments with `sudo bash run.sh 2>&1 | tee -a result.log`.
 
 The results will be store in the `results` directory.
 
