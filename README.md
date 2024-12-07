@@ -19,3 +19,7 @@ The results will be store in the `results` directory.
 2. Please run `bash run.sh`.
 3. Generated plots will be stored in the `output` directory.
 
+**How to build Docker images?:**
+- Two Dockerfiles are in this repository.
+  - `Dockerfile` in the root directory sets up systems and prepares for experiments.
+  - `plot/Dockerfile` sets up an environment to generate plots in the paper.
