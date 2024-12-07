@@ -2,7 +2,6 @@
 
 A Dockerized version of the PreVision repository.
 If you find any errors or bugs, please [contact us](mailto:koo@dbs.snu.ac.kr).
-If there is any problem in the repository, we will notify you.
 
 **How to run experiments?:**
 1. Make sure that you have downloaded pre-generated dataset from our FTP server.
